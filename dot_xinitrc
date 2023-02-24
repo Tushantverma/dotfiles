@@ -1,5 +1,15 @@
+
+
+
+
+
+
+##################_add_commands_above_this_line_###################
 bash ~/.config/tv-dwm/scripts/run.sh
 
+### Warning..!!!
+## above script is runnig window manager with the "do while loop" so if there is an error the window manager will not break
+## always launch window manager at the last line because command billow that will never get executed 
 
 ### how to autostart x
 ##https://wiki.archlinux.org/title/Xinit#Autostart_X_at_login
