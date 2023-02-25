@@ -1,6 +1,8 @@
 
 
 
+########## if startup.sh exist run the startup.sh_################
+[[ -f ~/.startup.sh ]] && . ~/.startup.sh
 
 
 
