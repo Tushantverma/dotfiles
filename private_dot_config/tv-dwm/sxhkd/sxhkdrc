@@ -96,7 +96,7 @@ super + v
 
 #alacritty
 super + Return
-    alacritty
+    st
 
 #Xkill
 super + Escape
