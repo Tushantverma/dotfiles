@@ -56,7 +56,7 @@ bind "set completion-ignore-case on"
   alias day='xrandr --output eDP-1 --gamma 1:1:1 --brightness 1.0'
   alias cm='chezmoi'
   alias cdcm='chezmoi cd'
-  
+  alias yay='yay --color auto'
 
 ############################################################################################
 ################ some custom created function for navigate on terminal fast ################
