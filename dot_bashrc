@@ -58,18 +58,23 @@ bind "set completion-ignore-case on"
   alias cdcm='chezmoi cd'
   alias yay='yay --color auto'
 
+
 ############################################################################################
-################ some custom created function for navigate on terminal fast ################
+######################## functions (alias with spaces lol)##################################
 ############################################################################################
 
-#smart cd into a file ## install fzf first
-fcd(){
-  cd "$(find -type d | fzf)"
+# git log = git log --reverse
+git() {
+    if [ "$1" = "log" ]; then command git log --reverse ;
+    else command git "$@"; fi ;
 }
+
+# smart cd into a file ## install fzf first
+fcd(){ cd "$(find -type d | fzf)" ; }
+
 # open a text file ## install fzf first
-open(){
-  xdg-open "$(find -type f | fzf)"
-}
+open(){ xdg-open "$(find -type f | fzf)" ; }
+
 # copy the path ## install fzf and xclip first 
 alias getpath="find -type f | fzf | sed 's/^..//g' | tr -d '\n' | xclip -selection c"
 
