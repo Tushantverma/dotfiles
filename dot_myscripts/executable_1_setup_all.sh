@@ -1,13 +1,15 @@
 #!/bin/bash
 
+# my OS install script will use '*'
+
 # building dwm
-cd ~/.config/tv-dwm/chadwm/
+cd /home/*/.config/tv-dwm/chadwm/
 sudo make
 sudo make install
 sudo make clean
 
 # building st
-cd ~/.config/tv-dwm/st/
+cd /home/*/.config/tv-dwm/st/
 sudo make
 sudo make install
 sudo make clean
