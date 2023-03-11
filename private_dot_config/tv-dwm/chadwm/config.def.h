@@ -21,7 +21,7 @@ static const int toptab             = 1;        /* 0 means bottom tab */
 static const int floatbar           = 1;/* 1 means the bar will float(don't have padding),0 means the bar have padding */
 static const int topbar             = 1;        /* 0 means bottom bar */
 static const int horizpadbar        = 5;        /* padding inside the bar */
-static const int vertpadbar         = 11;       /* padding inside the bar */
+static const int vertpadbar         = 0;        /* padding inside the bar */
 static const int vertpadtab         = 35;
 static const int horizpadtabi       = 15;
 static const int horizpadtabo       = 15;
@@ -37,7 +37,7 @@ static const int new_window_attach_on_end = 0; /*  1 means the new window will a
 #define ICONSIZE 19   /* icon size */
 #define ICONSPACING 8 /* space between icon and title */
 
-static const char *fonts[]          = {"JetBrainsMono Nerd Font:style:medium:size=12"};
+static const char *fonts[]          = {"Iosevka Term Nerd Font:style:medium:size=12"};
 
 // theme
 #include "themes/onedark.h"
@@ -70,7 +70,7 @@ static const char *colors[][3]      = {
 };
 
 /* tagging */
-static char *tags[] = {"", "", "", "", "", "", "", "", ""};
+static char *tags[] = {"謁", "凉", "齃", "留", "滑", "廙", "凉", "磊", "便"};
 //static char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 //static char *tags[] = { "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX" };
 //static char *tags[] = { "", "", "", "", "", "", "", "", "" };
@@ -85,18 +85,19 @@ static const char* pavucontrol[] = { "pavucontrol", NULL };
 
 static const Launcher launchers[] = {
     /* command     name to display */
-    { eww,           "數" },
-    { discord,       "ﱲ" },
-    { telegram,      "" },
-    { mintstick,     "虜" },
-    { pavucontrol,   "墳" },
+    { eww,           "雷" },
+    { discord,       "雷" },
+    { telegram,      "雷" },
+    { mintstick,     "雷" },
+    { pavucontrol,   "雷" },
 };
 
 static const int tagschemes[] = {
     SchemeTag1, SchemeTag2, SchemeTag3, SchemeTag4, SchemeTag5, SchemeTag6, SchemeTag7, SchemeTag8, SchemeTag9
 };
 
-static const unsigned int ulinepad      = 5; /* horizontal padding between the underline and tag */
+/*tags under line settings*/
+static const unsigned int ulinepad      = 3; /* horizontal padding between the underline and tag */
 static const unsigned int ulinestroke   = 2; /* thickness / height of the underline */
 static const unsigned int ulinevoffset  = 0; /* how far above the bottom of the bar the line should appear */
 static const int ulineall               = 0; /* 1 to show underline on all tags, 0 for just the active ones */
