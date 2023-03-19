@@ -128,9 +128,9 @@ static const Layout layouts[] = {
     /* symbol     arrange function */
     { "[]=",      tile },    /* first entry is default */
     { "[M]",      monocle },
-    { "[@]",      spiral },
-    { "[\\]",     dwindle },
-    { "H[]",      deck },
+    { "[@]",      spiral }, // Fibonacci layout
+    { "[\\]",     dwindle }, // same as Fibonacci layout
+    { "H[]",      deck }, // only two recent window on workspace/tag
     { "TTT",      bstack },
     { "===",      bstackhoriz },
     { "HHH",      grid },
@@ -157,107 +157,135 @@ static const Layout layouts[] = {
 /* commands */
 
 static const Key keys[] = {
-    /* modifier                         key         function        argument */
+    /* modifier                         key                 function        argument */
 
     // brightness and audio 
-    {0,                       XF86XK_AudioLowerVolume, spawn, {.v = downvol}},
-	{0,                       XF86XK_AudioMute, spawn, {.v = mutevol }},
-	{0,                       XF86XK_AudioRaiseVolume, spawn, {.v = upvol}},
-	{0,				XF86XK_MonBrightnessUp,		spawn,	{.v = light_up}},
-	{0,				XF86XK_MonBrightnessDown,	spawn,	{.v = light_down}},
+    {0,                    XF86XK_AudioLowerVolume,        spawn,        {.v = downvol}},
+	{0,                    XF86XK_AudioMute,               spawn,        {.v = mutevol }},
+	{0,                    XF86XK_AudioRaiseVolume,        spawn,        {.v = upvol}},
+	{0,                    XF86XK_MonBrightnessUp,         spawn,	     {.v = light_up}},
+	{0,                    XF86XK_MonBrightnessDown,       spawn,	     {.v = light_down}},
 
     // screenshot fullscreen and cropped
-    {MODKEY|ControlMask,                XK_u,       spawn,
-        SHCMD("maim | xclip -selection clipboard -t image/png")},
-    {MODKEY,                            XK_u,       spawn,
-        SHCMD("maim --select | xclip -selection clipboard -t image/png")},
+    //{ MODKEY|ControlMask,              XK_s,             spawn,         SHCMD("maim | xclip -selection clipboard -t image/png")},
+    //{ MODKEY,                          XK_s,             spawn,         SHCMD("maim --select | xclip -selection clipboard -t image/png")},
+    //{ MODKEY,                          XK_c,             spawn,         SHCMD("rofi -show drun") },
+    //{ MODKEY,                          XK_Return,        spawn,         SHCMD("st")},
 
-    //{ MODKEY,                           XK_c,       spawn,          SHCMD("rofi -show drun") },
-    //{ MODKEY,                           XK_Return,  spawn,            SHCMD("st")},
+
+
+
+//#########################################################################################################
+//#########################################################################################################
+// its better to not change default keybinding because all are well configured to avoide any confilicts
 
     // toggle stuff
-    { MODKEY,                           XK_b,       togglebar,      {0} },
-    { MODKEY|ControlMask,               XK_t,       togglegaps,     {0} },
-    { MODKEY|ShiftMask,                 XK_space,   togglefloating, {0} },
-    { MODKEY,                           XK_f,       togglefullscr,  {0} },
+    { MODKEY,                           XK_b,       togglebar,      {0} },      // toggle bar 
+  //{ MODKEY|ControlMask,               XK_t,       togglegaps,     {0} },      // there is no any gaps already to toggle anything
+    { MODKEY|ShiftMask,                 XK_space,   togglefloating, {0} },      // toggle floating tilling
+    { MODKEY,                           XK_f,       togglefullscr,  {0} },      // full screen window
 
-    { MODKEY|ControlMask,               XK_w,       tabmode,        { -1 } },
-    { MODKEY,                           XK_j,       focusstack,     {.i = +1 } },
-    { MODKEY,                           XK_k,       focusstack,     {.i = -1 } },
-    { MODKEY,                           XK_i,       incnmaster,     {.i = +1 } },
-    { MODKEY,                           XK_d,       incnmaster,     {.i = -1 } },
+
+//#########################################################################################################
+//#########################################################################################################
+
+  //{ MODKEY|ControlMask,               XK_w,       tabmode,        { -1 } },         // monocal layout have already tab mode enabled
+    { MODKEY,                           XK_j,       focusstack,     {.i = +1 } },     // switch window focus down
+    { MODKEY,                           XK_k,       focusstack,     {.i = -1 } },     // switch window foucs up
+    { MODKEY,                           XK_i,       incnmaster,     {.i = +1 } },     // add master 
+    { MODKEY,                           XK_u,       incnmaster,     {.i = -1 } },     // remove master
+
+//#########################################################################################################
+//#########################################################################################################
 
     // change m,cfact sizes 
-    { MODKEY,                           XK_h,       setmfact,       {.f = -0.05} },
-    { MODKEY,                           XK_l,       setmfact,       {.f = +0.05} },
-    { MODKEY|ShiftMask,                 XK_h,       setcfact,       {.f = +0.25} },
-    { MODKEY|ShiftMask,                 XK_l,       setcfact,       {.f = -0.25} },
-    { MODKEY|ShiftMask,                 XK_o,       setcfact,       {.f =  0.00} },
+    { MODKEY,                           XK_h,       setmfact,       {.f = -0.05} },      // resize window horizontal
+    { MODKEY,                           XK_l,       setmfact,       {.f = +0.05} },      // resize window horizontal
+    { MODKEY|ShiftMask,                 XK_h,       setcfact,       {.f = +0.25} },      // resize window vertical
+    { MODKEY|ShiftMask,                 XK_l,       setcfact,       {.f = -0.25} },      // resize window vertical
+  //{ MODKEY|ShiftMask,                 XK_o,       setcfact,       {.f =  0.00} },      // reset to default vertical window size if resized {not needed much}
+    { MODKEY|ShiftMask,                 XK_j,       movestack,      {.i = +1 } },        //  move window in stack down
+    { MODKEY|ShiftMask,                 XK_k,       movestack,      {.i = -1 } },        //  move window in stack up
+  //{ MODKEY|ShiftMask,                 XK_Return,  zoom,           {0} },               //  not tried <<===================================
+    { MODKEY,                           XK_Tab,     view,           {0} },               //  switch b/w two recent workspace
 
-
-    { MODKEY|ShiftMask,                 XK_j,       movestack,      {.i = +1 } },
-    { MODKEY|ShiftMask,                 XK_k,       movestack,      {.i = -1 } },
-    { MODKEY|ShiftMask,                 XK_Return,  zoom,           {0} },
-    { MODKEY,                           XK_Tab,     view,           {0} },
+//#########################################################################################################
+//#########################################################################################################
 
     // overall gaps
-    { MODKEY|ControlMask,               XK_i,       incrgaps,       {.i = +1 } },
-    { MODKEY|ControlMask,               XK_d,       incrgaps,       {.i = -1 } },
+    //{ MODKEY|ControlMask,               XK_i,       incrgaps,       {.i = +1 } },      //  not tried <<===================================
+    //{ MODKEY|ControlMask,               XK_d,       incrgaps,       {.i = -1 } },      //  not tried <<===================================
 
     // inner gaps
-    { MODKEY|ShiftMask,                 XK_i,       incrigaps,      {.i = +1 } },
-    { MODKEY|ControlMask|ShiftMask,     XK_i,       incrigaps,      {.i = -1 } },
+    //{ MODKEY|ShiftMask,                 XK_i,       incrigaps,      {.i = +1 } },      //  not tried <<===================================
+    //{ MODKEY|ControlMask|ShiftMask,     XK_i,       incrigaps,      {.i = -1 } },      //  not tried <<===================================
 
     // outer gaps
-    { MODKEY|ControlMask,               XK_o,       incrogaps,      {.i = +1 } },
-    { MODKEY|ControlMask|ShiftMask,     XK_o,       incrogaps,      {.i = -1 } },
+    //{ MODKEY|ControlMask,               XK_o,       incrogaps,      {.i = +1 } },      //  not tried <<===================================
+    //{ MODKEY|ControlMask|ShiftMask,     XK_o,       incrogaps,      {.i = -1 } },      //  not tried <<===================================
 
-    // inner+outer hori, vert gaps 
-    { MODKEY|ControlMask,               XK_6,       incrihgaps,     {.i = +1 } },
-    { MODKEY|ControlMask|ShiftMask,     XK_6,       incrihgaps,     {.i = -1 } },
-    { MODKEY|ControlMask,               XK_7,       incrivgaps,     {.i = +1 } },
-    { MODKEY|ControlMask|ShiftMask,     XK_7,       incrivgaps,     {.i = -1 } },
-    { MODKEY|ControlMask,               XK_8,       incrohgaps,     {.i = +1 } },
-    { MODKEY|ControlMask|ShiftMask,     XK_8,       incrohgaps,     {.i = -1 } },
-    { MODKEY|ControlMask,               XK_9,       incrovgaps,     {.i = +1 } },
-    { MODKEY|ControlMask|ShiftMask,     XK_9,       incrovgaps,     {.i = -1 } },
 
-    { MODKEY|ControlMask|ShiftMask,     XK_d,       defaultgaps,    {0} },
+// inner+outer hori, vert gaps { keybinding are in conflicts with connecting tags}
+//    { MODKEY|ControlMask,               XK_6,       incrihgaps,     {.i = +1 } },        // increase Vertical gaps b/w window
+//    { MODKEY|ControlMask|ShiftMask,     XK_6,       incrihgaps,     {.i = -1 } },        // decrease Vertical gaps b/w window
+//    { MODKEY|ControlMask,               XK_7,       incrivgaps,     {.i = +1 } },        // increase Horizental gaps b/w widnow
+//    { MODKEY|ControlMask|ShiftMask,     XK_7,       incrivgaps,     {.i = -1 } },        // decrease Horizental gaps b/w widnow
+//    { MODKEY|ControlMask,               XK_8,       incrohgaps,     {.i = +1 } },        // increase Vertical gaps b/w screen edge and window manager
+//    { MODKEY|ControlMask|ShiftMask,     XK_8,       incrohgaps,     {.i = -1 } },        // decrease Vertical gaps b/w screen edge and window manager
+//    { MODKEY|ControlMask,               XK_9,       incrovgaps,     {.i = +1 } },        // increase Horizental gaps b/w screen edge and window manager
+//    { MODKEY|ControlMask|ShiftMask,     XK_9,       incrovgaps,     {.i = -1 } },        // decrease Horizental gaps b/w screen edge and window manager
+//    { MODKEY|ControlMask|ShiftMask,     XK_d,       defaultgaps,    {0} },               // reset screen gaps to default
+
+
+//#########################################################################################################
+//#########################################################################################################
 
     // layout
-    { MODKEY,                           XK_t,       setlayout,      {.v = &layouts[0]} },
-    { MODKEY|ShiftMask,                 XK_f,       setlayout,      {.v = &layouts[1]} },
-    { MODKEY,                           XK_m,       setlayout,      {.v = &layouts[2]} },
-    { MODKEY|ControlMask,               XK_g,       setlayout,      {.v = &layouts[10]} },
-    { MODKEY|ControlMask|ShiftMask,     XK_t,       setlayout,      {.v = &layouts[13]} },
-    { MODKEY,                           XK_space,   setlayout,      {0} },
-    { MODKEY|ControlMask,               XK_comma,   cyclelayout,    {.i = -1 } },
-    { MODKEY|ControlMask,               XK_period,  cyclelayout,    {.i = +1 } },
-    { MODKEY,                           XK_0,       view,           {.ui = ~0 } },
-    { MODKEY|ShiftMask,                 XK_0,       tag,            {.ui = ~0 } },
-    { MODKEY,                           XK_comma,   focusmon,       {.i = -1 } },
-    { MODKEY,                           XK_period,  focusmon,       {.i = +1 } },
-    { MODKEY|ShiftMask,                 XK_Left,    tagmon,         {.i = -1 } },
-    { MODKEY|ShiftMask,                 XK_Right,   tagmon,         {.i = +1 } },
+    { MODKEY,                           XK_t,       setlayout,      {.v = &layouts[0]} },       // tilling layout
+    { MODKEY,                           XK_m,       setlayout,      {.v = &layouts[1]} },       // monocal layout
+  //{ MODKEY|ShiftMask,                 XK_f,       setlayout,      {.v = &layouts[2]} },       // configure layout <<<<==================
+  //{ MODKEY|ControlMask,               XK_g,       setlayout,      {.v = &layouts[10]} },      // configure layout <<<<==================
+  //{ MODKEY|ControlMask|ShiftMask,     XK_t,       setlayout,      {.v = &layouts[13]} },      // configure layout <<<<==================
+    { MODKEY,                           XK_space,   setlayout,      {0} },                      // switch to last recent layout
+    { MODKEY|ControlMask,               XK_comma,   cyclelayout,    {.i = -1 } },               // forward change layout in bus      ->
+    { MODKEY|ControlMask,               XK_period,  cyclelayout,    {.i = +1 } },               // backward change layout in bus <-
+    { MODKEY,                           XK_0,       view,           {.ui = ~0 } },              // active all tags togather
+    { MODKEY|ShiftMask,                 XK_0,       tag,            {.ui = ~0 } },              // place focused window in all tags
+  //{ MODKEY,                           XK_comma,   focusmon,       {.i = -1 } },               //   move focus to different monitor(if available)
+  //{ MODKEY,                           XK_period,  focusmon,       {.i = +1 } },               //   move focus to different monitor(if available)
+  //{ MODKEY|ShiftMask,                 XK_Left,    tagmon,         {.i = -1 } },               //   move focused window to different monitor (if available) 
+  //{ MODKEY|ShiftMask,                 XK_Right,   tagmon,         {.i = +1 } },               //   move focused window to different monitor (if available)
+
+//#########################################################################################################
+//#########################################################################################################
 
     // change border size
-    { MODKEY|ShiftMask,                 XK_minus,   setborderpx,    {.i = -1 } },
-    { MODKEY|ShiftMask,                 XK_p,       setborderpx,    {.i = +1 } },
-    { MODKEY|ShiftMask,                 XK_w,       setborderpx,    {.i = default_border } },
+    //{ MODKEY|ShiftMask,                 XK_minus,   setborderpx,    {.i = -1 } },             // decrease window boarder size
+    //{ MODKEY|ShiftMask,                 XK_p,       setborderpx,    {.i = +1 } },             // increase window boarder size
+    //{ MODKEY|ShiftMask,                 XK_w,       setborderpx,    {.i = default_border } }, // default window boarder size
+
+//#########################################################################################################
+//#########################################################################################################
 
     // kill dwm
     //{ MODKEY|ControlMask,               XK_q,       spawn,        SHCMD("killall bar.sh dwm") },
 
     // kill window
-    { MODKEY,                           XK_q,       killclient,     {0} },
-    { MODKEY|ShiftMask,                 XK_q,       killclient,     {0} },
+    { MODKEY,                           XK_q,       killclient,     {0} },      // kill window
+    //{ MODKEY|ShiftMask,                 XK_q,       killclient,     {0} },      // kill window {not needed}
+
+//#########################################################################################################
+//#########################################################################################################
 
     // restart
-    { MODKEY|ShiftMask,                 XK_r,       restart,           {0} },
+    { MODKEY|ShiftMask,                 XK_r,       restart,           {0} },       // restart DWM
 
     // hide & restore windows
-    { MODKEY,                           XK_e,       hidewin,        {0} },
-    { MODKEY|ShiftMask,                 XK_e,       restorewin,     {0} },
+    { MODKEY,                           XK_e,       hidewin,        {0} },       // hide the focused window
+    { MODKEY|ShiftMask,                 XK_e,       restorewin,     {0} },       // unhide the hidden window 
+
+//#########################################################################################################
+//#########################################################################################################
 
     // qwerty keyboard
 
@@ -271,18 +299,12 @@ static const Key keys[] = {
     TAGKEYS(                            XK_8,                       7)
     TAGKEYS(                            XK_9,                       8)
 
-    // azerty keyboard (Belgium)
-    // TAGKEYS(                               XK_ampersand,                0)
-    // TAGKEYS(                               XK_eacute,                   1)
-    // TAGKEYS(                               XK_quotedbl,                 2)
-    // TAGKEYS(                               XK_apostrophe,               3)
-    // TAGKEYS(                               XK_parenleft,                4)
-    // TAGKEYS(                               XK_section,                  5)
-    // TAGKEYS(                               XK_egrave,                   6)
-    // TAGKEYS(                               XK_exclam,                   7)
-    // TAGKEYS(                               XK_ccedilla,                 8)
 
 };
+
+//#########################################################################################################
+//#########################################################################################################
+
 
 /* button definitions */
 /* click can be ClkTagBar, ClkLtSymbol, ClkStatusText, ClkWinTitle, ClkClientWin, or ClkRootWin */
@@ -321,3 +343,6 @@ static const Button buttons[] = {
     { ClkTabNext,           0,              Button1,        movestack,      { .i = +1 } },
     { ClkTabClose,          0,              Button1,        killclient,     {0} },
 };
+
+
+
