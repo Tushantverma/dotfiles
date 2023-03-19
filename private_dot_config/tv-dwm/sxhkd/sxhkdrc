@@ -1,0 +1,379 @@
+
+# #####################################################################
+# #####################################################################
+# keybinding used by chadwm
+
+# MODKEY + bfjkiuhltm0qe Tab Space
+# MODKEY + Shift + hljk0re  Space Return
+# MODKEY + Ctrl  + comma, period.
+
+
+# #####################################################################
+# #####################################################################
+
+
+
+#terminal ###############
+super + {_,shift + } Return
+    {st,xfce4-terminal}
+
+
+
+# #####################################################################
+# ########################## super key  ###############################
+# #####################################################################
+
+
+# rofi large #############
+super + d
+    rofi -no-config -no-lazy-grab -show drun -modi drun -theme ~/.config/tv-dwm/rofi/launcher2.rasi
+
+
+
+# Xkill ##################
+super + Escape
+     xkill
+
+
+
+
+# #####################################################################
+# ######################## super + shift ##############################
+# #####################################################################
+
+
+# application ############
+super + shift + {   w   , s  ,   v       ,  f   }
+                {firefox,subl,pavucontrol,thunar}
+
+
+# dmenu ##################
+ super + shift + d
+   dmenu_run -i -nb '#191919' -nf '#fea63c' -sb '#fea63c' -sf '#191919' -fn 'NotoMonoRegular:bold:pixelsize=14'
+
+
+# Picom Toggle
+super + shift + o
+     ~/.config/tv-dwm/scripts/picom-toggle.sh
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## #############################################################################################################################################
+## ####################################################### other keybinding for Reference ######################################################
+## #############################################################################################################################################
+
+
+
+
+
+# #Vlc
+# super + F6
+#     vlc --video-on-top
+
+
+# #Rofi Fullscreen
+# super + F11
+#     rofi -theme-str 'window \{width: 100%;height: 100%;\}' -show drun
+
+# #Rofi
+# super + F12
+#     rofi -show drun
+
+
+# #reload sxhkd:
+# super + shift + s
+# 	pkill -USR1 -x sxhkd
+
+
+#################################################################
+# CONTROL + ALT KEYS
+#################################################################
+
+
+# #Chromium
+# ctrl + alt + g
+#     chromium -no-default-browser-check
+
+# #Xfce4-appfinder
+# alt + F2
+#     xfce4-appfinder --collapsed
+
+# #Xfce4-appfinder
+# alt + F3
+#     xfce4-appfinder
+
+
+
+# #################################################################
+# #     SCREENSHOTS
+# #################################################################
+
+# #Scrot
+# Print
+#     scrot 'ArcoLinux-%Y-%m-%d-%s_screenshot_$wx$h.jpg' -e 'mv $f $$(xdg-user-dir PICTURES)'
+
+# #screeenshooter
+# ctrl + Print
+#      xfce4-screenshooter
+
+# #Gnome-Screenshot
+# ctrl + shift + Print
+#      gnome-screenshot -i
+
+# #flameshot
+# ctrl + super + Print
+#      flameshot gui
+
+
+
+# #################################################################
+# #     MULTIMEDIA KEYS
+# #################################################################
+
+# #Raises volume
+# XF86AudioRaiseVolume
+#     amixer -D pulse set Master 10%+
+
+# #Lowers volume
+# XF86AudioLowerVolume
+#     amixer -D pulse set Master 10%-
+
+# #Mute
+# XF86AudioMute
+#     amixer -D pulse set Master 1+ toggle
+
+# #PLAY
+# XF86AudioPlay
+#     playerctl play-pause
+
+# #Next
+# XF86AudioNext
+#     playerctl next
+
+# #previous
+# XF86AudioPrev
+#     playerctl previous
+
+# #Stop
+# XF86AudioStop
+#     playerctl stop
+
+# #Brightness up
+# XF86MonBrightnessUp
+#     xbacklight -inc 10
+
+# #Brightness down
+# XF86MonBrightnessDown
+#     xbacklight -dec 10
+
+
+# ##################################################################################
+# ####################### some bspwm style for reference ###########################
+# ##################################################################################
+
+
+
+
+# ##---------- Keybindings for bspwm ----------##
+
+
+
+# # Terminal (fullscreen)
+# super + t
+#     xfce4-terminal --fullscreen
+
+
+
+
+# # Rofi Menus/Applets (screenshot and powermenu and add other)
+# super + {s,x}
+#     sh ~/.config/bspwm/rofi/{applets/bin/screenshot.sh,powermenu/type-2/powermenu.sh}
+
+# ##---------- Applications ----------##
+
+
+
+# # Terminal Apps
+# ctrl + alt + {v,r,h}
+#     alacritty --config-file ~/.config/bspwm/alacritty/alacritty.yml -e {vim,ranger,htop}
+
+# # Color Picker
+# super + p
+#     color-gpick
+
+# # Lockscreen
+# ctrl + alt + l
+#     betterlockscreen --lock
+
+# ##---------- System Keys ----------##
+
+# # Take a screenshot
+# Print
+#     takeshot --now
+    
+# # Take screenshot in 5 second
+# alt + Print 
+#     takeshot --in5
+
+# # Take screenshot in 10 second
+# shift + Print   
+#     takeshot --in10
+
+# # Take screenshot of active window
+# ctrl + Print
+#     takeshot --win
+
+# # Take screenshot of area
+# ctrl + alt + Print
+#     takeshot --area
+
+
+
+
+# # Music control
+# XF86Audio{Next,Prev,Play,Stop}
+#     mpc {next,prev,toggle,stop}
+
+# ##---------- Bspwm ----------##
+
+# # Close App
+# super + {_,shift + }c
+#     bspc node -{c,k}
+
+# # Reload Keybindings
+# super + Escape
+#     pkill -USR1 -x sxhkd
+
+# # kill window
+# ctrl + alt + Escape
+#     xkill
+
+# # Quit/Restart bspwm
+# ctrl + shift + {q,r}
+#     bspc {quit,wm -r}
+    
+# # Split horizontal, vertical or cancel
+# super + {h,v,q}
+#     bspc node -p {east,south,cancel}
+
+# # Preselect the ratio
+# super + ctrl + {1-9}
+#     bspc node -o 0.{1-9}
+
+# # Fullscreen
+# super + f
+#     bspc desktop -l next
+
+# # Toggle beetwen floating & tiled
+# super + space
+#     bspc node -t "~"{floating,tiled}
+
+# # Pseudo Tiled & tiled mode
+# super + shift + space
+# #super + {p,t}
+#     bspc node -t "~"{pseudo_tiled,tiled}
+
+# # Set the node flags
+# super + ctrl + {m,x,y,z}
+#     bspc node -g {marked,locked,sticky,private}
+
+# # Send the window to another edge of the screen
+# super + {_,shift + }{Left,Down,Up,Right}
+#     bspc node -{f,s} {west,south,north,east}
+
+# # Change focus to next window, including floating window
+# alt + {_,shift + }Tab
+#     bspc node -f {next.local.window,prev.local.window}
+
+# # Switch workspace
+# ctrl + alt + {Left,Right}
+#     bspc desktop -f {prev.local,next.local}
+
+# # Switch to last opened workspace
+# super + {Tab,grave}
+#     bspc {node,desktop} -f last
+
+# # Send focused window to another workspace
+# super + {_,shift + }{1-8}
+#     bspc {desktop -f,node -d} '^{1-8}'
+
+# # Expanding windows
+# super + control + {Left,Right,Up,Down}
+#     bspc node -z {left -20 0,right 20 0,top 0 -20,bottom 0 20}
+    
+# ## Shrinking windows
+# super + alt + {Left,Right,Up,Down}
+#     bspc node -z {left 20 0,right -20 0,top 0 20,bottom 0 -20}
+    
+# ## Move floating windows
+# alt + shift + {Left,Down,Up,Right}
+#     bspc node -v {-20 0,0 20,0 -20,20 0}
+
+# # Hide/Unhide Window
+# super + shift + i
+#     bspwinmask      
+
+# ##---------- EOF ----------##
+
+# #press keybinding free your hand and press one key to open applicaiton
+# super + z ; {w,f}
+#     {firefox,thunar}
+
+# #Monocle (type of fullscreen)
+# F11
+#     bspc node -t "~"fullscreen
+
+
+# F12 
+#     bspc query -D -d .occupied | xargs -i bspc node @\{\}:/ -c; bspc desktop ^1 -f
+
+# ##bspc query -N -n .window | xargs -i bspc node \{\} -c; bspc desktop ^1 -f  ##(maybe this will not work above)
+
+
+# #Hide polybar
+# super + y
+#   sh ~/.config/bspwm/polybar/hidepolybar.sh
+#   #polybar-msg cmd toggle
+
+
+
+
