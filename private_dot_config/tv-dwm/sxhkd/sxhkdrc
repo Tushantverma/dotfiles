@@ -61,12 +61,26 @@ super + shift + o
 
 
 
+# #####################################################################
+# ########################## system ctrl ##############################
+# #####################################################################
 
 
 
+# Brighness control
+XF86MonBrightness{Up,Down}
+    light {-A,-U} 5
+    
 
+# Volume control
+XF86Audio{RaiseVolume,LowerVolume}
+    amixer set Master {5%+,5%-}
 
+XF86AudioMute
+    amixer -D pulse set Master 1+ toggle
 
+XF86AudioMicMute
+    amixer set Capture toggle
 
 
 
@@ -373,6 +387,52 @@ super + shift + o
 # super + y
 #   sh ~/.config/bspwm/polybar/hidepolybar.sh
 #   #polybar-msg cmd toggle
+
+
+
+
+
+
+# ##---------- System Keys ----------##
+
+# # Take a screenshot
+# Print
+#     takeshot --now
+    
+# # Take screenshot in 5 second
+# alt + Print 
+#     takeshot --in5
+
+# # Take screenshot in 10 second
+# shift + Print   
+#     takeshot --in10
+
+# # Take screenshot of active window
+# ctrl + Print
+#     takeshot --win
+
+# # Take screenshot of area
+# ctrl + alt + Print
+#     takeshot --area
+
+# # Brighness control
+# XF86MonBrightness{Up,Down}
+#     brightnessctl set {5%+,5%-}
+    
+# # Volume control
+# XF86Audio{RaiseVolume,LowerVolume}
+#     amixer set Master {5%+,5%-}
+
+# XF86AudioMute
+#     amixer -D pulse set Master 1+ toggle
+
+# XF86AudioMicMute
+#     amixer set Capture toggle
+    
+# # Music control
+# XF86Audio{Next,Prev,Play,Stop}
+#     mpc {next,prev,toggle,stop}
+
 
 
 
