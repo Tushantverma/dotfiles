@@ -69,18 +69,19 @@ super + shift + o
 
 # Brighness control
 XF86MonBrightness{Up,Down}
-    light {-A,-U} 5
+    light {-A,-U} 5 ;kill -$(expr 34 + 5) $(pidof dwmblocks)
     
 
 # Volume control
 XF86Audio{RaiseVolume,LowerVolume}
-    amixer set Master {5%+,5%-}
+    amixer -q set Master {5%+,5%-} unmute ;kill -$(expr 34 + 4) $(pidof dwmblocks)
 
 XF86AudioMute
-    amixer -D pulse set Master 1+ toggle
+    amixer -q -D pulse set Master 1+ toggle
 
 XF86AudioMicMute
-    amixer set Capture toggle
+    amixer -q set Capture toggle ;kill -$(expr 34 + 4) $(pidof dwmblocks)
+    ###(-q => flag means dont show output just do the action)###
 
 
 
