@@ -1,0 +1,51 @@
+#!/bin/bash
+
+# ^c$var^ = fg color
+# ^b$var^ = bg color
+# ^d^ =  clear color
+
+# kill -$(expr 34 + 1) $(pidof dwmblocks)   ### faster
+# pkill -RTMIN+1 dwmblocks # slower
+# kill -10 $(pidof dwmblocks)   or   pkill -SIGUSR1 dwmblocks ## refresh all block
+
+color=#61afef;
+
+case $BLOCK_BUTTON in
+    1) pavucontrol ;; #pavucontrol >/dev/null 2>&1 &  #### run it in the background separately
+    2) ;;
+    3) subl ${0};;
+    4) amixer -q set Master 5%+ unmute;;
+    5) amixer -q set Master 5%- unmute;;
+esac
+
+
+
+DEFAULT_SINK=$(pactl info | awk '/Default Sink/ { print $3 }')
+VOLUME=$(pactl get-sink-volume "$DEFAULT_SINK" | awk '/^Volume/ { print substr($5, 1, length($5)-1) }')
+MUTE=$(pactl get-sink-mute "$DEFAULT_SINK" | awk '/^Mute/ { print $2 }')
+
+if [ "$MUTE" = "yes" ]; then
+    ICON="婢"
+elif [ "$VOLUME" -lt 30 ]; then
+    ICON="奄"
+elif [ "$VOLUME" -lt 60 ]; then
+    ICON="奔"
+else
+    ICON="墳"
+fi
+
+
+##### show mic usage icon on statusbar
+# DEFAULT_SOURCE=$(pactl info | awk '/Default Source/ { print $3 }')
+# SOURCE_MUTE=$(pactl get-source-mute "$DEFAULT_SOURCE" | awk '/^Mute/ { print $2 }')
+# MIC=""
+
+# if [ "$SOURCE_MUTE" = "yes" ]; then
+#     MIC=""
+# else
+#     MIC=" "
+# fi
+
+printf "  ^c$color^$MIC$ICON $VOLUME%%"
+
+

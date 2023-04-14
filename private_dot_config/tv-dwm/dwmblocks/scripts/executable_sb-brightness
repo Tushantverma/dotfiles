@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# ^c$var^ = fg color
+# ^b$var^ = bg color
+# ^d^ =  clear color
+
+# kill -$(expr 34 + 1) $(pidof dwmblocks)   ### faster
+# pkill -RTMIN+1 dwmblocks # slower
+# kill -10 $(pidof dwmblocks)   or   pkill -SIGUSR1 dwmblocks ## refresh all block
+
+color=#61afef;
+
+case $BLOCK_BUTTON in
+    1) ;;
+    2) ;;
+    3) subl ${0};;
+    4) light -A 5;;
+    5) light -U 5;;
+esac
+
+
+printf "  ^c$color^盛 $(printf "%.0f\n" $(light))%%"

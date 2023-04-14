@@ -35,7 +35,7 @@ sxhkd -c ~/.config/tv-dwm/sxhkd/sxhkdrc &
 #run "nitrogen --restore"
 #run "conky -c $HOME/.config/tv-dwm/conky/system-overview"
 #you can set wallpapers in themes as well
-#feh --bg-fill /usr/share/backgrounds/archlinux/arch-wallpaper.jpg &
+#feh --bg-fill ~/Downloads/wallpaper.jpg &
 #feh --bg-fill /usr/share/backgrounds/arcolinux/arco-wallpaper.jpg &
 #feh --randomize --bg-fill /home/erik/Insync/Apps/Wallhaven/*
 #feh --bg-fill ~/.config/tv-dwm/wallpaper/chadwm.jpg &
@@ -54,6 +54,9 @@ sxhkd -c ~/.config/tv-dwm/sxhkd/sxhkdrc &
 #run "telegram-desktop"
 #run "dropbox"
 
-pkill bar.sh
-~/.config/tv-dwm/scripts/bar.sh &
+#pkill bar.sh
+#~/.config/tv-dwm/scripts/bar.sh &
+
+pkill dwmblocks
+dwmblocks &
 while type chadwm >/dev/null; do chadwm && continue || break; done
