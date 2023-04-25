@@ -28,8 +28,8 @@ run "xfce4-power-manager"
 #run "blueberry-tray"
 #run "/usr/lib/xfce4/notifyd/xfce4-notifyd"
 run "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1"
-picom -b  --config ~/.config/tv-dwm/picom/picom.conf &
-run "numlockx on"
+#picom -b  --config ~/.config/tv-dwm/picom/picom.conf &
+#run "numlockx on"
 #run "volumeicon"
 sxhkd -c ~/.config/tv-dwm/sxhkd/sxhkdrc &
 #run "nitrogen --restore"
@@ -39,6 +39,9 @@ sxhkd -c ~/.config/tv-dwm/sxhkd/sxhkdrc &
 #feh --bg-fill /usr/share/backgrounds/arcolinux/arco-wallpaper.jpg &
 #feh --randomize --bg-fill /home/erik/Insync/Apps/Wallhaven/*
 #feh --bg-fill ~/.config/tv-dwm/wallpaper/chadwm.jpg &
+
+## if ~/.fehbg exist then run the ~/.fehbg to setup wallpaper
+[[ -f ~/.fehbg ]] && . ~/.fehbg &
 
 #nitrogen --set-zoom-fill --random /home/erik/Insync/Apps/Desktoppr/ --head=0
 #nitrogen --set-zoom-fill --random /home/erik/Insync/Apps/Desktoppr/ --head=1
