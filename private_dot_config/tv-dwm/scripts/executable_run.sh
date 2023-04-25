@@ -40,8 +40,9 @@ sxhkd -c ~/.config/tv-dwm/sxhkd/sxhkdrc &
 #feh --randomize --bg-fill /home/erik/Insync/Apps/Wallhaven/*
 #feh --bg-fill ~/.config/tv-dwm/wallpaper/chadwm.jpg &
 
-## if ~/.fehbg exist then run the ~/.fehbg to setup wallpaper
-[[ -f ~/.fehbg ]] && . ~/.fehbg &
+## if ~/.fehbg exist then run the ~/.fehbg to setup wallpaper else set the wallaper with --no-fehbg script
+[[ -f ~/.fehbg ]] && . ~/.fehbg & #|| feh --no-fehbg --bg-fill ~/Downloads/wallpaper.jpg &
+
 
 #nitrogen --set-zoom-fill --random /home/erik/Insync/Apps/Desktoppr/ --head=0
 #nitrogen --set-zoom-fill --random /home/erik/Insync/Apps/Desktoppr/ --head=1
