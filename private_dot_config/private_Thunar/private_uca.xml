@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+<action>
+	<icon>utilities-terminal</icon>
+	<name>Open Terminal Here</name>
+	<submenu></submenu>
+	<unique-id>1681596693271874-1</unique-id>
+	<command>exo-open --working-directory %f --launch TerminalEmulator</command>
+	<description>Example for a custom action</description>
+	<range></range>
+	<patterns>*</patterns>
+	<startup-notify/>
+	<directories/>
+</action>
+<action>
+	<icon>meld</icon>
+	<name>meld compare</name>
+	<submenu></submenu>
+	<unique-id>1492232362549799-1</unique-id>
+	<command>meld %F</command>
+	<description></description>
+	<range></range>
+	<patterns>*</patterns>
+	<directories/>
+	<other-files/>
+	<text-files/>
+</action>
+<action>
+	<icon>gtk-execute</icon>
+	<name>Open as Root</name>
+	<submenu></submenu>
+	<unique-id>1682378739123943-2</unique-id>
+	<command>pkexec thunar %f</command>
+	<description>Open selected folder as root in new Thunar window</description>
+	<range></range>
+	<patterns>*</patterns>
+	<directories/>
+</action>
+<action>
+	<icon>catfish</icon>
+	<name>Search with Catfish</name>
+	<submenu></submenu>
+	<unique-id>1489089852658523-2</unique-id>
+	<command>catfish %f</command>
+	<description></description>
+	<range></range>
+	<patterns>*</patterns>
+	<directories/>
+</action>
+<action>
+	<icon>gksu-root-terminal</icon>
+	<name>Ownership to root</name>
+	<submenu></submenu>
+	<unique-id>1682380293018794-1</unique-id>
+	<command>pkexec chown -R root:root %F</command>
+	<description>Change ownership to root</description>
+	<patterns>*</patterns>
+	<directories/>
+	<audio-files/>
+	<image-files/>
+	<other-files/>
+	<text-files/>
+	<video-files/>
+</action>
+<action>
+	<icon>system-switch-user</icon>
+	<name>Ownership to user</name>
+	<submenu></submenu>
+	<unique-id>1682380293018801-2</unique-id>
+	<command>pkexec chown -R $(id -un):$(id -gn) %F</command>
+	<description>Change ownership to user</description>
+	<patterns>*</patterns>
+	<directories/>
+	<audio-files/>
+	<image-files/>
+	<other-files/>
+	<text-files/>
+	<video-files/>
+</action>
+<action>
+	<icon>application-x-executable</icon>
+	<name>Make executable</name>
+	<submenu></submenu>
+	<unique-id>1526670239648084-2</unique-id>
+	<command>chmod +x %f</command>
+	<description>Make a file execuble</description>
+	<range></range>
+	<patterns>*</patterns>
+	<other-files/>
+	<text-files/>
+</action>
+<action>
+	<icon>com.deepin.ScreenShot</icon>
+	<name>Set Dual Screen wallaper</name>
+	<submenu></submenu>
+	<unique-id>1637670737487118-1</unique-id>
+	<command>feh --bg-fill --no-xinerama %f</command>
+	<description>Set as wallpaper using feh dual screen</description>
+	<range></range>
+	<patterns>*</patterns>
+	<image-files/>
+</action>
+<action>
+	<icon>kscreenshot</icon>
+	<name>Set Single Screen wallpaper</name>
+	<submenu></submenu>
+	<unique-id>1637670897220972-2</unique-id>
+	<command>feh --bg-fill %f</command>
+	<description>Set as wallpaper using feh single screen</description>
+	<range></range>
+	<patterns>*</patterns>
+	<image-files/>
+</action>
+<action>
+	<icon>insert-link-symbolic</icon>
+	<name>Create symlink</name>
+	<submenu></submenu>
+	<unique-id>1526631663081446-14</unique-id>
+	<command>ln -s  %f &quot;%n&quot;</command>
+	<description>Softlink between two files or directories</description>
+	<range></range>
+	<patterns>*</patterns>
+	<directories/>
+	<other-files/>
+	<text-files/>
+</action>
+</actions>
