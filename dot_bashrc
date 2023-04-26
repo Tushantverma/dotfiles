@@ -76,7 +76,7 @@ fcd(){ cd "$(find -type d | fzf)" ; }
 open(){ xdg-open "$(find -type f | fzf)" ; }
 
 # find file which is created and modified under 30 second
-change() { sudo find $1 -type f -cmin -0.5; }
+change() { sudo find "$PWD" -type f -cmin -0.5 | sed "s|$HOME|~|g" ; }
 
 # copy the path ## install fzf and xclip first 
 alias getpath="find -type f | fzf | sed 's/^..//g' | tr -d '\n' | xclip -selection c"
