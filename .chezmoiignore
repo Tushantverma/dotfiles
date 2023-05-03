@@ -14,3 +14,9 @@
 ##################################################################################
 
 README.md
+
+## if thunar.xml exist then ignore and if not exist then add it to the location
+{{ if stat (joinPath .chezmoi.homeDir ".config/xfce4/xfconf/xfce-perchannel-xml/thunar.xml") }}
+		.config/xfce4/xfconf/xfce-perchannel-xml/thunar.xml
+{{ end }}
+## source :- https://github.com/twpayne/chezmoi/discussions/2969
