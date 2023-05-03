@@ -21,7 +21,15 @@ function run {
 #run xrandr --output HDMI2 --right-of HDMI1 --auto
 #autorandr horizontal
 
-run "nm-applet"
+#Speedy keys
+xset r rate 210 40
+
+# Don't Randomly Turn off
+xset s off
+xset -dpms
+xset s noblank
+
+run "nm-applet --indicator"
 #run "pamac-tray"
 #run "variety"
 run "xfce4-power-manager"
