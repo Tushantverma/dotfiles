@@ -21,6 +21,9 @@ function run {
 #run xrandr --output HDMI2 --right-of HDMI1 --auto
 #autorandr horizontal
 
+#Access there clipboard data after closing an application
+while true; do xclip -out -selection clipboard | xclip -in -selection clipboard; sleep 2; done &
+
 #Speedy keys
 xset r rate 210 40
 
