@@ -32,7 +32,7 @@ xset s off
 xset -dpms
 xset s noblank
 
-run "nm-applet --indicator"
+#run "nm-applet --indicator"
 #run "pamac-tray"
 #run "variety"
 run "xfce4-power-manager"
