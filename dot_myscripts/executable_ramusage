@@ -1,0 +1,24 @@
+#!/bin/bash
+
+if [[ $# -eq 0 ]]; then
+  echo "Usage: $0 <application name>"
+  exit 1
+fi
+
+app_name=$1
+
+# Use ps command to get the PID of the application
+pid=$(ps -e | grep "$app_name" | awk '{print $1}')
+
+if [[ -z $pid ]]; then
+  echo "Could not find process for application $app_name"
+  exit 1
+fi
+
+# Use ps command to get the RAM usage of the application
+ram_usage=$(ps -p $pid -o rss=)
+
+# Convert to MB
+ram_usage_mb=$((ram_usage / 1024))
+
+echo "RAM usage for $app_name: $ram_usage_mb MB"
