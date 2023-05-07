@@ -19,10 +19,12 @@ function run {
 #run xrandr --output DVI-1 --right-of DVI-0 --auto
 #run xrandr --output DVI-D-1 --right-of DVI-I-1 --auto
 #run xrandr --output HDMI2 --right-of HDMI1 --auto
+run "xrandr --output eDP-1 --mode 1600x900 --rate 58"
+
 #autorandr horizontal
 
 #Access there clipboard data after closing an application
-while true; do xclip -out -selection clipboard | xclip -in -selection clipboard; sleep 2; done &
+#while true; do xclip -out -selection clipboard | xclip -in -selection clipboard; sleep 2; done &
 
 #Speedy keys
 xset r rate 210 40
@@ -35,7 +37,7 @@ xset s noblank
 #run "nm-applet --indicator"
 #run "pamac-tray"
 #run "variety"
-run "xfce4-power-manager"
+#run "xfce4-power-manager"
 #run "blueberry-tray"
 #run "/usr/lib/xfce4/notifyd/xfce4-notifyd"
 run "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1"
