@@ -26,7 +26,7 @@ super + {_,shift + } Return
 
 # rofi large #############
 super + d
-    rofi -no-config -no-lazy-grab -show drun -modi drun -theme ~/.config/tv-dwm/rofi/launcher2.rasi
+    rofi -no-config -no-lazy-grab -show drun -modi drun -theme ~/.config/tv-dwm/rofi/launcher.rasi
 
 
 
