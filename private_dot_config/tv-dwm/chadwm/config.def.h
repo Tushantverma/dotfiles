@@ -40,7 +40,7 @@ static const int new_window_attach_on_end = 0; /*  1 means the new window will a
 #define ICONSIZE 19   /* icon size */
 #define ICONSPACING 8 /* space between icon and title */
 
-static const char *fonts[]          = {"Iosevka Term Nerd Font:style:medium:size=12"};
+static const char *fonts[]          = {"Iosevka Nerd Font:style:medium:size=12"};
 
 // theme
 #include "themes/onedark.h"
@@ -73,8 +73,8 @@ static const char *colors[][3]      = {
 };
 
 /* tagging */
-static char *tags[] = {"謁", "凉", "齃", "留", "滑", "廙", "凉", "磊", "便"};
-//static char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+//static char *tags[] = {"🯱", "🯲", "🯳", "🯴", "🯵", "🯶", "🯷", "🯸", "🯹"};
+static char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 //static char *tags[] = { "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX" };
 //static char *tags[] = { "", "", "", "", "", "", "", "", "" };
 //static char *tags[] = { "Web", "Chat", "Edit", "Meld", "Vb", "Mail", "Video", "Image", "Files" };
@@ -88,11 +88,11 @@ static const char* pavucontrol[] = { "pavucontrol", NULL };
 
 static const Launcher launchers[] = {
     /* command     name to display */
-    { eww,           "雷" },
-    { discord,       "雷" },
-    { telegram,      "雷" },
-    { mintstick,     "雷" },
-    { pavucontrol,   "雷" },
+    { eww,           "" },
+    { discord,       "" },
+    { telegram,      "" },
+    { mintstick,     "" },
+    { pavucontrol,   "" },
 };
 
 static const int tagschemes[] = {
