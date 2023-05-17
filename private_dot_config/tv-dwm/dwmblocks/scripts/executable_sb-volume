@@ -25,13 +25,13 @@ VOLUME=$(pactl get-sink-volume "$DEFAULT_SINK" | awk '/^Volume/ { print substr($
 MUTE=$(pactl get-sink-mute "$DEFAULT_SINK" | awk '/^Mute/ { print $2 }')
 
 if [ "$MUTE" = "yes" ]; then
-    ICON="婢"
-elif [ "$VOLUME" -lt 30 ]; then
-    ICON="奄"
-elif [ "$VOLUME" -lt 60 ]; then
-    ICON="奔"
+    ICON="󰖁"
+elif [ "$VOLUME" -lt 33 ]; then
+    ICON="󰕿"
+elif [ "$VOLUME" -lt 66 ]; then
+    ICON="󰖀"
 else
-    ICON="墳"
+    ICON="󰕾"
 fi
 
 
