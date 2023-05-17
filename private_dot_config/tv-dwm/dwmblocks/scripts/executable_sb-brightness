@@ -19,4 +19,6 @@ case $BLOCK_BUTTON in
 esac
 
 
-printf "  ^c$color^盛 $(printf "%.0f\n" $(light))%%"
+lightValue=$(printf "%.0f" $(light))
+icon="\U$(printf "%x" $((0xF00DE + $lightValue/34)))"
+printf "^c$color^  $icon $lightValue%%"
