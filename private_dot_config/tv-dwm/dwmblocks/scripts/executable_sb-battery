@@ -24,14 +24,14 @@ CAPACITY=$(cat /sys/class/power_supply/BAT*/capacity)
   STATUS=$(cat /sys/class/power_supply/BAT*/status)
 
   if [ $STATUS = "Charging" ]; then
-    ICON=""
+    ICON="󰂄"
   else
     if [ $CAPACITY == 100 ]; then
-      ICON=""
+      ICON="󰁹"
     else if [ $CAPACITY -lt 10 ]; then
-      ICON=" warning"
+      ICON="󰂃 warning"
     else
-      ICON=$(printf "\u$(printf "%x" $((0xf578 + $CAPACITY / 10)))")
+      ICON=$(printf "\U$(printf "%x" $((0xF0079 + $CAPACITY / 10)))")
     fi fi
   fi
 
