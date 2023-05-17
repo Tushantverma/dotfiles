@@ -459,7 +459,7 @@ alias awa="arcolinux-welcome-app"
 
 #git
 alias rmgitcache="rm -r ~/.cache/git"
-alias grh="git reset --hard"
+alias grh="git reset --hard HEAD ; git clean -df" # reset tracked files to last commit ; delete untracked file ## tv-added
 
 #pamac
 alias pamac-unlock="sudo rm /var/tmp/pamac/dbs/db.lock"
