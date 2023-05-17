@@ -80,7 +80,7 @@ XF86AudioMute
     amixer -q -D pulse set Master 1+ toggle
 
 XF86AudioMicMute
-    amixer -q set Capture toggle ;kill -$(expr 34 + 4) $(pidof dwmblocks)
+    amixer -q set Capture toggle ;kill -$(expr 34 + 8) $(pidof dwmblocks)
     ###(-q => flag means dont show output just do the action)###
 
 

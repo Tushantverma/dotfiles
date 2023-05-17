@@ -35,17 +35,4 @@ else
 fi
 
 
-##### show mic usage icon on statusbar
-# DEFAULT_SOURCE=$(pactl info | awk '/Default Source/ { print $3 }')
-# SOURCE_MUTE=$(pactl get-source-mute "$DEFAULT_SOURCE" | awk '/^Mute/ { print $2 }')
-# MIC=""
-
-# if [ "$SOURCE_MUTE" = "yes" ]; then
-#     MIC=""
-# else
-#     MIC=" "
-# fi
-
-printf "  ^c$color^$MIC$ICON $VOLUME%%"
-
-
+printf " ^c$color^$ICON $VOLUME%%"
