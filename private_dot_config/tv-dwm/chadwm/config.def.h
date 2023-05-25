@@ -111,10 +111,11 @@ static const Rule rules[] = {
      *	WM_NAME(STRING) = title
      */
     /* class            instance    title       tags mask   switchtotag  iscentered   isfloating   monitor */
-    { "Gimp",           NULL,       NULL,       0,               0,              0,           0,           -1 },
     { "firefox",        NULL,       NULL,       1 << 1,          1,              0,           0,           -1 },
+    { "Subl",           NULL,       NULL,       1 << 2,          1,              0,           0,           -1 },
+    { "Thunar",         NULL,       NULL,       1 << 3,          1,              0,           0,           -1 },
     { "Xfce4-terminal", NULL,       NULL,       0,               0,              1,           1,           -1 },
-    { "mintstick",      NULL,       NULL,       0,               0,              0,           0,           -1 },
+    
 };
 
 /* layout(s) */
