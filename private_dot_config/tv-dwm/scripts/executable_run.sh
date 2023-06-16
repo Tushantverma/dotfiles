@@ -3,6 +3,7 @@
 #xrdb merge ~/.Xresources 
 #xbacklight -set 10 &
 #xset r rate 200 50 &
+export QT_QPA_PLATFORMTHEME=qt5ct  #fixed qt5ct environment variables issue
 
 function run {
  if ! pgrep $1 ;
