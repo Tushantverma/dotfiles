@@ -57,6 +57,7 @@ bind "set completion-ignore-case on"
   alias cm='chezmoi'
   alias cdcm='chezmoi cd'
   alias yay='yay --color auto'
+  alias v='nvim'
 
 
 ############################################################################################
