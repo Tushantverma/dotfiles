@@ -1,17 +1,16 @@
 #!/bin/bash
 
-su ; cd /
-pacman -Sy --noconfirm --needed snapper btrfs-assistant
+sudo pacman -Sy --noconfirm --needed snapper btrfs-assistant
 
-umount /.snapshots
-rm -r /.snapshots
-snapper --no-dbus -c root create-config /
-btrfs subvolume delete /.snapshots
-mkdir /.snapshots
-mount -a
-chmod 750 /.snapshots
+sudo umount /.snapshots
+sudo rm -r /.snapshots
+sudo snapper --no-dbus -c root create-config /
+sudo btrfs subvolume delete /.snapshots
+sudo mkdir /.snapshots
+sudo mount -a
+sudo chmod 750 /.snapshots
 
-grub-mkconfig -o /boot/grub/grub.cfg
+sudo grub-mkconfig -o /boot/grub/grub.cfg
 
 
 
