@@ -58,6 +58,7 @@ bind "set completion-ignore-case on"
   alias cdcm='chezmoi cd'
   alias yay='yay --color auto'
   alias v='nvim'
+  alias screenoff='xset dpms force off'
 
 
 ############################################################################################
