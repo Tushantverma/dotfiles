@@ -2,6 +2,28 @@
 
 sudo pacman -Sy --noconfirm --needed snapper btrfs-assistant
 
+sudo mkdir /.snapshots/1
+sudo btrfs subvolume create /.snapshots/1/snapshot
+
+
+NOW=$(date +"%Y-%m-%d %H:%M:%S")
+
+sudo echo "
+<?xml version="1.0"?>
+<snapshot>
+	<type>single</type>
+	<num>1</num>
+	<date>$NOW</date>
+	<description>First Root Filesystem Created at Installation</description>
+</snapshot>
+
+" > /.snapshots/1/info.xml
+
+sudo btrfs subvolume set-default $(btrfs subvolume list /mnt | grep "@/.snapshots/1/snapshot" | grep -oP '(?<=ID )[0-9]+') /
+
+
+
+
 sudo umount /.snapshots
 sudo rm -r /.snapshots
 sudo snapper --no-dbus -c root create-config /
@@ -9,7 +31,6 @@ sudo btrfs subvolume delete /.snapshots
 sudo mkdir /.snapshots
 sudo mount -a
 sudo chmod 750 /.snapshots
-
 sudo grub-mkconfig -o /boot/grub/grub.cfg
 
 
@@ -22,32 +43,15 @@ sudo grub-mkconfig -o /boot/grub/grub.cfg
 
 
 
+# sudo umount /.snapshots
+# sudo rm -r /.snapshots
+# sudo snapper --no-dbus -c root create-config /
+# sudo btrfs subvolume delete /.snapshots
+# sudo mkdir /.snapshots
+# sudo mount -a
+# sudo chmod 750 /.snapshots
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# sudo grub-mkconfig -o /boot/grub/grub.cfg
 
 
 
