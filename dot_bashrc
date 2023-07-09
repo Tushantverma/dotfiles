@@ -49,7 +49,7 @@ bind "set completion-ignore-case on"
   alias dd='cd ~/Downloads'
   alias premove='sudo pacman -Rcns'
   alias pinstall='sudo pacman -S --noconfirm'
-  alias cat='cat -n'   #this command can give the issue maybe any error on terminal
+  # alias cat='cat -n'   #this command can give the issue maybe any error on terminal
   alias tree='tree -AC' #install tree before using this command
   alias tterminal="sed -i 's/BackgroundDarkness=*.*/BackgroundDarkness=0.8/' ~/.config/xfce4/terminal/terminalrc"
   alias bterminal="sed -i 's/BackgroundDarkness=*.*/BackgroundDarkness=1.0/' ~/.config/xfce4/terminal/terminalrc"
