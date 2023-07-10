@@ -27,13 +27,14 @@ esac
 
 
 echo "###########################################################################"
-echo "##      This script will install virtualbox       					   ##"
+echo "##              This script will install virtualbox                      ##"
 echo "###########################################################################"
 
 sudo pacman -Syyy
 sudo pacman -S --noconfirm --needed $installpkg
 sudo pacman -S --noconfirm --needed virtualbox
-sudo pacman -S --needed virtualbox-host-dkms
+sudo pacman -S --noconfirm --needed virtualbox-host-dkms
+sudo pacman -S --noconfirm --needed xdotool  ## auto type from clipboard
 
 echo "###########################################################################"
 echo "##      Removing all the messages virtualbox produces                    ##"
