@@ -95,7 +95,7 @@ super + F1
     yt-dlp -o - $(xclip -o) | mpv --fullscreen -
 
 super + F2
-    xdotool type "$(xclip -o -selection clipboard)"
+    sleep 5 ; xdotool type "$(xclip -o -selection clipboard)"
 
 super + F11
     killall chadwm
