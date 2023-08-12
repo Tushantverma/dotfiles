@@ -14,7 +14,7 @@ NOW=$(date +"%Y-%m-%d %H:%M:%S")
 
 
 # setup first dummy snapshot #
-################ every little space + new_line dose matter otherwise your first snapshot will now be created ####################
+################ every little space + new_line dose matter otherwise your first snapshot will not be created there ####################
 echo "<?xml version=\"1.0\"?>
 <snapshot>
 	<type>single</type>
@@ -22,7 +22,7 @@ echo "<?xml version=\"1.0\"?>
 	<date>$NOW</date>
 	<description>First Root Filesystem Created at Installation</description>
 </snapshot> " > /.snapshots/1/info.xml
-#################################################################################################################################
+########################################################################################################################################
 
 # set the default subvolume
 btrfs subvolume set-default $(btrfs su li / | grep @.snapshots/1/snapshot | grep -oP '(?<=ID )[0-9]+') /
@@ -36,7 +36,7 @@ btrfs subvolume delete /.snapshots
 mkdir /.snapshots
 mount -a
 chmod 750 /.snapshots
-grub-mkconfig -o /boot/grub/grub.cfg  #IDK needed this line or not
+grub-mkconfig -o /boot/grub/grub.cfg  #to update grub-btrfs (grub snapshot menu)
 
 
 
