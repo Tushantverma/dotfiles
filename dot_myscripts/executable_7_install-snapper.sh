@@ -1,38 +1,43 @@
 #!/bin/bash
 
-sudo pacman -Sy --noconfirm --needed snapper btrfs-assistant
-
-sudo mkdir /.snapshots/1
-sudo btrfs subvolume create /.snapshots/1/snapshot
+# run the whole script as root 
+[ "$EUID" -ne 0 ] && echo "This script requires root privileges." && exec sudo sh "$0" "$@"; 
 
 
-#NOW=$(date +"%Y-%m-%d %H:%M:%S")
+pacman -Sy --noconfirm --needed snapper btrfs-assistant
 
-#sudo echo "
-#<?xml version="1.0"?>
-#<snapshot>
-#	<type>single</type>
-#	<num>1</num>
-#	<date>$NOW</date>
-#	<description>First Root Filesystem Created at Installation</description>
-#</snapshot>
-
-#" > /.snapshots/1/info.xml
-
-#sudo btrfs subvolume set-default $(btrfs subvolume list /mnt | grep "@/.snapshots/1/snapshot" | grep -oP '(?<=ID )[0-9]+') /
+mkdir /.snapshots/1
+btrfs subvolume create /.snapshots/1/snapshot
 
 
+NOW=$(date +"%Y-%m-%d %H:%M:%S")
 
 
-sudo umount /.snapshots
-sudo rm -r /.snapshots
-sudo snapper --no-dbus -c root create-config /
-sudo btrfs subvolume delete /.snapshots
-sudo mkdir /.snapshots
-sudo mount -a
-sudo chmod 750 /.snapshots
-sleep 5
-sudo grub-mkconfig -o /boot/grub/grub.cfg
+# setup first dummy snapshot
+echo -n"
+<?xml version=\"1.0\"?>
+<snapshot>
+	<type>single</type>
+	<num>1</num>
+	<date>$NOW</date>
+	<description>First Root Filesystem Created at Installation</description>
+</snapshot> " > /.snapshots/1/info.xml
+
+
+# set the default subvolume
+btrfs subvolume set-default $(btrfs su li / | grep @.snapshots/1/snapshot | grep -oP '(?<=ID )[0-9]+') /
+
+
+# setting up snapper
+umount /.snapshots
+rm -r /.snapshots
+snapper --no-dbus -c root create-config /
+btrfs subvolume delete /.snapshots
+mkdir /.snapshots
+mount -a
+chmod 750 /.snapshots
+sleep 1
+grub-mkconfig -o /boot/grub/grub.cfg
 
 
 
