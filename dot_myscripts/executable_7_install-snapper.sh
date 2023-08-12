@@ -13,16 +13,16 @@ btrfs subvolume create /.snapshots/1/snapshot
 NOW=$(date +"%Y-%m-%d %H:%M:%S")
 
 
-# setup first dummy snapshot
-echo -n"
-<?xml version=\"1.0\"?>
+# setup first dummy snapshot #
+################ every little space + new_line dose matter otherwise your first snapshot will now be created ####################
+echo "<?xml version=\"1.0\"?>
 <snapshot>
 	<type>single</type>
 	<num>1</num>
 	<date>$NOW</date>
 	<description>First Root Filesystem Created at Installation</description>
 </snapshot> " > /.snapshots/1/info.xml
-
+#################################################################################################################################
 
 # set the default subvolume
 btrfs subvolume set-default $(btrfs su li / | grep @.snapshots/1/snapshot | grep -oP '(?<=ID )[0-9]+') /
@@ -36,8 +36,7 @@ btrfs subvolume delete /.snapshots
 mkdir /.snapshots
 mount -a
 chmod 750 /.snapshots
-sleep 1
-grub-mkconfig -o /boot/grub/grub.cfg
+grub-mkconfig -o /boot/grub/grub.cfg  #IDK needed this line or not
 
 
 
