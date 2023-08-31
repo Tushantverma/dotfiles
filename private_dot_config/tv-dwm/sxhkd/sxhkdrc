@@ -92,7 +92,8 @@ XF86AudioMicMute
 
 
 super + F1
-    yt-dlp -o - $(xclip -o) | mpv --fullscreen -
+    yt-dlp --restrict-filenames -o '/tmp/%(title)s.%(ext)s' -f 'bestvideo[height<=720]+bestaudio/best[height<=720]' $(xclip -o) && mpv --fullscreen "$(yt-dlp --restrict-filenames -o '/tmp/%(title)s.%(ext)s' -f 'bestvideo[height<=720]+bestaudio/best[height<=720]' --get-filename $(xclip -o))"
+#   yt-dlp -o - $(xclip -o) | mpv --fullscreen -
 
 super + F2
     sleep 5 ; xdotool type "$(xclip -o -selection clipboard)"
