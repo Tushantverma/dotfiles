@@ -44,14 +44,15 @@ edit_csvfile() {
 	read -p "Enter the entry number: " entry_number
 
 	# show selected line only
-	awk -F',' -v serial="$entry_number" '$1 == serial { print }' $csv_file
+	# awk -F',' -v serial="$entry_number" '$1 == serial { print }' $csv_file  # (for backup)
+	awk -F',' -v serial="$entry_number" '$1 == serial' $csv_file | column -t -s "," -o '  | '
 
 	read -p "Enter the new comment: " new_comment
 
 	# change the enter in the file
 	awk -v entry="$entry_number" -v comment="$new_comment" -F',' '
 	    BEGIN { OFS = FS }
-	    $1 == entry { $3 = comment }
+	    $1 == entry { $4 = comment }
 	    { print }
 	' "$csv_file" > tmpfile && mv tmpfile "$csv_file"
 
@@ -79,7 +80,7 @@ create_snapshot() {
 
 	# creating snapshot one by one in for-loop
 	for my_subvol in "${subvolume_name[@]}"; do
-		btrfs subvolume snapshot -r $mounted_snap_dir/$my_subvol $mounted_snap_dir/@.snapshots/$dateDirName/$my_subvol
+		btrfs subvolume snapshot -r $mounted_snap_dir/$my_subvol $mounted_snap_dir/@.snapshots/$dateDirName/$my_subvol > /dev/null
 	done
 
 	# serial Number for CSV file  ## last line number +1
@@ -92,11 +93,14 @@ create_snapshot() {
 	echo "$serialNumber,$dateDirName,$real_subvols,$comment,"             >> $mounted_snap_dir/@.snapshots/info.csv
 
 	# if there is only one line in the info.csv file after creating the snapshot  (add <<< I'm here) there
-	[ $serialNumber -eq 2 ] && sed -i '2s/$/ <<< I'\''m here,/' "$mounted_snap_dir/@.snapshots/info.csv"
+	[ $serialNumber -eq 1 ] && sed -i '2s/$/ <<< I'\''m here/' "$mounted_snap_dir/@.snapshots/info.csv"
 
 
 	# list snapshots info.csv
 	cat $mounted_snap_dir/@.snapshots/info.csv | column -t -s "," -o '  |  '
+
+	# update grub config
+	grub-mkconfig -o /boot/grub/grub.cfg > /dev/null
 
 	# message on terminal
 	tput setaf 2    # Set text color to green
@@ -120,20 +124,20 @@ delete_snapshot() {
 	# Convert the subvolume_name string to an array
 	# local selected_subvolumes=($del_snap) ### added -a at read time
 
-	# this file will be removed automatically after reboot
-	local live_system_snapshot=$(cat /tmp/reboot_now)
+	# if the file exist then assing the file value in variable otherwise assign null 
+	[ -e "/tmp/reboot_now" ] && local live_system_snapshot=$(cat /tmp/reboot_now) || live_system_snapshot="null"
 
 	# creating snapshot one by one in for-loop
 	for my_subvol in "${del_snap[@]}"; do
 
 		# Find the directoryName (datedir) where first column == my_subvol
-		local snapshot_dir_Name=(awk -F ',' -v var="$my_subvol" '$1 == var { print $2 }' $mounted_snap_dir/@.snapshots/info.csv)
+		local snapshot_dir_Name=$(awk -F ',' -v var="$my_subvol" '$1 == var { print $2 }' $mounted_snap_dir/@.snapshots/info.csv)
 
 		# protacting system to delete live mounted current snapshot
-		[ "$snapshot_dir_Name" -eq "$live_system_snapshot" ] && { echo "Please Reboot to delete LIVE snapshot number : $my_subvol "; continue; } || :
+		[ "$snapshot_dir_Name" == "$live_system_snapshot" ] && { echo "Please Reboot to delete LIVE snapshot number : $my_subvol "; continue; } || :
 
 		# delete that selected snapshots
-		btrfs subvolume delete $mounted_snap_dir/@.snapshots/$snapshot_dir_Name/*
+		btrfs subvolume delete $mounted_snap_dir/@.snapshots/$snapshot_dir_Name/*  > /dev/null
 
 		# delete that directory also rmdir /snapsdir
 		rmdir $mounted_snap_dir/@.snapshots/$snapshot_dir_Name
@@ -145,6 +149,10 @@ delete_snapshot() {
 
 	# list snapshots info.csv
 	cat $mounted_snap_dir/@.snapshots/info.csv | column -t -s "," -o '  |  '
+
+
+	# update grub config
+	grub-mkconfig -o /boot/grub/grub.cfg > /dev/null
 
 	# message on terminal
 	tput setaf 2    # Set text color to green
@@ -165,7 +173,7 @@ rollback_snapshot() {
 	read -p "Enter Snapshot number to rollback : "  rollback_number
 
 	# Find the directoryName (datedir) where first column == rollback_number 
-	local snapshot_dir_Name=(awk -F ',' -v var="$rollback_number" '$1 == var { print $2 }' $mounted_snap_dir/@.snapshots/info.csv)
+	local snapshot_dir_Name=$(awk -F ',' -v var="$rollback_number" '$1 == var { print $2 }' $mounted_snap_dir/@.snapshots/info.csv)
 
 	# actual snapshot subvolume available 
 	ls $mounted_snap_dir/@.snapshots/$snapshot_dir_Name/
@@ -213,7 +221,7 @@ rollback_snapshot() {
 	for all_rollback_subvol in "${rollback_subvol[@]}"; do
 
 		# creating read-write snapshot form read-only
-		btrfs subvolume snapshot $mounted_snap_dir/@.snapshots/$snapshot_dir_Name/$all_rollback_subvol $mounted_snap_dir/$all_rollback_subvol
+		btrfs subvolume snapshot $mounted_snap_dir/@.snapshots/$snapshot_dir_Name/$all_rollback_subvol $mounted_snap_dir/$all_rollback_subvol > /dev/null
 
 	done
 
@@ -228,6 +236,9 @@ rollback_snapshot() {
 
 	# list snapshots info.csv
 	cat $mounted_snap_dir/@.snapshots/info.csv | column -t -s "," -o '  |  '
+
+	# update grub config
+	grub-mkconfig -o /boot/grub/grub.cfg > /dev/null
 
 	# message on terminal
 	tput setaf 2    # Set text color to green
