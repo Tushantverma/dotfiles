@@ -79,7 +79,7 @@ create_snapshot() {
 
 	# creating snapshot one by one in for-loop
 	for my_subvol in "${subvolume_name[@]}"; do
-		btrfs subvolume snaphsot -r $mounted_snap_dir/$my_subvol $mounted_snap_dir/@.snapshots/$dateDirName/$my_subvol
+		btrfs subvolume snapshot -r $mounted_snap_dir/$my_subvol $mounted_snap_dir/@.snapshots/$dateDirName/$my_subvol
 	done
 
 	# serial Number for CSV file  ## last line number +1
@@ -213,7 +213,7 @@ rollback_snapshot() {
 	for all_rollback_subvol in "${rollback_subvol[@]}"; do
 
 		# creating read-write snapshot form read-only
-		btrfs subvolume snaphsot $mounted_snap_dir/@.snapshots/$snapshot_dir_Name/$all_rollback_subvol $mounted_snap_dir/$all_rollback_subvol
+		btrfs subvolume snapshot $mounted_snap_dir/@.snapshots/$snapshot_dir_Name/$all_rollback_subvol $mounted_snap_dir/$all_rollback_subvol
 
 	done
 
@@ -241,18 +241,17 @@ rollback_snapshot() {
 
 
 
-while true; do
 
-    case $1 in
-    	edit    )    edit_csvfile  ;;
-    	list    )   list_snapshot  ;;
-        create  )  create_snapshot ;;
-        delete  )  delete_snapshot ;;
-		rollback) rollback_snapshot;;
-        *) echo "Invalid option"   ;;
-    esac
 
-done
+case $1 in
+	edit    )    edit_csvfile  ;;
+	list    )   list_snapshot  ;;
+	create  )  create_snapshot ;;
+	delete  )  delete_snapshot ;;
+	rollback) rollback_snapshot;;
+	*) echo "Invalid option"   ;;
+esac
+
 
 
 
