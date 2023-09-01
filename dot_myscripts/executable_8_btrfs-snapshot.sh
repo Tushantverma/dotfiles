@@ -86,7 +86,7 @@ create_snapshot() {
 	local serialNumber=$(awk -F',' '/[^[:space:]]/ {last=$1} END {last += 1; print last}' $mounted_snap_dir/@.snapshots/info.csv)
 
 	# present subvolume inside new snapshot directory
-	local real_subvols=$(ls $mounted_snap_dir/@.snapshots/$dateDirName)
+	local real_subvols=$(ls -1 $mounted_snap_dir/@.snapshots/$dateDirName | tr '\n' ' ')
 
 	# setting up CSV file for logs
 	echo "$serialNumber,$dateDirName,$real_subvols,$comment,"             >> $mounted_snap_dir/@.snapshots/info.csv
@@ -201,7 +201,7 @@ rollback_snapshot() {
 	local serialNumber=$(awk -F',' '/[^[:space:]]/ {last=$1} END {last += 1; print last}' $mounted_snap_dir/@.snapshots/info.csv)
 
 	# present subvolume inside new snapshot directory
-	local real_subvols=$(ls $mounted_snap_dir/@.snapshots/$dateDirName)
+	local real_subvols=$(ls -1 $mounted_snap_dir/@.snapshots/$dateDirName | tr '\n' ' ')
 
 	local comment="[ LIVE ] Before Restoring $snapshot_dir_Name "   ################################ this would be the live system dont delete this snapshot
 	# setting up CSV file for logs
