@@ -93,14 +93,11 @@ create_snapshot() {
 	echo "$serialNumber,$dateDirName,$real_subvols,$comment,"             >> $mounted_snap_dir/@.snapshots/info.csv
 
 	# if there is only one line in the info.csv file after creating the snapshot  (add <<< I'm here) there
-	[ $serialNumber -eq 1 ] && sed -i '2s/$/ <<< I'\''m here/' "$mounted_snap_dir/@.snapshots/info.csv"
+	[ $serialNumber -eq 1 ] && sed -i "2s/$/<<< I'm here/" "$mounted_snap_dir/@.snapshots/info.csv"
 
 
 	# list snapshots info.csv
 	cat $mounted_snap_dir/@.snapshots/info.csv | column -t -s "," -o '  |  '
-
-	# update grub config
-	grub-mkconfig -o /boot/grub/grub.cfg > /dev/null
 
 	# message on terminal
 	tput setaf 2    # Set text color to green
@@ -125,7 +122,7 @@ delete_snapshot() {
 	# local selected_subvolumes=($del_snap) ### added -a at read time
 
 	# if the file exist then assing the file value in variable otherwise assign null 
-	[ -e "/tmp/reboot_now" ] && local live_system_snapshot=$(cat /tmp/reboot_now) || live_system_snapshot="null"
+	[ -e "/tmp/reboot_now" ] && local live_system_snapshot=$(cat /tmp/reboot_now) || local live_system_snapshot="null"
 
 	# creating snapshot one by one in for-loop
 	for my_subvol in "${del_snap[@]}"; do
@@ -134,8 +131,8 @@ delete_snapshot() {
 		local snapshot_dir_Name=$(awk -F ',' -v var="$my_subvol" '$1 == var { print $2 }' $mounted_snap_dir/@.snapshots/info.csv)
 
 		# protacting system to delete live mounted current snapshot
-		[ "$snapshot_dir_Name" == "$live_system_snapshot" ] && { echo "Please Reboot to delete LIVE snapshot number : $my_subvol "; continue; } || :
-
+		[ "$snapshot_dir_Name" == "$live_system_snapshot" ] && { echo "$(tput setaf 1)Please Reboot to delete LIVE snapshot number $my_subvol $(tput sgr0)"; continue; } || :
+	
 		# delete that selected snapshots
 		btrfs subvolume delete $mounted_snap_dir/@.snapshots/$snapshot_dir_Name/*  > /dev/null
 
@@ -150,9 +147,6 @@ delete_snapshot() {
 	# list snapshots info.csv
 	cat $mounted_snap_dir/@.snapshots/info.csv | column -t -s "," -o '  |  '
 
-
-	# update grub config
-	grub-mkconfig -o /boot/grub/grub.cfg > /dev/null
 
 	# message on terminal
 	tput setaf 2    # Set text color to green
@@ -229,16 +223,13 @@ rollback_snapshot() {
 	## setting up csv file for rolling back to above previous snapshot #######################
 
 	# removing privious "I'm here" Message form complete info.csv file
-	sed -i 's/,<<< I'"'"'m here//' $mounted_snap_dir/@.snapshots/info.csv
+	sed -i "s/<<< I'm here//" $mounted_snap_dir/@.snapshots/info.csv
 
 	# added "I'm here" Message for crrent system snapshot
-	sed -i "/,$snapshot_dir_Name,/ s/\$/,<<< I'm here/" $mounted_snap_dir/@.snapshots/info.csv
+	sed -i "/,$snapshot_dir_Name,/ s/\$/<<< I'm here/" $mounted_snap_dir/@.snapshots/info.csv
 
 	# list snapshots info.csv
 	cat $mounted_snap_dir/@.snapshots/info.csv | column -t -s "," -o '  |  '
-
-	# update grub config
-	grub-mkconfig -o /boot/grub/grub.cfg > /dev/null
 
 	# message on terminal
 	tput setaf 2    # Set text color to green
@@ -277,6 +268,9 @@ umount $mounted_snap_dir
 [ -e "$mounted_snap_dir" ] && rmdir $mounted_snap_dir
 
 
+
+# update grub config
+grub-mkconfig -o /boot/grub/grub.cfg  &>/dev/null &
 
 
 
@@ -330,6 +324,12 @@ umount $mounted_snap_dir
 # can i take one master snapshot
 # .......take read-write one complete snapshot
 # ...... add entry to grub for snapshot and it's discription
+
+
+# command > /dev/null		(This redirects the standard output (stdout) of the command to /dev/null, effectively discarding the output.)
+# command 2> /dev/null	(If you also want to discard error messages (standard error or stderr), you can use 2>)
+# command &> /dev/null	(To discard both stdout and stderr in a bash shell, you can use &>)
+# command &> /dev/null &	((To discard both stdout and stderr without occupying time on terminal run in background)
 
 
 # some links 
