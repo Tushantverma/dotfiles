@@ -3,8 +3,9 @@
 # run the whole script as root 
 [ "$EUID" -ne 0 ] && echo "This script requires root privileges." && exec sudo sh "$0" "$@"; 
 
-# # current system partition /dev/sdX#
-current_subvolume_partition=$(df --output=source / | tail -1)
+# current_subvolume_partition="/dev/sdX#"              # <<< Mount Here 
+current_subvolume_partition=$(df -Th | grep btrfs | awk '{print $1}' | sort -u)
+[ $(echo $current_subvolume_partition | wc -w) -gt 1 ] && { echo "$(tput setaf 1)Multiple Btrfs partitions detected __PLEASE_MOUNT_MANUALLY__$(tput sgr0)"; exit 1; }
 
 # snapshot directory with random
 mounted_snap_dir="/run/snapshot_dir/"$RANDOM
@@ -38,6 +39,9 @@ list_snapshot() {
 
 edit_csvfile() {
 
+	# list snapshots info.csv
+	cat $mounted_snap_dir/@.snapshots/info.csv | column -t -s "," -o '  |  '
+
 	# file path
 	csv_file=$mounted_snap_dir/@.snapshots/info.csv
 
@@ -66,7 +70,7 @@ edit_csvfile() {
 
 create_snapshot() {
 	ls $mounted_snap_dir
-	read -p "Enter subvolume name Seprate it by space : " -a subvolume_name
+	read -p "Enter subvolume name (space-separated) : " -a subvolume_name
 	read -p "Enter comment for snapshot: "                comment
 
 	# directory name inside @.snapshots
@@ -116,7 +120,7 @@ delete_snapshot() {
 	# list snapshots info.csv
 	cat $mounted_snap_dir/@.snapshots/info.csv | column -t -s "," -o '  |  '
 
-	read -p "Enter Snapshot number to Delete Seprate it by space : " -a del_snap
+	read -p "Enter Snapshot number to Delete (space-separated) : " -a del_snap
 
 	# Convert the subvolume_name string to an array
 	# local selected_subvolumes=($del_snap) ### added -a at read time
@@ -172,7 +176,7 @@ rollback_snapshot() {
 	# actual snapshot subvolume available 
 	ls $mounted_snap_dir/@.snapshots/$snapshot_dir_Name/
 
-	read -p "Enter Snapshot subvolume to rollback seprate by space : "  -a rollback_subvol
+	read -p "Enter Snapshot subvolume to rollback (space-separated) : "  -a rollback_subvol
 
 
 	# taking current system snapshot #########################################################################
@@ -195,7 +199,8 @@ rollback_snapshot() {
 	done
 
 	# protecting current mounted subvolume form deletion (if this file exist that means system is not rebooted yet so don't delete this snapshot for mount protection)
-	echo "$dateDirName" > /tmp/reboot_now
+	# if the file present that means i have just rollbacked and if the file is not present then make it to prevent deleting mounted subvolume
+	[ -e "/tmp/reboot_now" ] && echo "$(tput setaf 1)your System is still mounted to previous snapshots$(tput sgr0)" || echo "$dateDirName" > /tmp/reboot_now
 
 	## setting up csv file for taking above snapshot #######################
 
@@ -242,20 +247,29 @@ rollback_snapshot() {
 
 
 
+while true; do
 
 
+tput setaf 3 # applying yellow
+echo "edit list create delete rollback exit"
+tput sgr0  # reset
 
-case $1 in
-	edit    )    edit_csvfile  ;;
-	list    )   list_snapshot  ;;
-	create  )  create_snapshot ;;
-	delete  )  delete_snapshot ;;
-	rollback) rollback_snapshot;;
-	*) echo "Invalid option"   ;;
-esac
+read -p "command : " entry1
+clear
+  
+
+	case $entry1 in
+		edit    )    edit_csvfile  ;;
+		list    )   list_snapshot  ;;
+		create  )  create_snapshot ;;
+		delete  )  delete_snapshot ;;
+		rollback) rollback_snapshot;;
+		exit    )      break       ;;
+		*) echo "Invalid option"   ;;
+	esac
 
 
-
+done
 
 
 
@@ -268,13 +282,12 @@ umount $mounted_snap_dir
 [ -e "$mounted_snap_dir" ] && rmdir $mounted_snap_dir
 
 
-
 # update grub config
 grub-mkconfig -o /boot/grub/grub.cfg  &>/dev/null &
 
-
-
-
+tput setaf 5 # magenta
+echo "#--------------SCRIPT_ENDED--------------#"
+tput sgr0    # reset
 
 
 
