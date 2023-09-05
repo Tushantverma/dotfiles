@@ -1,36 +1,29 @@
 #!/bin/bash
 
-# run the whole script as root 
-[ "$EUID" -ne 0 ] && echo "This script requires root privileges." && exec sudo sh "$0" "$@"; 
-
-
 
 directoryy="/etc/systemd/system/getty@tty1.service.d"
-
 
 
 # Function to configure auto-login
 configure_autologin() {
 
+  # if directory dose not exist then create
+  [ ! -e "$directoryy" ] && sudo mkdir -p $directoryy || { echo "$(tput setaf 1)auto login already configured$(tput sgr0)" ; exit 1 ; }
+
   read -p "Enter Username (Enter nothing for Current User): " username
 
   # if empty input then assing current username if non empty then assing entered username
-  [ -z "$username" ] && { current_user=$(whoami) ; echo "Current user: $current_user" ; } || echo "You entered: $username"
-
-
-  # if directory dose not exist then create
-  [ ! -e "$directoryy" ] && mkdir -p $directoryy
+  [ -z "$username" ] && { current_user=$(whoami) ; echo "Current user: $current_user" ; } || { current_user=$(username) ; echo "You entered: $username" ; }
 
 
   echo "
   [Service] 
   ExecStart= 
-  ExecStart=-/sbin/agetty -o '-p -f -- \\u' --noclear --autologin $username %I $TERM" > $directoryy/autologin.conf
+  ExecStart=-/sbin/agetty -o '-p -f -- \\u' --noclear --autologin $current_user %I $TERM" | sudo tee $directoryy/autologin.conf >/dev/null
 
+  # sudo systemctl enable getty@tty1.service (it always in running)
 
-  # systemctl enable getty@tty1.service (it always in running)
-
-  echo "Auto-login for user '$username' has been configured."
+  echo "Auto-login for user '$current_user' has been configured."
 
 }
 
@@ -41,9 +34,10 @@ configure_autologin() {
 # Function to remove auto-login
 remove_autologin() {
 
-  rm -rf $directoryy
+  
+  [ -e "$directoryy" ] && sudo rm -rf $directoryy || { echo "$(tput setaf 1)auto login already removed$(tput sgr0)" ; exit 1 ; }
 
-  # systemctl disable getty@tty1.service (it always in running)
+  # sudo systemctl disable getty@tty1.service (it always in running)
   echo "Auto-login configuration has been removed."
 
 }
@@ -53,19 +47,17 @@ remove_autologin() {
 
 
 
-
 # Main script
-while true; do
-  read -p "add remove exit: " action
+
+echo "Enter a command :( add / remove )"
+  read -p "command : " action
 
   case "$action" in
     "add") configure_autologin ;;
     "remove") remove_autologin ;;
-    "exit")    exit 0 ;;
      * ) echo "Invalid Input"  ;;
-  esac
+esac
 
-done
 
 
 
@@ -74,8 +66,6 @@ done
 tput setaf 5 # magenta
 echo "#--------------SCRIPT_ENDED--------------#"
 tput sgr0    # reset
-
-
 
 
 # source
