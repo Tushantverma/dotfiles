@@ -49,9 +49,7 @@ mount $current_subvolume_partition $mounted_snap_dir
 #---COMMENT THIS OR ------------------------------ Adding Snapshots in NEW Subvolume -------------------------------------------------#
 
 # if the @zSnapshots dosent exist then create it  # this subvolume should not be mounted all the time in the file system for Safety Reasons # all snapshots will go in this subvolume
-[ ! -d "$mounted_snap_dir/@zSnapshots" ] && { 
-	btrfs subvolume create "$mounted_snap_dir/@zSnapshots" >/dev/null &     # if billow csv file is not creating (around line 73) that means billow command is executing first before creation of the @zSnapshots subvolume in that case remove "&" so that script will wait untill this line execution will be ended
-	echo "$(tput setaf 2)Subvolume @zSnapshots created to store snapshots.$(tput sgr0)" ; }
+[ ! -d "$mounted_snap_dir/@zSnapshots" ] && { btrfs subvolume create "$mounted_snap_dir/@zSnapshots" >/dev/null ; echo "$(tput setaf 2)Subvolume @zSnapshots created to store snapshots.$(tput sgr0)" ; }
 
 # snapshot subvolume (all snapshot will go in this subvolume)
 at____snapshots="@zSnapshots"                        # <<< Assign here
