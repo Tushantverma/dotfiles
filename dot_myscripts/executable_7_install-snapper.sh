@@ -4,6 +4,38 @@
 [ "$EUID" -ne 0 ] && echo "This script requires root privileges." && exec sudo sh "$0" "$@"; 
 
 
+#-----------------------------------  Setting up @.Snapshots subvolume --------------------------------------#
+
+# Check if the @.snapshots subvolume dosen't exists then execute billow code
+if ! sudo btrfs subvolume list / | grep -q '@.snapshots'; then       
+
+tput setaf 2; tput bold;   # color dark blue
+echo "creating @.snapshots because it dosen't exist"
+tput sgr0                  # color reset
+
+# if this directory dosen't exist then create it
+[ ! -d "/.snapshots" ] && mkdir /.snapshots
+
+# creating top level 5 subvolume
+current_disk_partition=$(df --output=source / | tail -1) # /dev/sdX#
+mount $current_disk_partition /.snapshots
+btrfs subvolume create /.snapshots/@.snapshots 
+umount /.snapshots
+
+# mount subvolume on current system
+mountpoint="rw,noatime,compress=zstd:3,discard=async,space_cache=v2,autodefrag,commit=120"
+mount -o "$mountpoint","subvol=/@.snapshots"   $current_disk_partition /.snapshots
+
+# add mount entery in fstab to automatically mount @.snapshots after boot
+myUUID=$(blkid $current_disk_partition -s UUID -o value)
+
+echo "# $current_disk_partition
+UUID=$myUUID	/.snapshots	btrfs     	$mountpoint,subvol=/@.snapshots	0 0" >> /etc/fstab
+
+fi
+#------------------------------------------------------------------------------------------------------------#
+
+
 pacman -Sy --noconfirm --needed snapper btrfs-assistant
 
 mkdir /.snapshots/1
@@ -34,9 +66,9 @@ rm -r /.snapshots
 snapper --no-dbus -c root create-config /
 btrfs subvolume delete /.snapshots
 mkdir /.snapshots
-mount -a
+mount -a  ## this will mount only those entery which is configured in /etc/fstab
 chmod 750 /.snapshots
-grub-mkconfig -o /boot/grub/grub.cfg  #to update grub-btrfs (grub snapshot menu)
+grub-mkconfig -o /boot/grub/grub.cfg &>/dev/null & #to update grub-btrfs (grub snapshot menu)
 
 
 
