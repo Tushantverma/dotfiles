@@ -14,8 +14,8 @@ cleanup_on_interrupt() {
 	# [ -z "$(find "$mounted_snap_dir/@zSnapshots"/ -mindepth 1 -type d)" ] && {  btrfs subvolume delete "$mounted_snap_dir/@zSnapshots" >/dev/null ; echo "$(tput setaf 1)  Subvolume @zSnapshots Deleted because NO snapshot exist$(tput sgr0)" ; }
 	[ -z "$(ls -d "$mounted_snap_dir/@zSnapshots"/*/ 2>/dev/null)" ] && {  btrfs subvolume delete "$mounted_snap_dir/@zSnapshots" >/dev/null ; echo "$(tput setaf 1)  Subvolume @zSnapshots Deleted because NO snapshot exist$(tput sgr0)" ; }
 
-	# unmount the mounted directory (--lazy option will umount forcefully. Be cautious when using this option, as it can lead to data corruption if files are being actively written or read. )
-	umount --lazy $mounted_snap_dir (--lazy = -l )
+	# unmount the mounted directory #(--lazy option will umount forcefully. Be cautious when using this option, as it can lead to data corruption if files are being actively written or read. )
+	umount --lazy $mounted_snap_dir #(--lazy = -l )
 
 	# delete the $RANDOM directory
 	[ -e "$mounted_snap_dir" ] && rmdir $mounted_snap_dir

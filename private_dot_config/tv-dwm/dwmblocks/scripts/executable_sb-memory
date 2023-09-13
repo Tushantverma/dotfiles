@@ -19,5 +19,8 @@ case $BLOCK_BUTTON in
 esac
 
 
-printf "  ^c$color^ $(free -h | awk '/^Mem/ { print $3 }' | sed s/i//g)"
+# usedMemory = MemTotal - MemAvailable ( currentlly used by 'free' and 'top' command) form #/proc/meminfo
+# printf "  ^c$color^ $(free -h | awk '/^Mem/ { print $3 }' | sed s/i//g)"
 
+# usedMemory = MemTotal - MemFree - Buffers - Cached - SReclaimable ( previously used by 'free' and 'top' command) form #/proc/meminfo
+printf "  ^c$color^ $(printf "$(($(awk '/^(MemTotal|MemFree|Buffers|Cached|SReclaimable)/ { printf "%s-", $2 } END { printf "\n" }' /proc/meminfo | sed 's/-$//')))" | awk '{if ($1<1024*1024) printf "%.fM\n", $1/1024; else printf "%.1fG\n", $1/1024/1024}')"
