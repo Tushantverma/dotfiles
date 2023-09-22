@@ -45,7 +45,7 @@ bind "set completion-ignore-case on"
 #Tushant_Aliases
   alias c='clear'
   alias x='exit'
-  alias d='cd ~/Desktop'
+  alias d='[ -d ~/work ] || mkdir ~/work && cd ~/work' # if directory exist then just cd and if it dosent exist then mkdir and then cd both
   alias dd='cd ~/Downloads'
   alias premove='sudo pacman -Rcns'
   alias pinstall='sudo pacman -S --noconfirm'
@@ -60,7 +60,7 @@ bind "set completion-ignore-case on"
   alias yay='yay --color auto'
   alias v='nvim'
   alias screenoff='xset dpms force off'
-
+  alias sudo='sudo ' ##  If the last character of the alias is a 'space' or 'tab' character then the next word of the command is also checked for an alias (now you can run your aliases with sudo command | this way you can create one alias by using multiple aliases like [ alias new_alias='alias1 alias2 alias3' ])
 
 ############################################################################################
 ######################## functions (alias with spaces lol)##################################
