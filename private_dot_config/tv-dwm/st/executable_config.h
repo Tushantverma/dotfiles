@@ -430,10 +430,12 @@ static Key key[] = {
 	{ XK_Delete,        ControlMask,    "\033[3;5~",    +1,    0},
 	{ XK_Delete,        ShiftMask,      "\033[2K",      -1,    0},
 	{ XK_Delete,        ShiftMask,      "\033[3;2~",    +1,    0},
-	{ XK_Delete,        XK_ANY_MOD,     "\033[3~",       -1,    0}, //tushant patched delete key
+	{ XK_Delete,        XK_ANY_MOD,     "\033[3~",      -1,    0}, //tushant patched delete key
 	{ XK_Delete,        XK_ANY_MOD,     "\033[3~",      +1,    0},
-	{ XK_BackSpace,     XK_NO_MOD,      "\177",          0,    0},
-	{ XK_BackSpace,     Mod1Mask,       "\033\177",      0,    0},
+      //{ XK_BackSpace,     XK_NO_MOD,      "\177",          0,    0}, // (no-key-pressed + backspace) will return (^?) comment this line here so that it can be used in billow
+	{ XK_BackSpace,     Mod1Mask,       "\033\177",      0,    0}, // (alt + backspace) =  ^[^?        # can also delete the word backword
+	{ XK_BackSpace,     ControlMask,    "\b",            0,    0}, // (ctrl + backspace)=  ^H          # this is fixing ctrl + backspace so that it can return ^H key-code to the terminal (because it is used by every other terminal expect st )and that keycode can be use to map backward-delete-word functionality in the .bashrc/.zshrc (example: bindkey '^H' backward-delete-word )
+	{ XK_BackSpace,     XK_ANY_MOD,     "\177",          0,    0}, // (backspace + any-mod-key (alt,super,shift)) = ^?    (always define this in the last otherwise it will overwrite other backspace key functionality )   
 	{ XK_Home,          ShiftMask,      "\033[2J",       0,   -1},
 	{ XK_Home,          ShiftMask,      "\033[1;2H",     0,   +1},
 	{ XK_Home,          XK_ANY_MOD,     "\033[H",        0,   -1},
