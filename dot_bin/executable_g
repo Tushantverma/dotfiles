@@ -1,0 +1,304 @@
+#!/usr/bin/env bash
+
+commit(){
+	read -ep "Commit msg : "  msg
+	git add --all
+	git commit -m "$msg"
+}
+
+commitdt(){
+	echo -e "$(tput setaf 2) yesterday \n last monday \n 2 weeks ago \n 2023-10-15 04:30:00 PM \n after (for date after last commit) $(tput sgr0)"
+	while true; do
+		read -ep "Time for commit (default: now) : " time_in
+		time_out=$(         [ "$time_in" == "after" ] && { date --date="$(git log -1 --format="%cd" --date=iso) + 1 day 44 minutes" ; } || { [ -z "$time_in" ] && date --date="now" || date --date="$time_in" 2>&1 ; }       )
+		[ $? -eq 0 ] && { echo "$time_out <----------------<<<" ; break ; } || {  echo "Invalid Input" ; }  ## exception handling
+	done
+	export GIT_AUTHOR_DATE="$time_out"
+	export GIT_COMMITTER_DATE="$time_out"
+	commit
+
+}
+
+case $1 in
+    commitdt  )   commitdt                                       ;;
+	commit    )   commit                                         ;;
+
+	delhead   )   command git reset --hard HEAD~1                ;;  # it deletes the current HEAD~1 (use carefully)
+	forcepush )   command git push origin HEAD --force           ;;  # forcefully push the current HEAD of the current branch to github/gitlab ( use it after deleting the current head, for above command )
+
+	delchange )   command git reset --hard HEAD && git clean -df ;;  # delete all tracked "&&" untracked changes both  (Dont worry..!! it dose not delete current HEAD~1)
+	s         )   command git status                             ;;
+	l         )   command git log -n 3                           ;;  # show last 3 entery on git log
+	*         )   command git "$@"                               ;;  # run all git command with 'g'
+esac
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# # ------------------------------------------------------------------- learning -----------------------------------------------------------------------#
+
+# # you can only source the files. not variables but you can export variables only for current running session
+
+
+
+
+# # ------------ how to use quotes in bash. see example billow ---------------#
+# bash -c 'code '
+# NAME="John"
+# echo 'Single quotes: Hello $NAME'  # Outputs: Hello $NAME
+# echo "Double quotes: Hello $NAME"  # Outputs: Hello John
+# echo "Double quotes: Hello \$NAME" # Outputs: Hello $NAME
+
+# echo "Today is `date`"   and   echo "Today is $(date)"  # will output = "Today is Wed Oct 11 11:44:32 PM IST 2023"    ##    `Backticks` and $() is used for command execution
+# Single quotes treat everything inside them as a 'literal string' on the other hand double quotes allow variable "expansion/execution"
+
+
+
+
+#--------------------------- how to use else-if in ternary operator ----------------------------#
+# number=11
+# # Normal else-if statement
+# if [ $number -gt 8 ] ; then
+#  	echo "AAA_111"
+# elif [ $number -gt 1 ]; then
+#  	echo "BBB_111"
+# else 
+# 	echo "ZZZ_111"
+# fi
+
+# # this is the correct representation of the above code in a ternary operator way
+# [ $number -gt 8 ] && { echo "AAA_222" ; } || { [ $number -gt 1 ] &&  echo "BBB_222" || echo "ZZZ_222" ; }
+
+# ## it may look similar to above code but it will not give you the desired result 
+# [ $number -lt 8 ] && echo "AAA_222" || [ $number -gt 1 ] && echo "BBB_222" || echo "ZZZ_222"
+# ##  (first condition)                     (second condition)                       (third condition)
+# # if the (first condition) is true it will execute (first and second condition both blindly) but if the (first condition) is false it will then check (second condition)
+# # what is first ---> (||)   ..  logical OR  --or--  nested if  --or--  else 
+
+
+
+
+
+
+
+
+####--------------------------------------- Date Calculation -----------------------------------------####
+
+# # Specific Date and Time
+# ### --date=''  ===  -d '' ###
+# date --date='2023-10-15 14:30:00'
+
+# # Yesterday and Tomorrow
+# date --date='yesterday'
+# date --date='tomorrow'
+
+# # First Day and Last Day of the Month
+# date --date='first day of this month'
+# date --date='last day of this month'
+
+# # Start and End of the Week (Sunday and Saturday)
+# date --date='sunday'
+# date --date='saturday'
+
+# # Previous and Next Weekday (e.g., Monday)
+# date --date='last monday'
+# date --date='next monday'
+
+# # Nth Occurrence of a Weekday in a Month
+# date --date='2nd tuesday'
+# date --date='3rd friday'
+
+# # Relative Time Expressions
+# date --date='2 days ago'
+# date --date='2 weeks ago'
+# date --date='2 months ago'
+# date --date='2 years ago'
+# date --date='2 hours ago'
+# date --date='30 minutes ago'
+# date --date='120 seconds ago'
+
+# # Date Calculations
+# date --date='2023-10-15 + 3 days'
+# date --date='2023-10-15 - 5 days'
+# date --date='2023-10-15 + 2 months'
+# date --date='2023-10-15 - 1 month'
+# date --date='2023-10-15 + 1 year'
+# date --date='2023-10-15 - 2 years'
+
+# # Custom Date Formatting (Unix Timestamp to Human-Readable)
+# date --date='@1608658800'
+
+# # Week and Day of the Week
+# date --date='2023-W42'  # Year and ISO week number
+# echo "Day of the week: $(date --date='2023-10-15' +%A)"  # Print the day of the week
+
+# # Specify Timezone
+# TZ='America/New_York' date
+# TZ='Europe/London' date --date='2023-10-15 14:30:00'
+
+
+
+
+## --------------------------- to change the date of the commit you can take reference of the billow code ( the code is not tested btw ) ---------------------------------- ##
+
+
+# GIT_COMMITTER_DATE="$(date -d '2022-01-01 10:00:00' +'%Y-%m-%d %H:%M:%S')" git commit --date "$(date -d '2022-01-01 10:00:00' +'%Y-%m-%d %H:%M:%S')" -m "Commit message"
+# GIT_COMMITTER_DATE="$(date -d '2 hours ago' +'%Y-%m-%d %H:%M:%S')" git commit --date "$(date -d '2 hours ago' +'%Y-%m-%d %H:%M:%S')" -m "Commit message"
+# GIT_COMMITTER_DATE="$(date --date='2 days ago' +'%Y-%m-%d %H:%M:%S %z')" git commit --date "$(date --date='2 days ago' +'%Y-%m-%d %H:%M:%S %z')" -m "Commit message"
+# GIT_COMMITTER_DATE="$(date --date='2 days ago')" git commit --date "$(date --date='2 days ago')" -m "Commit message"
+
+
+# # last author date only
+# git log -1 --format="%ad" --date=iso
+
+# # last commiter date only
+# git log -1 --format="%cd" --date=iso
+
+
+
+# GIT_AUTHOR_DATE="2022-01-01T12:00:00" GIT_COMMITTER_DATE="2022-01-01T12:00:00" git commit -m "Your commit message"
+
+# # This also works for merge commits:
+# GIT_AUTHOR_DATE=$(date -d'...') GIT_COMMITTER_DATE="$GIT_AUTHOR_DATE" git merge <branchname> --no-ff
+
+# GIT_AUTHOR_DATE=$(date -d'...') GIT_COMMITTER_DATE="$GIT_AUTHOR_DATE" git commit -m '...'  
+
+# THE_TIME='2019-03-30T8:20:00 -0500' GIT_AUTHOR_DATE=$THE_TIME GIT_COMMITTER_DATE=$THE_TIME git commit -m 'commit message here'
+
+# x=$(date -v -4H +%Y-%m-%dT%H:%M:%S%z); export GIT_COMMITTER_DATE=$x; git commit --amend --date $x
+
+# GIT_AUTHOR_DATE="2020-10-24T18:00:00 +0200" GIT_COMMITTER_DATE=$GIT_AUTHOR_DATE git commit
+
+
+
+# # Run this git commit --amend --no-edit --date="Sat Jun 5 20:00:00 2021 -0600" command after a commit to amend the last commit with the timestamp noted. The --no-edit will leave the message as-is.
+# # source: https://stackoverflow.com/questions/3895453/how-do-i-make-a-git-commit-in-the-past  
+
+
+
+# GIT_AUTHOR_DATE='Mon May 18 19:32:10 2020 -0400' \
+#   GIT_COMMITTER_DATE='Mon May 18 19:32:10 2020 -0400'\
+#   git commit -m 'Commit from the past'
+
+# you can use date above as
+# date +"%s %z"      ######## also referred to as internal raw git format
+
+# RFC 2822 ('Mon, 18 May 2020 19:32:10 -0400')
+#  ISO 8601 ('2020-05-18 19:32:10 -0400')
+#  local ('Mon May 18 19:32:10 2020'),
+#  short ('2020-05-18')
+#   relative (5.seconds.ago, 2.years.3.months.ago, '6am yesterday').
+
+# # source
+# # https://www.30secondsofcode.org/git/s/commit-different-date/
+
+
+# # git use this format to store commit 
+# Git internal format = <unix timestamp> <time zone offset>, e.g.  1112926393 +0200
+# RFC 2822            = e.g. Thu, 07 Apr 2005 22:13:13 +0200
+# ISO 8601            = e.g. 2005-04-07T22:13:13
+# # the above mehtod use only if you wan to commit in front of the current HEAD commit (commit at the tip of your branch )
+
+
+
+# # There are two date variable which Git used to keep the time of commits (this is verified form multiple source)
+# #     GIT_COMMITTER_DATE
+# #     GIT_AUTHOR_DATE
+# ## Although in most cases they both store the same value
+# ## The author is the person who originally wrote the work, whereas the committer is the person who applied the work in the code reposetory.
+
+
+
+# # By default, git log displays GIT_AUTHOR_DATE as “Date”
+# ####---------- see both commit date ( GIT_AUTHOR_DATE and GIT_COMMITTER_DATE ) -----------####
+# # git log --pretty=fuller 
+# # git log --format=fuller
+
+
+# ####---------- The "--date" flag only allows you to specify the author date (meaning only GIT_AUTHOR_DATE is modified, not GIT_COMMITTER_DATE) see example billow ----------####
+# # git commit --date="YYYY-MM-DD HH:MM:SS" -m "commit message"
+# # git commit --date="1 day ago"           -m "commit message"
+
+
+# ## Solution: to set a specific date export it to environment variable ( GIT_AUTHOR_DATE and GIT_COMMITTER_DATE ) and then commit your code without --date flag )
+
+
+# $ export GIT_AUTHOR_DATE="Wed Feb 16 14:00 2037 +0100"
+# $ export GIT_COMMITTER_DATE="Wed Feb 16 14:00 2037 +0100"
+# $ git commit -m " commit msg "
+
+
+# export GIT_AUTHOR_DATE="YYYY-MM-DDThh:mm:ss±hh:mm"
+# export GIT_COMMITTER_DATE="YYYY-MM-DDThh:mm:ss±hh:mm"
+# git commit -m 'commit message'
+
+
+# unset GIT_AUTHOR_DATE        # unset or remove the export variable
+# unset GIT_COMMITTER_DATE     # unset or remove the export variabel
+
+# #### source : https://m-razavi.medium.com/how-do-i-make-a-git-commit-in-the-past-c832c1d1362a
+
+
+
+# ####---------- if you have already modified only GIT_AUTHOR_DATE.. you can still change the GIT_COMMITTER_DATE by billow command -----------####
+# # git rebase HEAD~<head-number> --committer-date-is-author-date                  #### only for one specific commit   #### change <head-number> as per your commit head-number
+# # git filter-branch --env-filter 'export GIT_COMMITTER_DATE="$GIT_AUTHOR_DATE"'  #### for all commits
+# ### source : https://gist.github.com/bfoz/568898
+
+
+
+# ###### it changes the last commit date (only for head~1) of already applied commit ############
+# git commit --amend --date="YYYY-MM-DD HH:MM:SS" -m "Your commit message"
+
+
+# We can also use amend to change the timestamp of a previous commit:
+# $ git commit --amend --date="Wed Feb 16 14:00 2037 +0100"
+
+
+# ## It will create empty commit with provided date
+# git commit --allow-empty --date="Sat Nov 14 14:00 2015 +0100" -m '2 Dec commit'
+
+
+# # also read it
+# # https://alexpeattie.com/blog/working-with-dates-in-git/
+# # https://mirrors.edge.kernel.org/pub/software/scm/git/docs/git-commit.html#_date_formats
+
+
+# here mentioned that (how to commit in the middle on the multiple commits 4th answere)
+# # https://stackoverflow.com/questions/3895453/how-do-i-make-a-git-commit-in-the-past
+
+
+# ## other hash ##
+# # git uses SHA-1 hashes to maintain there version history
+# ## git by default use the unix timestemp in a raw format form 1970          see https://www.unixtimestamp.com/
+
+
+
+# ## to look at the git timestemp / hash / timezone offset / other details use billow commnad in ".git " directory
+# # rg <Author Name>    ### case-sensitive  ## 'rg' command is ripgrep command 
+
+
