@@ -1,0 +1,137 @@
+# to run zsh without config execute this command    $zsh -f    --or--    $zsh -o NO_RCS   --or--    $zsh --no-rcs
+autoload -U colors && colors 
+
+# source file if it's exist
+# source_if_exists() { [ -f "$1" ] && . "$1" ; } ## (this is increasing zsh prompt loadup time)
+
+#---------------prompt file---------------#
+source "$HOME/.config/shell/zsh/.prompt_config.sh"
+source "$HOME/.config/shell/aliases.sh"
+source "/usr/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh"   ###( pacman -S zsh-fast-syntax-highlighting ---> recommended ) 
+# source "/usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"          ###( pacman -S zsh-syntax-highlighting )
+# source  "/usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"                 ###( pacman -S zsh-autosuggestions )
+# source "$HOME/.zprofile"  ## to also source it again on new terminal session everytime
+
+
+# Emacs keybinding (this line should be at top because billow defined keys will adapt their behaviour form this)
+bindkey -e
+# https://gist.github.com/acamino/2bc8df5e2ed0f99ddbe7a6fddb7773a6 (some emacs keybinding for terminal for faster productivity)
+
+
+#------------------------------------------------------------------------------History file----------------------------------------------------------------------------------#
+# History in Environment Variable
+HISTSIZE=10000000
+SAVEHIST=10000000
+# HISTFILE=$HOME/.cache/history #(already defined in ~/.bash_profile ~/.zprofile both files are same copy of each other to work in bash and zsh both)
+
+# setopt HIST_IGNORE_ALL_DUPS  # Don't show duplicate entries in the history command (only show the last occurrence of that command. also will not show history command in history)
+# setopt HIST_IGNORE_SPACE     # Don't save commands that start with a white space in the history (for Sensitive info like password)
+# setopt HIST_FIND_NO_DUPS     # When searching with up/down arrow, don't display duplicate entries
+# setopt HIST_SAVE_NO_DUPS     # Do not save duplicate entries in history (prevents duplicates within a single terminal session only) 
+
+# unsetopt SHARE_HISTORY       # each terminal session will have there own History session and will not mix up with other terminal session history
+# setopt SHARE_HISTORY         # this is the default Behavior in zsh already (it will provide same history for all terminal session)
+
+alias history='history 1' # to show all the history on the terminal (not just 15 last line)
+
+
+
+##--------------------------------------------- Show Time-Stamps in History Command ----------------------------------------------------------##
+## setopt EXTENDED_HISTORY  # enable history file timestamp (to identify which command executed on what time when you type history on terminal)
+
+# history -E 1 ### example output -->      2.12.2013 14:19   command     (DATE TIME COMMAND)
+# history -i 1 ### example output -->      2013-12-02 14:19  command     (DATE TIME COMMAND)
+# history -D 1 ### example output -->              0:00      command     (DURATION COMMAND)
+# history () { fc -Dlim "*$@*" 1 }  # you can remove D if you dont want 0:00 which means how long this command took to complete
+#-------------- 1 in the end above means show complete output on terminal and not just show 7 last line --------------#
+
+### source 
+# # https://superuser.com/questions/232457/zsh-output-whole-history
+# # https://unix.stackexchange.com/questions/103398/how-to-view-datetime-stamp-for-history-command-in-zsh-shell
+##--------------------------------------------------------------------------------------------------------------------------------------------##
+
+
+#----- up/down arrow completion based on the prefix of your command (it should always billow bindkey -e/v)---------#
+autoload -U up-line-or-beginning-search
+autoload -U down-line-or-beginning-search
+zle -N up-line-or-beginning-search
+zle -N down-line-or-beginning-search
+bindkey "^[[A" up-line-or-beginning-search   # Up
+bindkey "^[[B" down-line-or-beginning-search # Down
+
+# it can be replaced it with up/down arrow history search ####### fzf can be use for tab completition also
+# search() {
+#   local selected_command=$(cat $(echo $HISTFILE) | fzf +s --tac)  # (history 1 | sed 's/^[[:space:]]*[0-9]\+[[:space:]]*//' | fzf +s --tac)#<<<--- you can use this also
+#   [ -n "$selected_command" ] && {echo "$selected_command" | xclip -selection clipboard ;  print -z "$selected_command" ;}  
+# }
+#----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
+
+
+
+
+
+# Basic auto/tab complete:  (this is increasing zsh prompt loadup time)
+autoload -Uz compinit && compinit
+zstyle ':completion:*' menu select
+zmodload zsh/complist
+compinit
+_comp_options+=(globdots)       # Include hidden files.
+##### fzf-tab completition source: https://github.com/Aloxaf/fzf-tab ##### (it can make zsh prompt faster)
+
+eval "$(dircolors)" # show directory in directory color in tab (otherwise it would be red auto-selected)
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"  # show color in tab
+
+# case-sensitive tab completion ####### This tells zsh that small letters will match small and capital letters. (i.e. capital letters match only capital letters and not small letters.)
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'   
+# source (look for more option) --> https://superuser.com/questions/1092033/how-can-i-make-zsh-tab-completion-fix-capitalization-errors-for-directories-and
+
+
+#------------------------------------------------------------ fixing some keybinding with zsh --------------------------------------------------------------------#
+#### To know the code of a key, run ($showkey --ascii) or "$cat" or "$od -c" or "$read" command then press enter then press the key (you can press multiple key to get the code) then Ctrl+C to stop the cat command.
+bindkey     '^[[H'           beginning-of-line       # home button
+bindkey     '^[[4~'          end-of-line             # end button (for st terminal)
+bindkey     '^[[F'           end-of-line             # end button (for xfce4-terminal alacritty termite)
+bindkey     '^[[1;5D'        backward-word           # move cursor left
+bindkey     '^[[1;5C'        forward-word            # move cursor right
+bindkey     '^[[M'           kill-word               # ctrl + delete
+bindkey     '^[[3~'          delete-char             # fixing normal-delete key
+bindkey     '^H'             backward-delete-word    #### you can use (ctrl + backspace) but it will be in conflict.. when you delete the word backword on pressing (ctrl + h) and (shift + backspace) and (capslock-on + backspace) all will delete the word backword  (adding key-map in st terminal to fix the issue)
+
+# bindkey   '^@'             autosuggest-accept      # user ctrl + space to auto-complete the suggestion when useing zsh "auto-suggestion" pluging instead of right arrow key -->   (or you can use ctrl + e default emacs key-binding to complete the auto-suggestion)
+# bindkey   '^?'             backward-kill-word   #### or you can use (alt + backspace) or emacs way ( ctrl + w )
+# bindkey   '^H'             backward-kill-word
+
+### how to enter text on new line on terminal use this emacs method -> ( alt + enter | esc + enter | ctrl + v then ctrl + j  )
+### syntex : bindkey '<ctrl+v> <key-combinations>'   <widget>
+
+### source 
+# https://stackoverflow.com/questions/8638012/fix-key-settings-home-end-insert-delete-in-zshrc-when-running-zsh-in-terminat
+# list of available < widgets > such as "beginning-of-line" is available here -----> https://zsh.sourceforge.io/Doc/Release/Zsh-Line-Editor.html#Standard-Widgets
+# # zsh source just for reading  : https://wiki.archlinux.org/title/zsh
+#-----------------------------------------------------------------------------------------------------------------------------------------------------------------#
+
+
+setopt autocd     # Automatically cd into typed directory.
+stty stop undef   # Disable ctrl-s to freeze terminal.
+setopt interactive_comments  # it allows the comments in the terminal
+
+
+zshtime() {  
+  # speed test your zsh modules if you zsh prompt load time is slow
+  zmodload zsh/zprof
+  source $ZDOTDIR/.zshrc
+  zprof
+
+  shell=${1-$SHELL}
+  for i in $(seq 1 10); do time $shell -i -c exit; done
+
+  #knowledge_source https://blog.tarkalabs.com/optimize-zsh-fce424fcfd5
+  # how to check and fix zsh slow startup ####### https://www.youtube.com/watch?v=I_EaA7Q3GxI
+}
+
+
+
+
+
+
+
