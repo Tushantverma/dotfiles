@@ -1,36 +1,43 @@
+## add ".sh" file extension for text editor that this is a shell file for Syntax highlighting
 ### EXPORT ###
-export EDITOR='subl'
-export VISUAL='subl'
-export HISTCONTROL=ignoreboth:erasedups
-export PAGER='most'
-export MANPAGER='less' # this will work with man-db pkg
 
-#Ibus settings if you need them
+###--------------------------------- for bash only -------------------------------------###
+## export HISTCONTROL=ignoreboth:erasedups  ### Do not save duplicate entries in history (prevents duplicates within a single terminal session only)   ## somthing like this is already configured in .zshrc
+## bind "set completion-ignore-case on"     ### ignore upper and lowercase when TAB completion  ### somthing like this already configured in .zshrc
+## setopt GLOB_DOTS ## show dot files (already enabled it in tab completition in .zshrc)
+
+#### its only for bash but if you want to use it for zsh you need to change "shopt to setopt" ####
+# shopt -s autocd # change to named directory
+# shopt -s cdspell # autocorrects cd misspellings
+# shopt -s cmdhist # save multi-line commands in history as single line
+# shopt -s dotglob
+# shopt -s histappend # do not overwrite history
+# shopt -s expand_aliases # expand aliases
+
+#PS1='[\u@\h \W]\$ '     ### this is a bash prompt (maybe not required)
+
+###-------------------------------------------------------------------------------------###
+
+#Ibus settings if you need them (it's for chinese and japanese type of languages to work on english keyboard for typing)
 #type ibus-setup in terminal to change settings and start the daemon
 #delete the hashtags of the next lines and restart
 #export GTK_IM_MODULE=ibus
 #export XMODIFIERS=@im=dbus
 #export QT_IM_MODULE=ibus
 
-PS1='[\u@\h \W]\$ '
-
-# If not running interactively, don't do anything
-[[ $- != *i* ]] && return
-
-
-if [ -d "$HOME/.bin" ] ;
-  then PATH="$HOME/.bin:$PATH"
-fi
-
-if [ -d "$HOME/.local/bin" ] ;
-  then PATH="$HOME/.local/bin:$PATH"
-fi
-
-#ignore upper and lowercase when TAB completion
-bind "set completion-ignore-case on"
 
 
 
+### custom man page location which is seprated form system wide man page
+# export MANPATH="/usr/local/man:$MANPATH"  ### it will check the man page in this custom location first and if the man page is not present there it will look for system wide man page
+
+# You may need to manually set your language environment
+# export LANG=en_US.UTF-8 ## already set the environment varibale at installation time ## use "echo $LANG" to see it  
+
+# Compilation flags (usually not needed in linux, only for macOS)
+# export ARCHFLAGS="-arch x86_64"   ## will create only 64 bit binary
+# export ARCHFLAGS="-arch i386"     ## will create only 32 bit binary
+### if comment all above flag then create universal binaries (not specific to 32bit or 64bit) 
 
 
 
@@ -49,7 +56,7 @@ bind "set completion-ignore-case on"
   alias dd='cd ~/Downloads'
   alias premove='sudo pacman -Rcns'
   alias pinstall='sudo pacman -S --noconfirm'
-  # alias cat='cat -n'   #this command can give the issue maybe any error on terminal
+  alias cat='bat'    ## (cat -n ###this command can give the issue maybe any error on terminal)
   alias tree='tree -AC' #install tree before using this command
   alias tterminal="sed -i 's/BackgroundDarkness=*.*/BackgroundDarkness=0.8/' ~/.config/xfce4/terminal/terminalrc"
   alias bterminal="sed -i 's/BackgroundDarkness=*.*/BackgroundDarkness=1.0/' ~/.config/xfce4/terminal/terminalrc"
@@ -60,6 +67,8 @@ bind "set completion-ignore-case on"
   alias yay='yay --color auto'
   alias v='nvim'
   alias screenoff='xset dpms force off'
+  alias diff="diff --color=auto" 
+  alias ip="ip --color=auto"
   alias sudo='sudo ' ##  If the last character of the alias is a 'space' or 'tab' character then the next word of the command is also checked for an alias (now you can run your aliases with sudo command | this way you can create one alias by using multiple aliases like [ alias new_alias='alias1 alias2 alias3' ])
 
 ############################################################################################
@@ -67,61 +76,53 @@ bind "set completion-ignore-case on"
 ############################################################################################
 
 # git log = git log --reverse
-git() {
-    if [ "$1" = "log" ]; then command git log --reverse ;
-    else command git "$@"; fi ;
-}
+# git() {
+#     if [ "$1" = "log" ]; then command git log --reverse ;
+#     else command git "$@"; fi ;
+# }
 
 # smart cd into a file ## install fzf first
 fcd(){ cd "$(find -type d | fzf)" ; }
 
-# open a text file ## install fzf first
-open(){ xdg-open "$(find -type f | fzf)" ; }
+# open a text file ## and default application
+open() {
+  local file_path=$(find -type f | fzf) ;
+  local file_type=$(file -b --mime-type "$file_path") ;
+  [[ "${file_type}" == text/* ]] && $EDITOR "${file_path}" || xdg-open "${file_path}" ;
+}
 
-# find file which is created and modified under 30 second
-change() { sudo find "$PWD" -type f -cmin -0.5 | sed "s|$HOME|~|g" ; }
+# find file which is created and modified under 5 second and log it in the terminal
+change() {  while true ; do find . -type f -cmin -0.083 ; sleep 1; done; }
 
-# copy the path ## install fzf and xclip first 
-alias getpath="find -type f | fzf | sed 's/^..//g' | tr -d '\n' | xclip -selection c"
+# if $1 is a file then copy its path into clipboard otherwise use fzf to find the file and then copy its path
+getpath() { 
+  [ -f "$1" ] && { realpath $1 | sed "s|$HOME|\$HOME|g"  | tr -d '\n' | xclip -selection clipboard ; } ||
+  { realpath $(find -type f | fzf) | sed "s|$HOME|\$HOME|g"  | tr -d '\n' | xclip -selection clipboard ; }
+}
 
 ############################################################################################
 ######################source:-https://youtu.be/_xxTcKJMnWQ##################################
 ############################################################################################
 
-alias cleanx='yes | pacman -Sc && yes | pacman -Scc && yes | yay -Sc && yes | yay -Scc && rm -rf $HOME/.cache/ && sudo sh -c "echo 1 >  /proc/sys/vm/drop_caches" && sudo sh -c "echo 2 >  /proc/sys/vm/drop_caches" && sudo sh -c "echo 3 >  /proc/sys/vm/drop_caches" && sudo swapoff -a && sudo swapon -a && sudo pacman -Rns $(pacman -Qtdq) '
-#source :- https://www.geeksforgeeks.org/how-to-clear-ram-memory-cache-buffer-and-swap-space-on-linux/
+
+# If not running interactively, don't do anything
+[[ $- != *i* ]] && return
 
 
-#cleanup command do already exist in arcolinux .zshrc .bashrc but tushant commendted it out first search it and reusing here and makeing it more advanced
-# alias md='mkdir -p' #create multiple directory in tree format  but already exist in arco linux .bashrc .zshrc
-#alias ll='ls -alFh'   # to check the file size  #already in arcolinux .bashrc .zshrc
+if [ -d "$HOME/.bin" ] ;
+  then PATH="$HOME/.bin:$PATH"
+fi
 
-#if following mathod 1 then comment both inherite file into the .bashrc .zshrc to avoid some minor error  ex.. zsh unknowing terminal error showing red symble in the right side of the terminal
-#[[ -f ~/.*rc-personal ]] && . ~/.*rc-personal   <<=== comment this into both .bashrc .zshrc
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+if [ -d "$HOME/.local/bin" ] ;
+  then PATH="$HOME/.local/bin:$PATH"
+fi
 
 ### ALIASES ###
 
 #list
-alias ls='ls --color=auto'
+alias ls='ls --color=auto --group-directories-first'  # tv added
 alias la='ls -a'
-alias ll='ls -alFh'
+alias ll='ls -AlFh' # tv-added
 alias l='ls'
 alias l.="ls -A | egrep '^\.'"
 alias listdir="ls -d */ > list"
@@ -191,13 +192,15 @@ alias userlist="cut -d: -f1 /etc/passwd | sort"
 alias merge="xrdb -merge ~/.Xresources"
 
 # Aliases for software managment
-# pacman or pm
+# pacman
 alias pacman='sudo pacman --color auto'
 alias update='sudo pacman -Syyu'
+alias upd='sudo pacman -Syyu'
 
 # paru as aur helper - updates everything
 alias pksyua="paru -Syu --noconfirm"
 alias upall="paru -Syu --noconfirm"
+alias upa="paru -Syu --noconfirm"
 
 #ps
 alias psa="ps auxf"
@@ -207,7 +210,7 @@ alias psgrep="ps aux | grep -v grep | grep -i -e VSZ -e"
 alias update-grub="sudo grub-mkconfig -o /boot/grub/grub.cfg"
 alias grub-update="sudo grub-mkconfig -o /boot/grub/grub.cfg"
 #grub issue 08/2022
-alias install-grub-efi="sudo grub-install --target=x86_64-efi --efi-directory=/boot/efi"
+alias install-grub-efi="sudo grub-install --target=x86_64-efi --efi-directory=/boot/efi" ## no need for any --bootloader-id  ##tv-added
 
 #add new fonts
 alias update-fc='sudo fc-cache -fv'
@@ -219,9 +222,9 @@ alias update-fc='sudo fc-cache -fv'
 alias bupskel='cp -Rf /etc/skel ~/.skel-backup-$(date +%Y.%m.%d-%H.%M.%S)'
 
 #copy shell configs
-alias cb='cp /etc/skel/.bashrc ~/.bashrc && exec bash'
-alias cz='cp /etc/skel/.zshrc ~/.zshrc && echo "Copied."'
-alias cf='cp /etc/skel/.config/fish/config.fish ~/.config/fish/config.fish && echo "Copied."'
+alias cb='cp /etc/skel/.bashrc ~/.bashrc && echo "Copied" && exec bash' ##tv made both similar
+alias cz='cp /etc/skel/.zshrc ~/.zshrc && echo "Copied" && exec zsh'    ##tv made both similar
+alias cf='cp /etc/skel/.config/fish/config.fish ~/.config/fish/config.fish && echo "Copied" && exec fish'    ##tv made both similar'
 
 #switch between bash and zsh
 alias tobash="sudo chsh $USER -s /bin/bash && echo 'Now log out.'"
@@ -279,13 +282,6 @@ alias start-vmware="sudo systemctl enable --now vmtoolsd.service"
 alias vmware-start="sudo systemctl enable --now vmtoolsd.service"
 alias sv="sudo systemctl enable --now vmtoolsd.service"
 
-#shopt
-shopt -s autocd # change to named directory
-shopt -s cdspell # autocorrects cd misspellings
-shopt -s cmdhist # save multi-line commands in history as single line
-shopt -s dotglob
-shopt -s histappend # do not overwrite history
-shopt -s expand_aliases # expand aliases
 
 #youtube download
 alias yta-aac="yt-dlp --extract-audio --audio-format aac "
@@ -349,6 +345,7 @@ alias nz="$EDITOR ~/.zshrc"
 alias nf="$EDITOR ~/.config/fish/config.fish"
 alias nneofetch="$EDITOR ~/.config/neofetch/config.conf"
 alias nplymouth="sudo $EDITOR /etc/plymouth/plymouthd.conf"
+alias nvconsole="sudo $EDITOR /etc/vconsole.conf"
 
 #reading logs with bat
 alias lcalamares="bat /var/log/Calamares.log"
@@ -468,7 +465,7 @@ alias awa="arcolinux-welcome-app"
 
 #git
 alias rmgitcache="rm -r ~/.cache/git"
-alias grh="git reset --hard HEAD ; git clean -df" # reset tracked files to last commit ; delete untracked file ## tv-added
+# alias grh="git reset --hard HEAD ; git clean -df" # reset tracked files to last commit ; delete untracked file ## tv-added (available this code in 'g' script in PATH variable)
 
 #pamac
 alias pamac-unlock="sudo rm /var/tmp/pamac/dbs/db.lock"
@@ -476,7 +473,7 @@ alias pamac-unlock="sudo rm /var/tmp/pamac/dbs/db.lock"
 #moving your personal files and folders from /personal to ~
 alias personal='cp -Rf /personal/* ~'
 
-#create a file called .bashrc-personal and put all your personal aliases
+#create a file called .my_alias and put all your personal aliases
 #in there. They will not be overwritten by skel.
 
 #[[ -f ~/.my_alias ]] && . ~/.my_alias
