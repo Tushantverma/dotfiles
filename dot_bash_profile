@@ -1,8 +1,0 @@
-#
-# ~/.bash_profile
-#
-
-
-### automatically run startx  
-[[ -z $DISPLAY && $XDG_VTNR -eq 1 ]] && exec startx
-### ~/.bash_profile for Bash or ~/.zprofile for Zsh

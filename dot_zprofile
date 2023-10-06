@@ -1,0 +1,54 @@
+#--> (USER SCOPE)----------------------------------------------# define environment_variables in per-User scope #-------------------------------------------------------------------#
+#--------- any variable defined in (for bash ~/.bash_profile and ~/.profile) and (for zsh ~/.zprofile and ~/.zshenv and ~/.zlogin ) will be available in your entire session -------#
+#-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
+
+#-------- Default Application -------#
+export EDITOR='subl'  ## for basic editing like git commit simple msg
+export VISUAL='subl'  ## for advanced editing like code writing
+export TERMINAL='st'
+export BROWSER='firefox'
+export PAGER='less' # less/most (less is better then most)
+export MANPAGER='less' # this will work with man-db pkg
+
+#-------------XDG Config-------------#
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_CACHE_HOME="$HOME/.cache"
+
+export XAUTHORITY="/tmp/Xauthority"    
+export XINITRC="$XDG_CONFIG_HOME/x11/xinitrc"
+export GTK2_RC_FILES="$XDG_CONFIG_HOME/gtk-2.0/gtkrc-2.0" 
+export ZDOTDIR="$XDG_CONFIG_HOME/shell/zsh" 
+export HISTFILE="$XDG_CONFIG_HOME/shell/history"
+#export INPUTRC="$XDG_CONFIG_HOME/shell/inputrc"
+
+
+export QT_QPA_PLATFORMTHEME="gtk2" # Have QT use gtk2 theme.
+export MOZ_USE_XINPUT2="1" # Mozilla smooth scrolling/touchpads/two finger zoom functionality.
+## also enable smooth schrolling in mouse also
+
+# source https://github.com/LukeSmithxyz/voidrice/blob/master/.config/shell/profile
+
+### automatically run startx on tty1 only  
+[[ -z $DISPLAY && $XDG_VTNR -eq 1 ]] && exec startx
+### ~/.bash_profile for Bash or ~/.zprofile for Zsh
+
+#---------------------------------------------------------------------------# LEARNING #---------------------------------------------------------------------------#
+#--> (GLOBAL SCOPE) # Define environment varibale in the "Global scope" : /etc/environment , /etc/profile , /etc/profile.d -> (for scripts) ,
+### for system-wide environment variable settings that should apply to all users, regardless of their shell. (no matter what shell a user is using)
+
+#--> (SHELL SCOPE) # Define environment variable in the "Shell specific scope"
+### and anything defined in ~/.bashrc or ~/.zshrc will only be available on that terminal session
+
+# ## sourcce ##
+# https://wiki.archlinux.org/title/Environment_variables (read for more details)
+# https://github.com/arcolinux/arcolinuxs-iso/blob/master/archiso/airootfs/etc/environment
+
+
+#-------------------------------------------------------------------------------------------#
+# you can define any configuretion golbally without adding config in your root user directory 
+# example global .zshrc file is /etc/zsh/zshrc
+
+# export SHELL="/bin/bash" ### you can also change the shell this way here
+
+# you can get all the environment variable to move your home directory config files somewhere else  # https://github.com/b3nj5m1n/xdg-ninja
