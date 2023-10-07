@@ -1,8 +1,10 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 #xrdb merge ~/.Xresources 
 #xbacklight -set 10 &
 #xset r rate 200 50 &
+
+[[ -f ~/.startup.sh ]] && . ~/.startup.sh  ### if startup.sh exist run the startup.sh
 export QT_QPA_PLATFORMTHEME=qt5ct  #fixed qt5ct environment variables issue
 
 function run {
@@ -78,3 +80,11 @@ sxhkd -c ~/.config/tv-dwm/sxhkd/sxhkdrc &
 pkill dwmblocks
 dwmblocks &
 while type chadwm >/dev/null; do chadwm && continue || break; done
+
+
+### Warning..!!!
+## above line is runnig window manager with the "do while loop" so if there is an error the window manager will not break
+## always launch window manager at the last line because command billow that will never get executed 
+
+### how to autostart x
+##https://wiki.archlinux.org/title/Xinit#Autostart_X_at_login
