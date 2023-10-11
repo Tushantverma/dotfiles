@@ -105,7 +105,7 @@ edit_csvfile() {
 	# file path
 	csv_file=$mounted_snap_dir/$at____snapshots/info.csv
 
-	read -p "Enter the entry number (space-separated) : " entry_number_var && entry_number=($(echo "$entry_number_var" | tr ' ' '\n' | sort -u)) # only take uniques
+	read -ep "Enter the entry number (space-separated) : " entry_number_var && entry_number=($(echo "$entry_number_var" | tr ' ' '\n' | sort -u)) # only take uniques
 
 	# grab first column
 	local indexx=$(cat $csv_file | awk -F ',' 'NR>1 {print $1}' | tr '\n' ' ')
@@ -119,7 +119,7 @@ edit_csvfile() {
 		# awk -F',' -v serial="$entry_number1" '$1 == serial { print }' $csv_file  # (for backup)
 		awk -F',' -v serial="$entry_number1" '$1 == serial' $csv_file | column -t -s "," -o '  | '
 
-		read -p "Enter the new comment: " new_comment
+		read -ep "Enter the new comment: " new_comment
 
 		# change the enter in the csv file
 		awk -v entry="$entry_number1" -v comment="$new_comment" -F',' '
@@ -149,7 +149,7 @@ create_snapshot() {
 #--------------------------------------------------------------------- READ INPUT ------------------------------------------------------------------------------------------------------#
 	while true; do
 	
-		read -p "Enter subvolume name (space-separated) : " subvolume_name_var && subvolume_name=($(echo "$subvolume_name_var" | tr ' ' '\n' | sort -u)) # only take uniques
+		read -ep "Enter subvolume name (space-separated) : " subvolume_name_var && subvolume_name=($(echo "$subvolume_name_var" | tr ' ' '\n' | sort -u)) # only take uniques
 
 
 		# entered value should not be empty checking the array
@@ -170,7 +170,7 @@ create_snapshot() {
 
 	done
 
-	read -p "Enter comment for snapshot: "                comment
+	read -ep "Enter comment for snapshot: "                comment
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
 
 
@@ -220,7 +220,7 @@ delete_snapshot() {
 	# list snapshots info.csv
 	list_snapshot #function
 
-	read -p "Enter Snapshot number to Delete (space-separated) : " del_snap_var && del_snap=($(echo "$del_snap_var" | tr ' ' '\n' | sort -u)) # only take uniques
+	read -ep "Enter Snapshot number to Delete (space-separated) : " del_snap_var && del_snap=($(echo "$del_snap_var" | tr ' ' '\n' | sort -u)) # only take uniques
 
 
 	# if the file exist then assing the file value in variable otherwise assign null 
@@ -285,7 +285,7 @@ rollback_snapshot() {
 
 	while true; do
 
-		read -p "Enter Snapshot number to rollback : "  rollback_number #enter only one digit
+		read -ep "Enter Snapshot number to rollback : "  rollback_number #enter only one digit
 
 		# Entery should not be empty
 		[ -z "$rollback_number" ] && { echo "$(tput setaf 1)Please Enter a number $(tput sgr0)"; continue ; }
@@ -319,7 +319,7 @@ rollback_snapshot() {
 
 while true; do
 
-	read -p "Enter Snapshot subvolume to rollback (space-separated) : " rollback_subvol_var && rollback_subvol=($(echo "$rollback_subvol_var" | tr ' ' '\n' | sort -u)) # only take uniques
+	read -ep "Enter Snapshot subvolume to rollback (space-separated) : " rollback_subvol_var && rollback_subvol=($(echo "$rollback_subvol_var" | tr ' ' '\n' | sort -u)) # only take uniques
 
 	# Entery should not be empty
 	[ -z "$rollback_subvol" ] && { echo "$(tput setaf 1)Please Enter a Subvolume $(tput sgr0)"; continue ; }
@@ -428,7 +428,7 @@ tput setaf 3 # applying yellow
 echo "edit list create delete rollback exit"
 tput sgr0  # reset
 
-read -p "command : " entry1
+read -ep "command : " entry1
 clear
   
 
@@ -476,7 +476,7 @@ done
 
 ####### delete entry form csv file on multiple entery working (this can be use when you need actual numbering in line instead of non-serial number indexing) #############
 # cat -n -b data.csv | column -t -s "," -o '  |  '
-# read -p "Enter Snapshot name to Delete Seprate it by space : " -a lines
+# read -ep "Enter Snapshot name to Delete Seprate it by space : " -a lines
 # sed -i "$(printf "%sd;" "${lines[@]}")" data.csv
 # echo "Selected lines have been deleted from data.csv"
 

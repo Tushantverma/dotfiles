@@ -10,7 +10,7 @@ configure_autologin() {
   # if directory dose not exist then create
   [ ! -e "$directoryy/autologin.conf" ] && sudo mkdir -p $directoryy || { echo "$(tput setaf 1)auto login already configured$(tput sgr0)" ; exit 1 ; }
 
-  read -p "Enter Username (Enter for Default $(whoami)): " username
+  read -ep "Enter Username (Enter for Default $(whoami)): " username
 
   # if empty input then assing current username if non empty then assing entered username
   [ -z "$username" ] && { current_user=$(whoami) ; echo "Current user: $current_user" ; } || { current_user=$(username) ; echo "You entered: $current_user" ; }
@@ -50,7 +50,7 @@ remove_autologin() {
 # Main script
 
 echo "Enter a command :( add / remove )"
-  read -p "command : " action
+  read -ep "command : " action
 
   case "$action" in
     "add") configure_autologin ;;
