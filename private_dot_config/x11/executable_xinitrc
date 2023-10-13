@@ -4,7 +4,7 @@
 #xbacklight -set 10 &
 #xset r rate 200 50 &
 
-[[ -f ~/.startup.sh ]] && . ~/.startup.sh  ### if startup.sh exist run the startup.sh
+[[ -f $HOME/.config/startup.sh ]] && . $HOME/.config/startup.sh  ### if startup.sh exist run the startup.sh
 export QT_QPA_PLATFORMTHEME=qt5ct  #fixed qt5ct environment variables issue
 
 function run {

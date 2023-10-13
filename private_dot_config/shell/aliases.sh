@@ -4,7 +4,6 @@
 ###--------------------------------- for bash only -------------------------------------###
 ## export HISTCONTROL=ignoreboth:erasedups  ### Do not save duplicate entries in history (prevents duplicates within a single terminal session only)   ## somthing like this is already configured in .zshrc
 ## bind "set completion-ignore-case on"     ### ignore upper and lowercase when TAB completion  ### somthing like this already configured in .zshrc
-## setopt GLOB_DOTS ## show dot files (already enabled it in tab completition in .zshrc)
 
 #### its only for bash but if you want to use it for zsh you need to change "shopt to setopt" ####
 # shopt -s autocd # change to named directory
@@ -25,8 +24,7 @@
 #export XMODIFIERS=@im=dbus
 #export QT_IM_MODULE=ibus
 
-
-
+setopt GLOB_DOTS ## show dot files (for bash and zsh both) # for example now you can use the command like $rm -rf * to delete both regular and hidden files in a single operation
 
 ### custom man page location which is seprated form system wide man page
 # export MANPATH="/usr/local/man:$MANPATH"  ### it will check the man page in this custom location first and if the man page is not present there it will look for system wide man page

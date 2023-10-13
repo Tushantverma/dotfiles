@@ -52,3 +52,4 @@ export MOZ_USE_XINPUT2="1" # Mozilla smooth scrolling/touchpads/two finger zoom 
 # export SHELL="/bin/bash" ### you can also change the shell this way here
 
 # you can get all the environment variable to move your home directory config files somewhere else  # https://github.com/b3nj5m1n/xdg-ninja
+# by default the environment variables contain nothing; example.. if you have .xinitrc in your home directory the environment variable $XINITRC will contain nothing
