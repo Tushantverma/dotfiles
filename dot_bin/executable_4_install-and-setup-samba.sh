@@ -1,39 +1,37 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 
 if pacman -Qi samba &> /dev/null; then
   echo "###################################################################"
-  echo "##################   Samba is installed   #########################"
+  echo "###### Samba is already installed restarting smb.service ##########"
   echo "###################################################################"
+  sudo systemctl restart smb.service
   exit 0  # Exit the script successfully
 fi
 
 ##############################################################################################
 
-
-
-#arcolinux pkg
 sudo pacman -Sy --noconfirm --needed arcolinux-meta-samba
 
-echo "type the password for your smb server"
-sudo smbpasswd -a $USER
+tput setaf 2  ## adding green color
 
+printf "\n"  ## new line
+echo "type the password for your smb server"
+sudo smbpasswd -a $USER  # it will systemctrl start and enable smb.service  ##both at the same time
+printf "\n"  ## new line
+
+tput sgr0     ## removing color
 
 ###############    change /etc/samba/smb.conf    ############################
 # comment out the home and stoping entire home to accesable in samba
 sudo sed -i '/^\[homes]/,/^$/ s/^\([^#].*\)/#\1/' /etc/samba/smb.conf
 
 # uncomment the shared option to only share the $HOME/SHARED directory over samba
-sudo sed -i '/^;\[SHARED\]/,/^;writable = yes/ { s/^;//; s/\/erik\//\/%u\// }' /etc/samba/smb.conf
+sudo sed -i  -e 's/;//g' -e 's/\[SHARED\]/\[.shared\]/'  -e 's|/home/erik/SHARED|/home/%u/.shared|' /etc/samba/smb.conf
 
-
-mkdir $HOME/SHARED
-
-
+mkdir -p $HOME/.shared/files_here
 
 ##############################################################################################
-
-
 
 ## checking if filemanager is installed then install extra packages
 ## share any directory with samba by right click => properties menu
@@ -53,17 +51,23 @@ if pacman -Qi thunar &> /dev/null; then
   sudo pacman -S --noconfirm --needed thunar-shares-plugin
 fi
 
-
-
 ipaddress=$(ip addr show | awk '/inet / {print $2}' | awk -F"/" 'NR==2{print $1}')
 
-echo "samba is running on ip-address : $ipaddress"
+tput setaf 2  ## adding green color
+
+printf "\n"  ## new line
+echo "samba is running on ip-address smb://$ipaddress/.shared/"
 echo "your username on samba is : $USER"
 echo "password you know ;) "
+printf "\n"  # new line
 
+echo "disabling smb.service on SystemD boot"
+sudo systemctl disable smb.service
 
-echo "starting systemd deamon"
+echo "starting the smb.service just for now , run this script again to restart smb.service"
 sudo systemctl start smb.service
+
+tput sgr0    ## removing color
 
 
 echo "##############################################################################"

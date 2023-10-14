@@ -7,8 +7,8 @@ wget -q --spider https://www.google.com || wget -q --spider https://www.apple.co
 # curl -s --head --fail https://www.google.com > /dev/null && { echo "Internet is working" ; } || { echo "No internet connection"; exit 1; }  # it downloads the head code to check
 
 ### install all dependency ###
-sudo pacman -Sy --noconfirm --needed libx11 libxrandr cmake
-# libxnvctrl ==> not installing right now this is for nvedia
+sudo pacman -Sy --noconfirm --needed libx11 libxrandr cmake libxnvctrl
+# libxnvctrl ==> its for nvidia but its required to build the package on my system otherwise you will have an error
 
 [ -d "$HOME/.config/libvibrant" ] && rm -rf "$HOME/.config/libvibrant/"
 git clone --depth 1 https://github.com/libvibrant/libvibrant.git "$HOME/.config/libvibrant/"
