@@ -35,6 +35,10 @@ super + Escape
      xkill
 
 
+# Boomer for zoom #######
+super + z
+    $HOME/.config/boomer/boomer_bin
+
 
 
 # #####################################################################
