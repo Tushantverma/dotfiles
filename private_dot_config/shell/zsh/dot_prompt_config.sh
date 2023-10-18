@@ -53,12 +53,12 @@ local SKY_color=$'%F{39}'
 # local BG_EMERALD_GREEN=$'%K{46}'
 # other color code ### https://www.tweaking4all.com/software/macosx-software/xterm-color-cheat-sheet/
 
-# 
+#  
 
 #---------------------------# Variables #---------------------------#
 local return_code="%(?..$fg_red%? ↵ $color_reset)"
 local user_host="%B%(!.$fg_red.$fg_green)%n@%m%b$color_reset "
-local user_symbol="%B%(!.$fg_red#.$fg_green❯)%b$color_reset"
+local user_symbol="%B%(!.$fg_red#.$fg_green❯)%b$color_reset"
 local current_dir="%B$fg_blue%~ %b$color_reset"
 local line1="$GREY_color╭─$COLOR_reset"
 local line2="$GREY_color╰─$COLOR_reset"
