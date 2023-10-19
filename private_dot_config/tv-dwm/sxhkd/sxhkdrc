@@ -47,8 +47,8 @@ super + z
 
 
 # application ############
-super + shift + {   w   , s  ,   v       ,  f   }
-                {firefox,subl,pavucontrol,thunar}
+super + shift + {   w   , s  ,   v       ,  f   ,   a    }
+                {firefox,subl,pavucontrol,thunar,obsidian}
 
 
 # dmenu ##################
