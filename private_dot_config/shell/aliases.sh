@@ -56,8 +56,8 @@ setopt GLOB_DOTS ## show dot files (for bash and zsh both) # for example now you
   alias pinstall='sudo pacman -S --noconfirm'
   alias cat='bat'    ## (cat -n ###this command can give the issue maybe any error on terminal)
   alias tree='tree -AC' #install tree before using this command
-  alias tterminal="sed -i 's/BackgroundDarkness=*.*/BackgroundDarkness=0.8/' ~/.config/xfce4/terminal/terminalrc"
-  alias bterminal="sed -i 's/BackgroundDarkness=*.*/BackgroundDarkness=1.0/' ~/.config/xfce4/terminal/terminalrc"
+  alias tterminal='xfconf-query -c xfce4-terminal -p /background-darkness -s 0.8'  # source/syntex https://forum.xfce.org/viewtopic.php?id=16911
+  alias bterminal='xfconf-query -c xfce4-terminal -p /background-darkness -s 1.0'  # source/syntex https://forum.xfce.org/viewtopic.php?id=16911
   alias night='xrandr --output eDP-1 --gamma 1.0:0.88:0.76 --brightness 1.0'
   alias day='xrandr --output eDP-1 --gamma 1:1:1 --brightness 1.0'
   alias cm='chezmoi'
