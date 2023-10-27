@@ -5,7 +5,6 @@
 #xset r rate 200 50 &
 
 [[ -f $HOME/.config/startup.sh ]] && . $HOME/.config/startup.sh  ### if startup.sh exist run the startup.sh
-export QT_QPA_PLATFORMTHEME=qt5ct  #fixed qt5ct environment variables issue
 
 function run {
  if ! pgrep $1 ;
@@ -22,7 +21,7 @@ function run {
 #run xrandr --output DVI-1 --right-of DVI-0 --auto
 #run xrandr --output DVI-D-1 --right-of DVI-I-1 --auto
 #run xrandr --output HDMI2 --right-of HDMI1 --auto
-run "xrandr --output eDP-1 --mode 1600x900 --rate 58"
+#run "xrandr --output eDP-1 --mode 1600x900 --rate 58"
 
 #autorandr horizontal
 

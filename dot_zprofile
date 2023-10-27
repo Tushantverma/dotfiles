@@ -22,8 +22,8 @@ export ZDOTDIR="$XDG_CONFIG_HOME/shell/zsh"
 export HISTFILE="$XDG_CONFIG_HOME/shell/history"
 #export INPUTRC="$XDG_CONFIG_HOME/shell/inputrc"
 
-
-export QT_QPA_PLATFORMTHEME="gtk2" # Have QT use gtk2 theme.
+# export QT_QPA_PLATFORMTHEME="gtk2" # Have QT use gtk2 theme.
+export QT_QPA_PLATFORMTHEME=qt5ct  #fixed qt5ct environment variables issue
 export MOZ_USE_XINPUT2="1" # Mozilla smooth scrolling/touchpads/two finger zoom functionality.
 ## also enable smooth schrolling in mouse also
 

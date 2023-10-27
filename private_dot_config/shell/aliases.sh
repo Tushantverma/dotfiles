@@ -63,11 +63,13 @@ setopt GLOB_DOTS ## show dot files (for bash and zsh both) # for example now you
   alias cm='chezmoi'
   alias cdcm='chezmoi cd'
   alias yay='yay --color auto'
-  alias v='nvim'
+  alias vim='nvim'
   alias screenoff='xset dpms force off'
-  alias diff="diff --color=auto" 
-  alias ip="ip --color=auto"
-  alias sudo='sudo ' ##  If the last character of the alias is a 'space' or 'tab' character then the next word of the command is also checked for an alias (now you can run your aliases with sudo command | this way you can create one alias by using multiple aliases like [ alias new_alias='alias1 alias2 alias3' ])
+  alias diff='diff --color=auto'
+  alias ip='ip --color=auto'
+  alias cp='cp -i'   ## ask before overwrite
+  alias nf='neofetch'
+  alias sudo='sudo ' ## If the last character of the alias is a 'space' or 'tab' character then the next word of the command is also checked for an alias (now you can run your aliases with sudo command | this way you can create one alias by using multiple aliases like [ alias new_alias='alias1 alias2 alias3' ])
 
 ############################################################################################
 ######################## functions (alias with spaces lol)##################################
@@ -338,9 +340,9 @@ alias ngnupgconf="sudo $EDITOR /etc/pacman.d/gnupg/gpg.conf"
 alias nhosts="sudo $EDITOR /etc/hosts"
 alias nhostname="sudo $EDITOR /etc/hostname"
 alias nresolv="sudo $EDITOR /etc/resolv.conf"
-alias nb="$EDITOR ~/.bashrc"
-alias nz="$EDITOR ~/.zshrc"
-alias nf="$EDITOR ~/.config/fish/config.fish"
+# alias nbb="$EDITOR ~/.bashrc"
+# alias nzz="$EDITOR ~/.zshrc"
+# alias nff="$EDITOR ~/.config/fish/config.fish"
 alias nneofetch="$EDITOR ~/.config/neofetch/config.conf"
 alias nplymouth="sudo $EDITOR /etc/plymouth/plymouthd.conf"
 alias nvconsole="sudo $EDITOR /etc/vconsole.conf"

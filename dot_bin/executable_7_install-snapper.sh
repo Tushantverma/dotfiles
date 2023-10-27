@@ -110,3 +110,46 @@ grub-mkconfig -o /boot/grub/grub.cfg &>/dev/null & #to update grub-btrfs (grub s
 # systemctl enable ${SCRUB}
 # systemctl enable snapper-timeline.timer
 # systemctl enable snapper-cleanup.timer
+
+
+
+#-------------------------------------- for future reference ---------------------------------------------#
+
+# ## how to setup snapper
+# su
+# cd /
+# umount .snapshots
+# rm -rf /.snapshots
+# snapper -c root create-config /
+# btrfs subvolume delete /.snapshots
+# mkdir /.snapshots
+# mount -a
+# chmod 750 /.snapshots/
+# chmod a+rx /.snapshots
+
+# ====================================
+# btrfs subvol get-default /
+# btrfs subvol list /
+# btrfs subvol set-default 256 /
+# btrfs subvol get-default /
+# ====================================
+
+# sudo snapper -c root create -d "first snapshot all done here"                                ## how to create snapshot
+# sudo snapper -c root list                                                                    ## how to see list of snapshot
+# sudo snapper -c root delete snapshot_number  [ snapshot_X-snapshot_Y  (range of snapshot) ]  ## how to delete snapshot
+# sudo snapper -c root rollback snapshot_number                                                ## how to rollback with snapshot
+
+# ## source
+# https://theduckchannel.github.io/post/13082021/arch-linux-btrfs-kde-plasma-full-install-2021/
+
+
+# ### if you have any error with rollback try billow solution ###
+# cat /etc/fstab
+# snapper list
+# btrfs subvolume get-default /
+# btrfs subvolume list /
+# snapper --ambit classic rollback <snapshots_number>
+
+# grub-mkconfig -o /boot/grub/grub.cfg
+
+# some video : https://www.youtube.com/watch?v=FDTkITEKS9g

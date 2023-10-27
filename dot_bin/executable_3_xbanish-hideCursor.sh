@@ -21,3 +21,8 @@ grep -qF "xbanish &" "$HOME/.config/startup.sh" 2>/dev/null || echo "xbanish &" 
 #1 remove form "$HOME/.config/startup.sh"
 #2 sudo rm -rf /usr/local/bin/xbanish (remove binary)
 #3 sudo rm -rf /usr/local/man/man1/xbanish.1 (remove manpage)
+
+## alternative tool
+# sudo pacman -Sy --needed --noconfirm unclutter
+# echo "unclutter -idle 2 & " >> $HOME/.config/startup.sh
+
