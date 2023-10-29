@@ -3,7 +3,7 @@
 <channel name="xfce4-terminal" version="1.0">
   <property name="scrolling-unlimited" type="bool" value="true"/>
   <property name="overlay-scrolling" type="bool" value="true"/>
-  <property name="font-name" type="string" value="Iosevka NF 14"/>
+  <property name="font-name" type="string" value="Iosevka Nerd Font 14"/>
   <property name="background-mode" type="string" value="TERMINAL_BACKGROUND_TRANSPARENT"/>
   <property name="background-darkness" type="double" value="0.80000000000000004"/>
   <property name="misc-menubar-default" type="bool" value="false"/>
