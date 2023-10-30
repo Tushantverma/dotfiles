@@ -8,4 +8,5 @@
   <property name="background-darkness" type="double" value="0.80000000000000004"/>
   <property name="misc-menubar-default" type="bool" value="false"/>
   <property name="misc-default-geometry" type="string" value="120x25"/>
+  <property name="misc-confirm-close" type="bool" value="false"/>
 </channel>
