@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 commit(){
-	read -ep "Commit msg : "  msg
+	read -rep "Commit msg : "  msg
 	git add --all
 	git commit -m "$msg"
 }
@@ -9,7 +9,7 @@ commit(){
 commitdt(){
 	echo -e "$(tput setaf 2) yesterday \n last monday \n 2 weeks ago \n 2023-10-15 04:30:00 PM \n after (for date after last commit) $(tput sgr0)"
 	while true; do
-		read -ep "Time for commit (default: now) : " time_in
+		read -rep "Time for commit (default: now) : " time_in
 		time_out=$(         [ "$time_in" == "after" ] && { date --date="$(git log -1 --format="%cd" --date=iso) + 1 day 44 minutes" ; } || { [ -z "$time_in" ] && date --date="now" || date --date="$time_in" 2>&1 ; }       )
 		[ $? -eq 0 ] && { echo "$time_out <----------------<<<" ; break ; } || {  echo "Invalid Input" ; }  ## exception handling
 	done
