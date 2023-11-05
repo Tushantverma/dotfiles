@@ -110,7 +110,7 @@ static const Rule rules[] = {
      *	WM_CLASS(STRING) = instance, class
      *	WM_NAME(STRING) = title
      */
-    /* class            instance    title       tags mask   switchtotag  iscentered   isfloating   monitor */
+    /* class            instance    title       tags mask   switchtag  iscentered   isfloating   monitor */
     { "firefox",        NULL,       NULL,       1 << 1,          1,              0,           0,           -1 },
     { "Subl",           NULL,       NULL,       1 << 2,          1,              0,           0,           -1 },
     { "Thunar",         NULL,       NULL,       1 << 3,          1,              0,           0,           -1 },
