@@ -13,7 +13,7 @@ color2=#CC5500 ;
 
 
 case $BLOCK_BUTTON in
-    1) xfce4-terminal --command=nmtui-connect;;
+    1) (sh -c 'nm-applet & sleep 1m && pkill -f "nm-applet"') >/dev/null 2>&1 & ;;  ##  xfce4-terminal --command=nmtui-connect;;
     2) ;;
     3) subl ${0};;
     4) ;;
@@ -22,38 +22,23 @@ esac
 
 
 
-internet() {
-    local INTERVAL=1
-    local INTERFACE="wlo1"
-
-    print_bytes() {
-        local SPEED=$1
-
-        if [ "$SPEED" -lt 1000 ]; then
-            echo "0 kB"
-        elif [ "$SPEED" -lt 1000000 ]; then
-            echo "$(( SPEED / 1000 )) kB"
-        else
-            echo "$( awk "BEGIN {printf \"%.1f\", $SPEED / 1000000}" ) MB"
-        fi
-    }
-
-    read -r PREV_DOWN < /sys/class/net/$INTERFACE/statistics/rx_bytes
-    read -r PREV_UP < /sys/class/net/$INTERFACE/statistics/tx_bytes
-
-    sleep "$INTERVAL"
-
-    read -r CUR_DOWN < /sys/class/net/$INTERFACE/statistics/rx_bytes
-    read -r CUR_UP < /sys/class/net/$INTERFACE/statistics/tx_bytes
-
-    local DOWN=$(( (CUR_DOWN - PREV_DOWN) / INTERVAL ))
-    local UP=$(( (CUR_UP - PREV_UP) / INTERVAL ))
-
-    printf '%s %s\n' "^c$color1^$(print_bytes "$DOWN")^d^" "^c$color2^$(print_bytes "$UP")^d^"
-
+update() {
+    sum=0
+    for arg; do
+        read -r i < "$arg"
+        sum=$(( sum + i ))
+    done
+    cache=/tmp/${1##*/}
+    [ -f "$cache" ] && read -r old < "$cache" || old=0
+    printf %d\\n "$sum" > "$cache"
+    printf %d\\n $(( sum - old ))
 }
 
-internet
+rx=$(update /sys/class/net/[ew]*/statistics/rx_bytes)
+tx=$(update /sys/class/net/[ew]*/statistics/tx_bytes)
+
+
+printf "^c$color1^%3sB^d^ ^c$color2^%3sB^d^\\n" $(numfmt --to=iec $rx $tx)
 
 
 
@@ -61,25 +46,40 @@ internet
 
 
 
+# internet() {
+#     local INTERVAL=1
+#     local INTERFACE="wlo1"
 
+#     print_bytes() {
+#         local SPEED=$1
 
+#         if [ "$SPEED" -lt 1000 ]; then
+#             echo "0 kB"
+#         elif [ "$SPEED" -lt 1000000 ]; then
+#             echo "$(( SPEED / 1000 )) kB"
+#         else
+#             echo "$( awk "BEGIN {printf \"%.1f\", $SPEED / 1000000}" ) MB"
+#         fi
+#     }
 
-# update() {
-#     sum=0
-#     for arg; do
-#         read -r i < "$arg"
-#         sum=$(( sum + i ))
-#     done
-#     cache=/tmp/${1##*/}
-#     [ -f "$cache" ] && read -r old < "$cache" || old=0
-#     printf %d\\n "$sum" > "$cache"
-#     printf %d\\n $(( sum - old ))
+#     read -r PREV_DOWN < /sys/class/net/$INTERFACE/statistics/rx_bytes
+#     read -r PREV_UP < /sys/class/net/$INTERFACE/statistics/tx_bytes
+
+#     sleep "$INTERVAL"
+
+#     read -r CUR_DOWN < /sys/class/net/$INTERFACE/statistics/rx_bytes
+#     read -r CUR_UP < /sys/class/net/$INTERFACE/statistics/tx_bytes
+
+#     local DOWN=$(( (CUR_DOWN - PREV_DOWN) / INTERVAL ))
+#     local UP=$(( (CUR_UP - PREV_UP) / INTERVAL ))
+
+#     printf '%s %s\n' "^c$color1^$(print_bytes "$DOWN")^d^" "^c$color2^$(print_bytes "$UP")^d^"
+
 # }
 
-# rx=$(update /sys/class/net/[ew]*/statistics/rx_bytes)
-# tx=$(update /sys/class/net/[ew]*/statistics/tx_bytes)
+# internet
 
-# printf " %4sB %4sB\\n" $(numfmt --to=iec $rx $tx)
+
 
 #printf "  ^c$purple^ $(free -h | awk '/^Mem/ { print $3 }' | sed s/i//g)"
 

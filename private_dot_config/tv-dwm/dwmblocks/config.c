@@ -5,7 +5,7 @@
 #define SCRIPTS_PATH "~/.config/tv-dwm/dwmblocks/scripts/"
 
 Block blocks[] = {
-    {SCRIPTS_PATH "sb-traffic"       ,5     ,7 },
+    {SCRIPTS_PATH "sb-traffic"       ,1     ,7 },
     {SCRIPTS_PATH "sb-battery"       ,60    ,6 },
     {SCRIPTS_PATH "sb-brightness"    ,0     ,5 },
     {SCRIPTS_PATH "sb-mic"           ,0     ,8 },
