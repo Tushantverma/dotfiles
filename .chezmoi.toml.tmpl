@@ -1,0 +1,21 @@
+
+[diff]
+    pager = ""   #   "diff-so-fancy"
+
+# source ## fixing diff output on "chezmoi apply" and "chezmoi diff <fileName>"
+# https://www.chezmoi.io/user-guide/tools/diff/
+
+
+[merge]
+    command = "meld"
+    args = ["--diff", "{{ `{{ .Destination }}` }}", "{{ `{{ .Source }}` }}"]
+
+
+# to use the argument as literal string you need to use the `{{ Backtick }}`
+# https://www.chezmoi.io/user-guide/tools/diff/
+# https://www.chezmoi.io/user-guide/tools/merge/
+# https://www.chezmoi.io/reference/commands/merge/
+# https://github.com/twpayne/chezmoi/discussions/3432
+# https://github.com/twpayne/chezmoi/discussions/3285
+# https://github.com/twpayne/chezmoi/discussions/3432
+
