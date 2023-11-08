@@ -1,6 +1,6 @@
 
 [diff]
-    pager = ""   #   "diff-so-fancy"
+    pager = ""   # "diff-so-fancy"
 
 # source ## fixing diff output on "chezmoi apply" and "chezmoi diff <fileName>"
 # https://www.chezmoi.io/user-guide/tools/diff/
@@ -11,7 +11,9 @@
     args = ["--diff", "{{ `{{ .Destination }}` }}", "{{ `{{ .Source }}` }}"]
 
 
-# to use the argument as literal string you need to use the `{{ Backtick }}`
+# to use the argument as literal string you need to use the Backtick
+# Don't use Curly braces even in the comment here.. it will be executed 
+# this comment is also applicable for "toml" and "tmpl" both
 # https://www.chezmoi.io/user-guide/tools/diff/
 # https://www.chezmoi.io/user-guide/tools/merge/
 # https://www.chezmoi.io/reference/commands/merge/
