@@ -21,7 +21,7 @@ cleanup_on_interrupt() {
 	[ -e "$mounted_snap_dir" ] && rmdir $mounted_snap_dir
 
 	# update grub config
-	grub-mkconfig -o /boot/grub/grub.cfg  &>/dev/null &
+	grub-mkconfig -o /boot/grub/grub.cfg  &>/dev/null
 
 	tput setaf 5 # magenta
 	echo "#--------------SCRIPT_ENDED--------------#"
