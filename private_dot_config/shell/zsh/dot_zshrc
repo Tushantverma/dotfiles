@@ -85,6 +85,9 @@ zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"  # show color in tab
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'   
 # source (look for more option) --> https://superuser.com/questions/1092033/how-can-i-make-zsh-tab-completion-fix-capitalization-errors-for-directories-and
 
+# disable highlights (means white background) when you paste the text on terminal
+zle_highlight=('paste:none')
+# source https://unix.stackexchange.com/questions/331850/zsh-selects-a-pasted-text   https://www.reddit.com/r/zsh/comments/c160o2/command_line_pasted_text/
 
 #------------------------------------------------------------ fixing some keybinding with zsh --------------------------------------------------------------------#
 #### To know the code of a key, run ($showkey --ascii) or "$cat" or "$od -c" or "$read" command then press enter then press the key (you can press multiple key to get the code) then Ctrl+C to stop the cat command.
