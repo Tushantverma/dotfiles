@@ -16,8 +16,10 @@ enable_autologin() {
   # if empty input then assing current username if non empty then assing entered username
   [ -z "$username" ] && { current_user=$(whoami) ; echo "Current user is: $current_user" ; } || { current_user=$(username) ; echo "You entered: $current_user" ; }
 
+  # every line is needed billow
   echo "
-  [Service]  
+  [Service]
+  ExecStart=
   ExecStart=-/sbin/agetty -o '-p -f -- \\u' --noclear --autologin $current_user %I $TERM" | sudo tee $directoryy/autologin.conf >/dev/null
 
   # sudo systemctl enable getty@tty1.service (it always in running)
@@ -51,7 +53,7 @@ disable_autologin() {
 ####################################################################################################################
 ####################################################################################################################
 
-read -rep "$(tput setaf 3)Auto-login : [ (e)nable / (d)isable ]: $(tput sgr0)" choice
+read -rep "$(tput setaf 3)Auto-login : [ (e)nable / (d)isable ] ? : $(tput sgr0)" choice
 
   case $choice in
     e | enable  ) enable_autologin   ;;
