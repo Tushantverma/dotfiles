@@ -58,8 +58,8 @@ setopt GLOB_DOTS ## show dot files (for bash and zsh both) # for example now you
   alias tree='tree -AC' #install tree before using this command
   alias tterminal='xfconf-query -c xfce4-terminal -p /background-darkness -s 0.8'  # source/syntex https://forum.xfce.org/viewtopic.php?id=16911
   alias bterminal='xfconf-query -c xfce4-terminal -p /background-darkness -s 1.0'  # source/syntex https://forum.xfce.org/viewtopic.php?id=16911
-  alias night="xrandr --output $(xrandr | awk '/ primary/{print $1}') --gamma 1.0:0.88:0.76 --brightness 1.0"
-  alias day="xrandr --output $(xrandr | awk '/ primary/{print $1}') --gamma 1:1:1 --brightness 1.0"
+  alias night="xrandr --output $(xrandr | awk '/ connected/{print $1}') --gamma 1.0:0.88:0.76 --brightness 1.0"
+  alias day="xrandr --output $(xrandr | awk '/ connected/{print $1}') --gamma 1:1:1 --brightness 1.0"
   alias cm='chezmoi'
   alias cdcm='chezmoi cd'
   alias yay='yay --color auto'
