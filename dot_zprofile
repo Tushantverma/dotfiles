@@ -40,9 +40,10 @@ export XCURSOR_SIZE='22' # examples : 22 28 34 40
 # also you can setup XCURSOR_THEME globally "sed -i "s/Inherits=.*/Inherits=Breeze_Snow/" /usr/share/icons/default/index.theme"
 # also you can set environment variable.. but for that please read billow --# LEARNING #-- section
 
-### automatically run startx on tty1 only  
+#---------------startx---------------#
+# automatically run startx on tty1 only  
 [[ -z $DISPLAY && $XDG_VTNR -eq 1 ]] && exec startx
-### ~/.bash_profile for Bash or ~/.zprofile for Zsh
+# ~/.bash_profile for Bash or ~/.zprofile for Zsh
 
 #---------------------------------------------------------------------------# LEARNING #---------------------------------------------------------------------------#
 #--> (GLOBAL SCOPE) # Define environment varibale in the "Global scope" : /etc/environment , /etc/profile , /etc/profile.d -> (for scripts) ,
