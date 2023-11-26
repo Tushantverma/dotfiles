@@ -38,7 +38,7 @@ export XCURSOR_SIZE='22' # examples : 22 28 34 40
 # "$HOME/.config/gtk-2.0/gtkrc-2.0" (or "~/gtkrc-2.0") and "$HOME/.config/gtk-3.0/settings.ini"
 # then remove the cursor named line (or chezmoi update) from these file to remove conflict 
 # also you can setup XCURSOR_THEME globally "sed -i "s/Inherits=.*/Inherits=Breeze_Snow/" /usr/share/icons/default/index.theme"
-# also you can set environment variable.. but for that please read billow --# LEARNING #-- section
+# also you can set environment variable globally.. but for that please read billow --# LEARNING #-- section
 
 #---------------startx---------------#
 # automatically run startx on tty1 only  
