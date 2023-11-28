@@ -8,11 +8,11 @@ wget -q --spider https://www.google.com || wget -q --spider https://www.apple.co
 
 ### install all dependency ###
 sudo pacman -Sy --noconfirm --needed libx11 libxrandr cmake libxnvctrl
-# libxnvctrl ==> its for nvidia but its required to build the package on my system otherwise you will have an error
+# libxnvctrl ==> its for nvidia but its required for working the package on the system otherwise you will have an error
 
 [ -d "$HOME/.config/libvibrant" ] && rm -rf "$HOME/.config/libvibrant/"
 git clone --depth 1 https://github.com/libvibrant/libvibrant.git "$HOME/.config/libvibrant/"
-rm -rf "$HOME/.config/libvibrant/.git*"
+rm -rf "$HOME/.config/libvibrant"/{.git*,LICENSE,NOTICE,README.md}
 mkdir "$HOME/.config/libvibrant/build/"
 
 # Run CMake to configure the project
@@ -29,8 +29,8 @@ display=$(xrandr --listmonitors | awk 'NR==2{print $NF}')  # getting the display
 # eDP-1 is your display port name got it form xrandr
 
 ## if the line already exist in the startup script dont add it again
-if ! grep -qF "\$HOME/.config/libvibrant/build/vibrant-cli/vibrant-cli $display 1.6"    "$HOME/.config/startup.sh" 2>/dev/null; then
-         echo "\$HOME/.config/libvibrant/build/vibrant-cli/vibrant-cli $display 1.6" >> "$HOME/.config/startup.sh"
+if ! grep -qF "\$HOME/.config/libvibrant/build/cli/vibrant-cli"                 "$HOME/.config/startup.sh" 2>/dev/null; then
+         echo "\$HOME/.config/libvibrant/build/cli/vibrant-cli $display 1.6" >> "$HOME/.config/startup.sh"
 fi
 
 
