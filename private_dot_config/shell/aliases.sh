@@ -54,7 +54,7 @@ setopt GLOB_DOTS ## show dot files (for bash and zsh both) # for example now you
   alias dd='cd ~/Downloads'
   alias premove='sudo pacman -Rcns'
   alias pinstall='sudo pacman -S --noconfirm'
-  alias cat='bat'    ## (cat -n ###this command can give the issue maybe any error on terminal)
+  alias cat='bat -p'    ## (cat -n ###this command can give the issue maybe any error on terminal)
   alias tree='tree -AC' #install tree before using this command
   alias tterminal='xfconf-query -c xfce4-terminal -p /background-darkness -s 0.8'  # source/syntex https://forum.xfce.org/viewtopic.php?id=16911
   alias bterminal='xfconf-query -c xfce4-terminal -p /background-darkness -s 1.0'  # source/syntex https://forum.xfce.org/viewtopic.php?id=16911
