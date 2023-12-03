@@ -33,7 +33,11 @@ if ! grep -qF "\$HOME/.config/libvibrant/build/cli/vibrant-cli"                 
          echo "\$HOME/.config/libvibrant/build/cli/vibrant-cli $display 1.6" >> "$HOME/.config/startup.sh"
 fi
 
-
-
 # source :- https://github.com/libvibrant/libvibrant/
+
+
+# ---------------------------------------------- Removing unnecessary packages --------------------------------------- #
+
+sudo pacman -R --noconfirm cmake
+sudo pacman -Rns --noconfirm $(pacman -Qtdq) # removing orphaned / leftover dependencies on the system including 'cmake' ( if those dependencies are not required by some other packages remove it )
 
