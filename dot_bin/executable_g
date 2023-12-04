@@ -20,17 +20,17 @@ commitdt(){
 }
 
 case $1 in
-        commitdt  )   commitdt                                       ;;
-	commit    )   commit                                         ;;
-	clone     )   command git clone --depth 1 "$2"               ;;
+        commitdt  )   commitdt                                         ;;
+	commit    )   commit                                           ;;
+	clone     )   command git clone --depth 1 --single-branch "$2" ;;
 
-	delhead   )   command git reset --hard HEAD~1                ;;  # it deletes the current HEAD~1 (use carefully)
-	forcepush )   command git push origin HEAD --force           ;;  # forcefully push the current HEAD of the current branch to github/gitlab ( use it after deleting the current head, for above command )
+	delhead   )   command git reset --hard HEAD~1                  ;;  # it deletes the current HEAD~1 (use carefully)
+	forcepush )   command git push origin HEAD --force             ;;  # forcefully push the current HEAD of the current branch to github/gitlab ( use it after deleting the current head, for above command )
 
-	delchange )   command git reset --hard HEAD && git clean -df ;;  # delete all tracked "&&" untracked changes both  (Dont worry..!! it dose not delete current HEAD~1)
-	s         )   command git status                             ;;
-	l         )   command git log -n 3                           ;;  # show last 3 entery on git log
-	*         )   command git "$@"                               ;;  # run all git command with 'g'
+	delchange )   command git reset --hard HEAD && git clean -df   ;;  # delete all tracked "&&" untracked changes both  (Dont worry..!! it dose not delete current HEAD~1)
+	s         )   command git status                               ;;
+	l         )   command git log -n 3                             ;;  # show last 3 entery on git log
+	*         )   command git "$@"                                 ;;  # run all git command with 'g'
 esac
 
 
