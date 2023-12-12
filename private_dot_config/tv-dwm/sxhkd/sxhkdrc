@@ -87,6 +87,9 @@ XF86AudioMicMute
     amixer -q set Capture toggle ;kill -$(expr 34 + 8) $(pidof dwmblocks)
     ###(-q => flag means dont show output just do the action)###
 
+# take screenshot
+Print
+    flameshot gui
 
 
 
