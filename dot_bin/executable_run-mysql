@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+
+# run the whole script as root 
+[ "$EUID" -ne 0 ] && echo "This script requires root privileges." && exec sudo sh "$0" "$@"; 
+
+# ##############  Check if mysql or mariadb installed then start the systemd service and run mysql ##############
+
+command -v mariadb &> /dev/null && {
+   { systemctl is-active --quiet mysqld.service ; echo "$(tput setaf 3) Already running Daemon$(tput sgr0)" ; } || { systemctl start mysqld.service ; echo "$(tput setaf 2) Fresh started Daemon$(tput sgr0)" ; } # Check if MySQL service is already running, if not, start it
+    mysql   # Run the MySQL client
+    exit 0 ;
+}
+
+# ###############  install mysql if it's not already installed  ################
+
+
+# ---------------------------------------------- checkup the internet connection --------------------------------------- #
+# wget -q --spider https://www.google.com || { echo "No internet connection"; exit 1; }  # wget just checks web page exist or not without downloading
+# wget -q --spider https://www.google.com && { echo "Internet is working" ; } || { echo "No internet connection"; exit 1; }
+wget -q --spider https://www.google.com || wget -q --spider https://www.apple.com || { echo "No internet connection"; exit 1; } && echo "Internet is working" 
+# curl -s --head --fail https://www.google.com > /dev/null && { echo "Internet is working" ; } || { echo "No internet connection"; exit 1; }  # it downloads the head code to check
+
+
+pacman -Sy --noconfirm extra/mariadb
+mariadb-install-db --user=mysql --basedir=/usr --datadir=/var/lib/mysql
+systemctl start mysqld
+
+
+###############################################################################
+################# automatically answer the question prompt ####################
+###############################################################################
+
+# Define the command to run your program
+command="mysql_secure_installation"
+
+# answer the subshell
+(
+#--------- answers -------- # -------------- Questions ----------------------------#
+  sleep 1; echo ""          # Enter current password for root (enter for none): enter
+  sleep 1; echo "Y"         # Switch to unix_socket authentication [Y/n] Y
+  sleep 1; echo "n"         # Change the root password? [Y/n] n
+  sleep 1; echo "Y"         # Remove anonymous users? [Y/n] Y
+  sleep 1; echo "Y"         # Disallow root login remotely? [Y/n] Y
+  sleep 1; echo "Y"         # Remove test database and access to it? [Y/n] Y
+  sleep 1; echo "Y"         # Reload privilege tables now? [Y/n] Y
+
+) | $command
+
+
+# Run the MySQL client
+mysql
+
+
+### NOTE ###
+# this script is just configured to practice SQL ## this might not be secure config for production database
+# you can also create a user for security of the database for more info look at the billow SOURCE
+
+### SOURCE ###
+## https://www.geeksforgeeks.org/how-to-install-and-configure-mysql-on-arch-based-linux-distributionsmanjaro/
+## https://www.atlantic.net/dedicated-server-hosting/how-to-install-mysql-on-arch-linux/
+
+
