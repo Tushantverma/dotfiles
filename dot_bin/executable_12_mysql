@@ -6,7 +6,7 @@
 # ##############  Check if mysql or mariadb installed then start the systemd service and run mysql ##############
 
 command -v mariadb &> /dev/null && {
-   { systemctl is-active --quiet mysqld.service ; echo "$(tput setaf 3) Already running Daemon$(tput sgr0)" ; } || { systemctl start mysqld.service ; echo "$(tput setaf 2) Fresh started Daemon$(tput sgr0)" ; } # Check if MySQL service is already running, if not, start it
+   { systemctl is-active --quiet mysqld.service && echo "$(tput setaf 3) Already running Daemon$(tput sgr0)" ; } || { systemctl start mysqld.service && echo "$(tput setaf 2) Fresh started Daemon$(tput sgr0)" ;  } # Check if MySQL service is already running, if not, start it
     mysql   # Run the MySQL client
     exit 0 ;
 }
@@ -21,14 +21,30 @@ wget -q --spider https://www.google.com || wget -q --spider https://www.apple.co
 # curl -s --head --fail https://www.google.com > /dev/null && { echo "Internet is working" ; } || { echo "No internet connection"; exit 1; }  # it downloads the head code to check
 
 
+echo "###############################################################################"
+echo "#################           installing mariadb             ####################"
+echo "###############################################################################"
+
 pacman -Sy --noconfirm extra/mariadb
+
+
+echo "###############################################################################"
+echo "#################               configuring                ####################"
+echo "###############################################################################"
+
 mariadb-install-db --user=mysql --basedir=/usr --datadir=/var/lib/mysql
+
+
+echo "###############################################################################"
+echo "#################               starting daemon            ####################"
+echo "###############################################################################"
+
 systemctl start mysqld
 
 
-###############################################################################
-################# automatically answer the question prompt ####################
-###############################################################################
+echo "###############################################################################"
+echo "################# automatically answer the question prompt ####################"
+echo "###############################################################################"
 
 # Define the command to run your program
 command="mysql_secure_installation"
@@ -37,8 +53,8 @@ command="mysql_secure_installation"
 (
 #--------- answers -------- # -------------- Questions ----------------------------#
   sleep 1; echo ""          # Enter current password for root (enter for none): enter
-  sleep 1; echo "Y"         # Switch to unix_socket authentication [Y/n] Y
-  sleep 1; echo "n"         # Change the root password? [Y/n] n
+  sleep 1; echo "n"         # Switch to unix_socket authentication [Y/n] n   (You already have your root account protected, so you can safely answer 'n')
+  sleep 1; echo "n"         # Change the root password? [Y/n] n              (You already have your root account protected, so you can safely answer 'n')
   sleep 1; echo "Y"         # Remove anonymous users? [Y/n] Y
   sleep 1; echo "Y"         # Disallow root login remotely? [Y/n] Y
   sleep 1; echo "Y"         # Remove test database and access to it? [Y/n] Y
