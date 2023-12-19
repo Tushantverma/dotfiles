@@ -105,6 +105,9 @@ super + F1
 super + F2
     sleep 5 ; xdotool type "$(xclip -o -selection clipboard)"
 
+super + F3
+    systemctl suspend
+
 super + F11
     killall chadwm
     
