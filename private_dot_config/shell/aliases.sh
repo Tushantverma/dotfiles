@@ -43,8 +43,26 @@ setopt GLOB_DOTS ## show dot files (for bash and zsh both) # for example now you
 #############################  Tushant Aliases ####################################
 ###################################################################################
 
+################################################################################### 
+### rules for the aliases to prevent slow shell startup or any unexpected error  ##
+###################################################################################
+# 1. in aliases always use commands as literal string in the 'single quote' or use backslash for escape sequence in "double quote"
+# 2. command substitution / expansion should not happen at the time of sourcing the .bashrc / .zshrc (it should happen while using the aliases)
+# 3. to prevent the command substitution / expansion when sourcing the .bashrc / .zshrc use 'single quote' or use escape sequence in "double quote"
 
-#add all billow aliases in .bashrc && .zshrc or create your own personal_rc file
+# alias alias1="$(sleep 10)"   # incorrect way (this will be evaluated every time automatically when the .bashrc / .zshrc will be sourced or when open the terminal)
+# alias alias2="\$(sleep 10)"  # correct way   (we use escape sequence to use a command as literal string) this will evaluate when using the alias  
+# alias alias3='$(sleep 10)'   # correct way   (this is already an literal string because it's single quoted) this will also evaluate when using the alias
+
+# debug : check what is the actual alias used by the terminal... steps : open terminal > write below command
+# alias <name of the alias>... example: alias alias1 --- or --- alias ls
+
+# source of knowledge : on the alias "day" and "night" xrandr was giving the error "can't open display" on tty2 after login
+# these rules are only applicable on aliases and not on functions because functions never get evaluated automatically
+
+
+
+
 
 
 #Tushant_Aliases
@@ -58,8 +76,8 @@ setopt GLOB_DOTS ## show dot files (for bash and zsh both) # for example now you
   alias tree='tree -AC' #install tree before using this command
   alias tterminal='xfconf-query -c xfce4-terminal -p /background-darkness -s 0.8'  # source/syntex https://forum.xfce.org/viewtopic.php?id=16911
   alias bterminal='xfconf-query -c xfce4-terminal -p /background-darkness -s 1.0'  # source/syntex https://forum.xfce.org/viewtopic.php?id=16911
-  alias night="xrandr --output $(xrandr | awk '/ connected/{print $1}') --gamma 1.0:0.88:0.76 --brightness 1.0"
-  alias day="xrandr --output $(xrandr | awk '/ connected/{print $1}') --gamma 1:1:1 --brightness 1.0"
+  alias night="xrandr --output \$(xrandr | awk '/ connected/{print \$1}') --gamma 1.0:0.88:0.76 --brightness 1.0"
+  alias day="xrandr --output \$(xrandr | awk '/ connected/{print \$1}') --gamma 1:1:1 --brightness 1.0"
   alias cm='chezmoi'
   alias cdcm='chezmoi cd'
   alias yay='yay --color auto'
@@ -82,12 +100,12 @@ setopt GLOB_DOTS ## show dot files (for bash and zsh both) # for example now you
 # }
 
 # smart cd into a file ## install fzf first
-fcd(){ cd "$(find -type d | fzf)" ; }
+cdd(){ cd "$(find -type d | fzf --query "$1")" ; }
 
 # open a text file ## and default application
 open() {
-  local file_path=$(find -type f | fzf) ;
-  local file_type=$(file -b --mime-type "$file_path") ;
+  local file_path=$(find -type f | fzf --query "$1") ;
+  [[ -z "$file_path" ]] && return 1 || local file_type=$(file -b --mime-type "$file_path")
   [[ "${file_type}" == text/* ]] && $EDITOR "${file_path}" || xdg-open "${file_path}" ;
 }
 
@@ -98,6 +116,14 @@ change() {  while true ; do find . -type f -cmin -0.083 ; sleep 1; done; }
 getpath() { 
   [ -f "$1" ] && { realpath $1 | sed "s|$HOME|\$HOME|g"  | tr -d '\n' | xclip -selection clipboard ; } ||
   { realpath $(find -type f | fzf) | sed "s|$HOME|\$HOME|g"  | tr -d '\n' | xclip -selection clipboard ; }
+}
+
+mkscript() {
+[[ -z "$1" ]] && { script_name="$(read -re "script_name?Enter script name: "; echo "$script_name")"; } || { script_name="$1"; } #ask for script name if not specified
+[[ -z "$script_name" ]] && { echo "Script name cannot be empty. Exiting."; return 1; } # script name should not be empty
+[ -e "$script_name" ] && { echo "File '$script_name' already exists."; return 1; };    # script name should not already exist
+touch "$script_name" ; [ $? -ne 0 ] && { echo "Error occurred"; return 1; } ;  # stop the function if any error occured on touch
+echo '#!/usr/bin/env bash' > "$script_name" ; chmod +x "$script_name" ; $EDITOR "$script_name" ; # basic command
 }
 
 ############################################################################################
@@ -113,9 +139,9 @@ if [ -d "$HOME/.bin" ] ;
   then PATH="$HOME/.bin:$PATH"
 fi
 
-if [ -d "$HOME/.local/bin" ] ;
-  then PATH="$HOME/.local/bin:$PATH"
-fi
+# if [ -d "$HOME/.local/bin" ] ;
+#   then PATH="$HOME/.local/bin:$PATH"
+# fi
 
 ### ALIASES ###
 
@@ -227,9 +253,9 @@ alias cz='cp /etc/skel/.zshrc ~/.zshrc && echo "Copied" && exec zsh'    ##tv mad
 alias cf='cp /etc/skel/.config/fish/config.fish ~/.config/fish/config.fish && echo "Copied" && exec fish'    ##tv made both similar'
 
 #switch between bash and zsh
-alias tobash="sudo chsh $USER -s /bin/bash && echo 'Now log out.'"
-alias tozsh="sudo chsh $USER -s /bin/zsh && echo 'Now log out.'"
-alias tofish="sudo chsh $USER -s /bin/fish && echo 'Now log out.'"
+alias tobash="sudo chsh \$USER -s /bin/bash && echo 'Now log out.'"
+alias tozsh="sudo chsh \$USER -s /bin/zsh && echo 'Now log out.'"
+alias tofish="sudo chsh \$USER -s /bin/fish && echo 'Now log out.'"
 
 #switch between lightdm and sddm
 alias tolightdm="sudo pacman -S lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings --noconfirm --needed ; sudo systemctl enable lightdm.service -f ; echo 'Lightm is active - reboot now'"
@@ -295,7 +321,7 @@ alias rip="expac --timefmt='%Y-%m-%d %T' '%l\t%n %v' | sort | tail -200 | nl"
 alias riplong="expac --timefmt='%Y-%m-%d %T' '%l\t%n %v' | sort | tail -3000 | nl"
 
 #iso and version used to install ArcoLinux
-alias iso="cat /etc/dev-rel | awk -F '=' '/ISO/ {print $2}'"
+alias iso="cat /etc/dev-rel | awk -F '=' '/ISO/ {print \$2}'"
 alias isoo="cat /etc/dev-rel"
 
 #Cleanup orphaned packages
@@ -313,7 +339,7 @@ alias listaur="sudo pacman -Qqem"
 # pacman -S --needed - < my-list-of-packages.txt
 
 #clear
-alias clean="clear; seq 1 $(tput cols) | sort -R | sparklines | lolcat"
+alias clean="clear; seq 1 \$(tput cols) | sort -R | sparklines | lolcat"
 
 #search content with ripgrep
 alias rg="rg --sort path"
@@ -323,29 +349,29 @@ alias jctl="journalctl -p 3 -xb"
 
 #nano for important configuration files
 #know what you do in these files
-alias nlxdm="sudo $EDITOR /etc/lxdm/lxdm.conf"
-alias nlightdm="sudo $EDITOR /etc/lightdm/lightdm.conf"
-alias npacman="sudo $EDITOR /etc/pacman.conf"
-alias ngrub="sudo $EDITOR /etc/default/grub"
-alias nconfgrub="sudo $EDITOR /boot/grub/grub.cfg"
-alias nmkinitcpio="sudo $EDITOR /etc/mkinitcpio.conf"
-alias nmirrorlist="sudo $EDITOR /etc/pacman.d/mirrorlist"
-alias narcomirrorlist="sudo $EDITOR /etc/pacman.d/arcolinux-mirrorlist"
-alias nsddm="sudo $EDITOR /etc/sddm.conf"
-alias nsddmk="sudo $EDITOR /etc/sddm.conf.d/kde_settings.conf"
-alias nfstab="sudo $EDITOR /etc/fstab"
-alias nnsswitch="sudo $EDITOR /etc/nsswitch.conf"
-alias nsamba="sudo $EDITOR /etc/samba/smb.conf"
-alias ngnupgconf="sudo $EDITOR /etc/pacman.d/gnupg/gpg.conf"
-alias nhosts="sudo $EDITOR /etc/hosts"
-alias nhostname="sudo $EDITOR /etc/hostname"
-alias nresolv="sudo $EDITOR /etc/resolv.conf"
-# alias nbb="$EDITOR ~/.bashrc"
-# alias nzz="$EDITOR ~/.zshrc"
-# alias nff="$EDITOR ~/.config/fish/config.fish"
-alias nneofetch="$EDITOR ~/.config/neofetch/config.conf"
-alias nplymouth="sudo $EDITOR /etc/plymouth/plymouthd.conf"
-alias nvconsole="sudo $EDITOR /etc/vconsole.conf"
+alias nlxdm="sudo \$EDITOR /etc/lxdm/lxdm.conf"
+alias nlightdm="sudo \$EDITOR /etc/lightdm/lightdm.conf"
+alias npacman="sudo \$EDITOR /etc/pacman.conf"
+alias ngrub="sudo \$EDITOR /etc/default/grub"
+alias nconfgrub="sudo \$EDITOR /boot/grub/grub.cfg"
+alias nmkinitcpio="sudo \$EDITOR /etc/mkinitcpio.conf"
+alias nmirrorlist="sudo \$EDITOR /etc/pacman.d/mirrorlist"
+alias narcomirrorlist="sudo \$EDITOR /etc/pacman.d/arcolinux-mirrorlist"
+alias nsddm="sudo \$EDITOR /etc/sddm.conf"
+alias nsddmk="sudo \$EDITOR /etc/sddm.conf.d/kde_settings.conf"
+alias nfstab="sudo \$EDITOR /etc/fstab"
+alias nnsswitch="sudo \$EDITOR /etc/nsswitch.conf"
+alias nsamba="sudo \$EDITOR /etc/samba/smb.conf"
+alias ngnupgconf="sudo \$EDITOR /etc/pacman.d/gnupg/gpg.conf"
+alias nhosts="sudo \$EDITOR /etc/hosts"
+alias nhostname="sudo \$EDITOR /etc/hostname"
+alias nresolv="sudo \$EDITOR /etc/resolv.conf"
+# alias nbb="\$EDITOR ~/.bashrc"
+# alias nzz="\$EDITOR ~/.zshrc"
+# alias nff="\$EDITOR ~/.config/fish/config.fish"
+alias nneofetch="\$EDITOR ~/.config/neofetch/config.conf"
+alias nplymouth="sudo \$EDITOR /etc/plymouth/plymouthd.conf"
+alias nvconsole="sudo \$EDITOR /etc/vconsole.conf"
 
 #reading logs with bat
 alias lcalamares="bat /var/log/Calamares.log"
@@ -363,7 +389,7 @@ alias fix-gpg-retrieve="gpg2 --keyserver-options auto-key-retrieve --receive-key
 alias fix-keyserver="[ -d ~/.gnupg ] || mkdir ~/.gnupg ; cp /etc/pacman.d/gnupg/gpg.conf ~/.gnupg/ ; echo 'done'"
 
 #fixes
-alias fix-permissions="sudo chown -R $USER:$USER ~/.config ~/.local"
+alias fix-permissions="sudo chown -R \$USER:\$USER ~/.config ~/.local"
 alias keyfix="/usr/local/bin/arcolinux-fix-pacman-databases-and-keys"
 alias key-fix="/usr/local/bin/arcolinux-fix-pacman-databases-and-keys"
 alias keys-fix="/usr/local/bin/arcolinux-fix-pacman-databases-and-keys"
