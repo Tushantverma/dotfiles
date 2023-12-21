@@ -120,7 +120,7 @@ getpath() {
 
 mkscript() {
 [[ -z "$1" ]] && { script_name="$(read -re "script_name?Enter script name: "; echo "$script_name")"; } || { script_name="$1"; } #ask for script name if not specified
-[[ -z "$script_name" ]] && { echo "Script name cannot be empty. Exiting."; return 1; } # script name should not be empty
+# [[ -z "$script_name" ]] && { echo "Script name cannot be empty. Exiting."; return 1; } # script name should not be empty
 [ -e "$script_name" ] && { echo "File '$script_name' already exists."; return 1; };    # script name should not already exist
 touch "$script_name" ; [ $? -ne 0 ] && { echo "Error occurred"; return 1; } ;  # stop the function if any error occured on touch
 echo '#!/usr/bin/env bash' > "$script_name" ; chmod +x "$script_name" ; $EDITOR "$script_name" ; # basic command
