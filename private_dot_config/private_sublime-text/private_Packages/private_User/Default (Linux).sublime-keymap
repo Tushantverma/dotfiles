@@ -1,3 +1,4 @@
 [
-	{ "keys": ["alt+w"], "command": "close_all" } // close all tabs
+	{ "keys": ["alt+w"], "command": "close_all" }, // close all tabs
+	{ "keys": ["ctrl+t"], "command": "new_file" }  // open new tab 
 ]
