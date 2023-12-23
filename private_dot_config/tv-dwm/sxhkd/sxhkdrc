@@ -40,6 +40,28 @@ super + z
     $HOME/.config/boomer/boomer_bin
 
 
+# #####################################################################
+# ######################## ctrl + super ###############################
+# #####################################################################
+
+
+# Copy selected text to clipboard (preserve clipboard entry after app is closed)
+ctrl + super + c
+    xclip -o | xclip -selection clipboard
+
+
+# Paste(type out) text from clipboard (cmd respects whitespace and newline while typing)
+ctrl + super + v
+    sleep 2; echo "$(xclip -o -selection clipboard)" | while IFS= read -r line; do xdotool type --delay 10 "$line"; xdotool key Return; done
+ 
+
+
+
+
+
+
+#############################################################################################################################
+
 
 # #####################################################################
 # ######################## super + shift ##############################
@@ -102,8 +124,6 @@ super + F1
     yt-dlp --restrict-filenames -o '/tmp/%(title)s.%(ext)s' -f 'bestvideo[height<=720]+bestaudio/best[height<=720]' $(xclip -o) && mpv --fullscreen "$(yt-dlp --restrict-filenames -o '/tmp/%(title)s.%(ext)s' -f 'bestvideo[height<=720]+bestaudio/best[height<=720]' --get-filename $(xclip -o))"
 #   yt-dlp -o - $(xclip -o) | mpv --fullscreen -
 
-super + F2
-    sleep 5 ; xdotool type "$(xclip -o -selection clipboard)"
 
 super + F3
     systemctl suspend
@@ -141,7 +161,8 @@ super + F12
 ## #############################################################################################################################################
 
 
-
+# super + F2
+#     sleep 5 ; xdotool type "$(xclip -o -selection clipboard)"
 
 
 # #Vlc
