@@ -34,7 +34,7 @@ sudo pacman -Syyy
 sudo pacman -S --noconfirm --needed $(echo $installpkg) ## Installing headers and updating kernal in a single variable (solving this error "Kernel driver not installed (rc=-1908)" by updating kernal)
 sudo pacman -S --noconfirm --needed virtualbox
 sudo pacman -S --noconfirm --needed virtualbox-host-dkms
-sudo pacman -S --noconfirm --needed xdotool  ## auto type from clipboard
+# sudo pacman -S --noconfirm --needed xdotool  ## auto type from clipboard # commented out because already installed
 
 echo "###########################################################################"
 echo "##      Removing all the messages virtualbox produces                    ##"
