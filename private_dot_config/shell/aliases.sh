@@ -86,7 +86,8 @@ setopt GLOB_DOTS ## show dot files (for bash and zsh both) # for example now you
   alias diff='diff --color=auto'
   alias ip='ip --color=auto'
   alias cp='cp -i'   ## ask before overwrite
-  alias nf='neofetch'
+  alias ff='fastfetch'
+  alias q='cd ..'
   alias sudo='sudo ' ## If the last character of the alias is a 'space' or 'tab' character then the next word of the command is also checked for an alias (now you can run your aliases with sudo command | this way you can create one alias by using multiple aliases like [ alias new_alias='alias1 alias2 alias3' ])
 
 ############################################################################################

@@ -7,7 +7,7 @@
 
 command -v mariadb &> /dev/null && {
    { systemctl is-active --quiet mysqld.service && echo "$(tput setaf 3) Already running Daemon$(tput sgr0)" ; } || { systemctl start mysqld.service && echo "$(tput setaf 2) Fresh started Daemon$(tput sgr0)" ;  } # Check if MySQL service is already running, if not, start it
-    mysql   # Run the MySQL client
+    mysql   # Run the MySQL client (yes it requires root privileges to run $sudo mysql)
     exit 0 ;
 }
 

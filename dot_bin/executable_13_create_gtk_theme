@@ -1,0 +1,181 @@
+#!/usr/bin/env bash
+
+echo "##################################################"
+echo "################ checking package ################"
+echo "##################################################"
+
+
+# Define the list of packages
+packages=(
+    "inkscape"
+    "sassc"
+    "meson"
+    "gnome-themes-standard"
+    "gtk-engine-murrine"
+    "gnome-shell"
+    "pkg-config"
+    "cinnamon"
+    "gtk3"
+    "optipng"
+    "gpick"  # color picker
+)
+
+# Loop through each package and check if it's installed
+for package in "${packages[@]}"; do
+    if ! pacman -Qi $package > /dev/null 2>&1; then
+        to_install+=($package)
+    fi
+done
+
+# If there are packages to install, install them
+if [ ${#to_install[@]} -gt 0 ]; then
+    sudo pacman -S "${to_install[@]}" --needed --noconfirm
+else
+    echo "All packages are already installed."
+fi
+
+
+
+
+echo "##################################################"
+echo "################# building theme #################"
+echo "##################################################"
+
+
+
+# Define theme colors # it have no any order for execution (creating [theme])
+declare -A theme_colors=(
+##-----------${colors[0]}, ${colors[1]}, ${colors[2]}, ${colors[3]}, ${colors[n]} -------##
+    [aaqua]="   61afef   ,    100e17   ,     191621  ,    0000ff   "
+  # [aazul]="   c1f505   ,    ff0000   ,     00ff00  ,    0000ff   "
+  # [xblue]="   05f519   ,    ff0000   ,     00ff00  ,    0000ff   "
+)
+
+# Function to change colors in files
+change_color() {
+   find /tmp/arc-theme/common -type f -exec sed -i "s/$1/$2/g" {} +
+}
+
+# Function to change rgba colors in files
+change_rgba_color() {
+  local hex=$2
+  local reddec=$((16#${hex:0:2}))
+  local greendec=$((16#${hex:2:2}))
+  local bluedec=$((16#${hex:4:2}))
+  local rgba="$reddec, $greendec, $bluedec"
+
+  find /tmp/arc-theme/common -type f -exec sed -i "s/$1/$rgba/g" {} +
+}
+
+cleanup(){
+  [ -d /tmp/arc-theme ] && sudo rm -rf /tmp/arc-theme
+  [ -d /tmp/at ] && sudo rm -rf /tmp/at
+}
+
+# Clone or update arc-theme repository ## if the function will reuse it will copy from backup instead of git clone again and again
+update_repo() {
+
+  if [ -d "/tmp/arc-theme_backup" ]; then
+    cp -rf /tmp/arc-theme_backup /tmp/arc-theme
+    echo "$(tput setaf 2)copy repo from arc-theme_backup$(tput sgr0)"
+  else
+    git clone --single-branch --depth 1 https://github.com/jnsh/arc-theme /tmp/arc-theme
+    cp -rf /tmp/arc-theme /tmp/arc-theme_backup
+  fi
+}
+
+# Build and install arc-theme
+build_theme() {
+  pushd /tmp/arc-theme    ## goto that directory
+  [ -d build ] || mkdir build
+
+  sed -i "/gtk/s/.*/  choices: \['gtk2', 'gtk3', 'gtk4'\],/" meson_options.txt   #  build only required theme  ## you can remove this line build time will not change that much
+  sed -i "/dark/s/.*/  choices: \['dark'\],/"                meson_options.txt   #  build only required theme  ## you can remove this line build time will not change that much
+
+  meson setup --prefix=/tmp/at build/
+  meson configure --prefix=/tmp/at build/
+  sudo meson install -C build/
+  popd                    ## come back to the previous directory again
+}
+
+# Create and rename themes
+create_theme() {
+  local theme_choice=$1
+
+  [ -d "$HOME/.themes" ] || mkdir -p "$HOME/.themes"
+ 
+ # rename the theme
+  for theme_path in /tmp/at/share/themes/*/; do # listing all the theme directory complete path (ex: /tmp/at/share/themes/Arc, /tmp/at/share/themes/Arc-Darker, /tmp/at/share/themes/Arc-Dark, /tmp/at/share/themes/Arc-Lighter)
+    theme_name=$(basename "${theme_path%/}")    # extracting theme name from theme path
+    new_theme_path="${theme_path%/}-$theme_choice"
+    sudo mv "$theme_path" "$new_theme_path"
+    sudo sed -i "s/$theme_name/$theme_name-$theme_choice/g" "$new_theme_path/index.theme"   # Update theme_name to theme_name-$theme_choice in the index.theme file
+  done
+
+  [ -d "$HOME/.themes/$theme_name-$theme_choice" ] && rm -rf "$HOME/.themes/$theme_name-$theme_choice" ## if theme already exist in the ~/.themes directory then delete it
+  cp -rf /tmp/at/share/themes/Arc* "$HOME/.themes/"
+}
+
+# Main script logic
+for theme in "${!theme_colors[@]}"; do  ##################################################################################################################################
+
+
+  # color="${theme_colors[$theme]}"                               # result only one and first single hex color variable  ## old way
+  # colors=($(printf "%s\n" ${theme_colors[$theme]}))             # works only if you have multiple hex color "space seprated" not "command seprated"
+  # colors=($(echo "${theme_colors[$theme]}" | tr ' ' '\n'))      # works only if you have multiple hex color "space seprated" not "comma seprated"
+    colors=($(echo "${theme_colors[$theme]}" | tr ',' '\n'))      # works only if you have multiple hex color "comma seprated"
+  # IFS=', ' read -r -a colors <<< "${theme_colors[$theme]}"      # works only if you have multiple hex color "comma seprated"
+
+
+
+  echo "###########################################################"
+  echo "#### Creating theme: $theme with colors: ${colors[@]} #####"
+  echo "###########################################################"
+
+  cleanup #----------------------------------
+  update_repo
+
+### to compile default colors of the theme.. comment out "change_color" and "change_rgba_color" function billow ###
+### to get your color code use google "Colour picker" or "pacman -S gpick" ###
+
+    change_color "5294e2" "${colors[0]}" # Accent colors
+  # change_color "5294E2" "${colors[0]}"
+  # change_color "4a85cb" "${colors[0]}"
+  # change_color "4DADD4" "${colors[0]}"
+  # change_color "76c0de" "${colors[0]}"
+  # change_color "2e96c0" "${colors[0]}"
+  # change_color "2679db" "${colors[0]}"
+
+  # change_rgba_color "38, 121, 219" "${colors[0]}"
+  # change_rgba_color "82, 148, 226" "${colors[0]}"
+  # change_rgba_color "65, 137, 223" "${colors[0]}"
+
+
+  change_color "404552" "${colors[1]}" # thunar folder window background color
+  change_color "353945" "${colors[2]}" # thunar side pannel background color
+  change_color "2f343f" "${colors[2]}" # thunar navigation button and file edit view background color
+  change_color "383C4A" "${colors[2]}" # thunar bottom bar background color
+
+
+  # -------------- # debug (if color doesn't work) # ----------- #
+  # if required color code doesn't change. 
+  # try changing it's "lower case hex color code" , "uppercase hex color code" , "RGB color code". of same color. one by one
+  # example : -------------------
+  # change_color "4dadd4" "${colors[0]}"            ## lower case hex color code  ## same color    ## try this example once
+  # change_color "4DADD4" "${colors[0]}"            ## uppercase hex color code   ## same color    ## try this example once
+  # change_rgba_color "77, 173, 212" "${colors[0]}" ## RGB color code             ## same color    ## try this example once
+  # that would not be good idea to use all these example together ## only change those color which works
+
+  build_theme
+  create_theme "$theme"
+  cleanup #----------------------------------    # sudo rm -rf /tmp/at/{Arc,Arc-Dark,Arc-Darker}
+
+  echo "Completed theme: $theme" ; created_themes+=("$theme")
+done ####################################################################################################################################################################
+
+
+echo "##################################################"
+echo "############# Total Themes Created ###############"
+echo "##################################################"
+echo "${created_themes[@]}"
+
