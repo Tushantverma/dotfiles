@@ -31,6 +31,7 @@ SAVEHIST=10000000
 
 # unsetopt SHARE_HISTORY       # each terminal session will have there own History session and will not mix up with other terminal session history
 # setopt SHARE_HISTORY         # this is the default Behavior in zsh already (it will provide same history for all terminal session)
+setopt inc_append_history      # Save command to history before it is executed
 
 alias history='history 1' # to show all the history on the terminal (not just 15 last line)
 
