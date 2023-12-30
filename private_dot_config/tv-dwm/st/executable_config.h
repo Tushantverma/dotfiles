@@ -6,8 +6,8 @@
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
 
-static char *font = "Iosevka Nerd Font:pixelsize=19:antialias=true:autohint=true";
-static char *font2[] = { "Iosevka Nerd Font:pixelsize=19:antialias=true:autohint=true" };
+static char *font = "Iosevka Nerd Font:pixelsize=19:antialias=true:autohint=true:hinting=full:rgba=rgb";  // smooth fonts
+static char *font2[] = { "Iosevka Nerd Font:pixelsize=19:antialias=true:autohint=true:hinting=full:rgba=rgb" }; // smooth fonts
 static int borderpx = 2;
 
 /*
