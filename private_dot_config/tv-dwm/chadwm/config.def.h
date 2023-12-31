@@ -40,7 +40,8 @@ static const int new_window_attach_on_end = 0; /*  1 means the new window will a
 #define ICONSIZE 19   /* icon size */
 #define ICONSPACING 8 /* space between icon and title */
 
-static const char *fonts[]          = {"Iosevka Nerd Font:size=12"};
+static const char *fonts[]          = { "Iosevka Nerd Font:pixelsize=16:antialias=true:autohint=true:hinting=full:rgba=rgb" };
+// static const char *fonts[]       = { "Iosevka Nerd Font:size=12" };
 
 // theme
 #include "themes/onedark.h"
