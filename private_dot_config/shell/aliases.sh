@@ -76,8 +76,6 @@ setopt GLOB_DOTS ## show dot files (for bash and zsh both) # for example now you
   alias tree='tree -AC' #install tree before using this command
   alias tterminal='xfconf-query -c xfce4-terminal -p /background-darkness -s 0.8'  # source/syntex https://forum.xfce.org/viewtopic.php?id=16911
   alias bterminal='xfconf-query -c xfce4-terminal -p /background-darkness -s 1.0'  # source/syntex https://forum.xfce.org/viewtopic.php?id=16911
-  alias night="xrandr --output \$(xrandr | awk '/ connected/{print \$1}') --gamma 1.0:0.88:0.76 --brightness 1.0"
-  alias day="xrandr --output \$(xrandr | awk '/ connected/{print \$1}') --gamma 1:1:1 --brightness 1.0"
   alias cm='chezmoi'
   alias cdcm='chezmoi cd'
   alias yay='yay --color auto'
@@ -99,6 +97,25 @@ setopt GLOB_DOTS ## show dot files (for bash and zsh both) # for example now you
 #     if [ "$1" = "log" ]; then command git log --reverse ;
 #     else command git "$@"; fi ;
 # }
+
+
+# alias night="xrandr --output \$(xrandr | awk '/ connected/{print \$1}') --gamma 1.0:0.88:0.76 --brightness 1.0"
+# alias day="xrandr --output \$(xrandr | awk '/ connected/{print \$1}') --gamma 1:1:1 --brightness 1.0"
+warm() {
+    local level="${1:-0}" # default when no argument is given
+    local displayName="$(xrandr | awk '/ connected/{print $1}')"
+  # local displayName="$(xrandr | awk '/connected/ && !/disconnected/ {print $1}' | tr '\n' ',' | sed 's/,$//')" ## for multi-display ## not tested
+    case "$level" in
+        0) xrandr --output $displayName --gamma 1:1:1          ;; # reset default
+        1) xrandr --output $displayName --gamma 1.0:0.88:0.76  ;; # soft yellow
+        2) xrandr --output $displayName --gamma 1.1:1.0:0.6    ;; # mild yellow
+        3) xrandr --output $displayName --gamma 1.3:1.1:0.4    ;; # moderate yellow
+        4) xrandr --output $displayName --gamma 1.6:1.3:0.6    ;; # strong yellow
+        5) xrandr --output $displayName --gamma 2.0:1.5:0.3    ;; # hard yellow
+        *) echo "Invalid level. Please choose a level between 0 and 6." ;;
+    esac
+}
+
 
 # smart cd into a file ## install fzf first
 cdd(){ cd "$(find -type d | fzf --query "$1")" ; }
