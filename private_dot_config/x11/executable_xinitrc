@@ -5,12 +5,7 @@
 
 # Function to start a program if not running already 
 # Never put the entire command in quotes when using this function # Always pass the command and its arguments separately (means without quotes) to ensure proper execution
-run() { 
-  if ! pgrep -x "$1" > /dev/null; then
-      "$@" &
-  fi
-}
-
+run() { pgrep -x "$1" > /dev/null || "$@" & }
 
 run unclutter # hide mouse cursor automatically after some seconds
 run /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
