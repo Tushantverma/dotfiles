@@ -24,6 +24,7 @@ export HISTFILE="$XDG_CONFIG_HOME/shell/history"
 
 # export QT_QPA_PLATFORMTHEME="gtk2" # Have QT use gtk2 theme.
 export QT_QPA_PLATFORMTHEME=qt5ct  #fixed qt5ct environment variables issue
+export QT_SCALE_FACTOR=1.1
 export MOZ_USE_XINPUT2="1" # Mozilla smooth scrolling/touchpads/two finger zoom functionality.
 ## also enable smooth schrolling in mouse also
 
@@ -45,7 +46,9 @@ export MOZ_USE_XINPUT2="1" # Mozilla smooth scrolling/touchpads/two finger zoom 
 [[ -z $DISPLAY && $XDG_VTNR -eq 1 ]] && exec startx
 # ~/.bash_profile for Bash or ~/.zprofile for Zsh
 
-#---------------------------------------------------------------------------# LEARNING #---------------------------------------------------------------------------#
+## print all the environment variable ##
+#  $printenv ---or--- $env
+#-------------------------------------------------------------# LEARNING #----------------------------------------------------------------#
 #--> (GLOBAL SCOPE) # Define environment varibale in the "Global scope" : /etc/environment , /etc/profile , /etc/profile.d -> (for scripts) ,
 ### for system-wide environment variable settings that should apply to all users, regardless of their shell. (no matter what shell a user is using)
 
