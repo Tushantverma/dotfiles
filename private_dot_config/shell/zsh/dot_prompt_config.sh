@@ -1,7 +1,7 @@
 ## add ".sh" file extension for text editor that this is a shell file for Syntax highlighting
 
 #---------------------------# Version Controle System #---------------------------#
-# Load version control information
+# # Load version control information
 # autoload -Uz vcs_info
 # precmd() { vcs_info }
 
@@ -56,19 +56,19 @@ local SKY_color=$'%F{39}'
 #  
 
 #---------------------------# Variables #---------------------------#
-local return_code="%(?..$fg_red%? ↵ $color_reset)"
-local user_host="%B%(!.$fg_red.$fg_green)%n@%m%b$color_reset "
+# local return_code="%(?..$fg_red%? ↵ $color_reset)"                 # required by #--- prompt 1 ---# 
+# local user_host="%B%(!.$fg_red.$fg_green)%n@%m%b$color_reset "      # required by #--- prompt 1 ---# 
 local user_symbol="%B%(!.$fg_red#.$fg_green❯)%b$color_reset"
 local current_dir="%B$fg_blue%~ %b$color_reset"
-local line1="$GREY_color╭─$COLOR_reset"
-local line2="$GREY_color╰─$COLOR_reset"
+# local line1="$GREY_color╭─$COLOR_reset"                             # required by #--- prompt 1 ---# 
+# local line2="$GREY_color╰─$COLOR_reset"                             # required by #--- prompt 1 ---# 
 setopt PROMPT_SUBST # to use "$vcs_info_msg_0_" variable in the prompt directly
 
 ## syntex -----------##
 ## ( ? . CODE_IF_SUCCESS(show green prompt) . CODE_IF_FAILURE(show red prompt)           ) 
 ## ( ! . IF_IT'S_ROOT_USER(show red prompt) . IF_IT'S_NON_ROOT_USER(show green prompt)   )
 
-#---------------------------#prompt 1 #---------------------------#
+#---------------------------# prompt 1 #---------------------------#
 
 # PROMPT='${line1}${user_host}${current_dir}${vcs_info_msg_0_}
 # ${line2}${user_symbol} '
@@ -80,10 +80,21 @@ PROMPT='${current_dir}${vcs_info_msg_0_}${user_symbol} '
 
 #---------------------------# prompt 3 #---------------------------#
 
-
 # PROMPT='$GREY_color%n $PINK_color%~ $SKY_color${vcs_info_msg_0_}$color_reset ${user_symbol} '
 
+#---------------------------# prompt 4 #---------------------------#
 
+## --- enable only one from billow for bottom prompt --- ##
+# local end="%{$(tput cup $LINES 0)%}"          
+# local end="%{$(tput cup $(($LINES - 1)) 0)%}" 
+# local end="%{$(tput cup $(tput lines) 0)%}"   
+# precmd(){tput cup $(($LINES - 1)) 0 ; }       ## you can NOT use `local` in front of function
+
+
+# PROMPT='${end}${current_dir}${vcs_info_msg_0_}${user_symbol} '
+
+## source : https://www.reddit.com/r/zsh/comments/10lo0vg/how_can_i_force_the_shell_prompt_at_bottom/
+## source : https://github.com/romkatv/powerlevel10k/issues/563
 
 
 
