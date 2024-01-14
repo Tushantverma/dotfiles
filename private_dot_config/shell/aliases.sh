@@ -1,4 +1,5 @@
 ## add ".sh" file extension for text editor that this is a shell file for Syntax highlighting
+## run command without alias example: $/usr/bin/ls ---or---  $command ls ---or--- check alias by $which ls ---or--- $type ls
 ### EXPORT ###
 
 ###--------------------------------- for bash only -------------------------------------###
@@ -92,11 +93,20 @@ setopt GLOB_DOTS ## show dot files (for bash and zsh both) # for example now you
 ######################## functions (alias with spaces lol)##################################
 ############################################################################################
 
-# git log = git log --reverse
-# git() {
-#     if [ "$1" = "log" ]; then command git log --reverse ;
-#     else command git "$@"; fi ;
-# }
+catt() { local file_path="$(fzf --height=50% --layout=reverse --border --query "$1")" ; [[ -z "$file_path" ]] && return 1 || bat -p "$file_path" ; }
+vimm() { local file_path="$(fzf --height=50% --layout=reverse --border --query "$1")" ; [[ -z "$file_path" ]] && return 1 || nvim   "$file_path" ; }
+subll(){ local file_path="$(fzf --height=50% --layout=reverse --border --query "$1")" ; [[ -z "$file_path" ]] && return 1 || subl   "$file_path" ; }
+
+cdd()  { local file_path="$(find .     -path '*/.cache/*' -prune -o        -path '*/.git/*' -prune -o         -type d -print | fzf --height=50% --layout=reverse --border --query "$1")" ;  [[ -z "$file_path" ]] && return 1 || cd "$file_path" ; }
+# # -path '*/.cache/*' -prune -o       ==>  exclude some directory          ##  -print : it's the default option to print the path. other are : -delete , -exec
+
+source <(fzf --zsh)    # for zsh only
+# eval "$(fzf --bash)" # for bash only
+# use ctrl+t  # to search for path file/directory
+# use alt+c   # fuzzy cd into directory
+# use ctrl+r  # to search command in history
+# source https://github.com/junegunn/fzf?tab=readme-ov-file#setting-up-shell-integration
+
 
 
 # alias night="xrandr --output \$(xrandr | awk '/ connected/{print \$1}') --gamma 1.0:0.88:0.76 --brightness 1.0"
@@ -117,16 +127,6 @@ warm() {
 }
 
 
-# smart cd into a file ## install fzf first
-cdd(){ cd "$(find -type d | fzf --query "$1")" ; }
-
-# open a text file ## and default application
-open() {
-  local file_path=$(find -type f | fzf --query "$1") ;
-  [[ -z "$file_path" ]] && return 1 || local file_type=$(file -b --mime-type "$file_path")
-  [[ "${file_type}" == text/* ]] && $EDITOR "${file_path}" || xdg-open "${file_path}" ;
-}
-
 # find file which is created and modified under 5 second and log it in the terminal
 change() {  while true ; do find . -type f -cmin -0.083 ; sleep 1; done; }
 
@@ -140,9 +140,68 @@ mkscript() {
 [[ -z "$1" ]] && { script_name="$(read -re "script_name?Enter script name: "; echo "$script_name")"; } || { script_name="$1"; } #ask for script name if not specified
 # [[ -z "$script_name" ]] && { echo "Script name cannot be empty. Exiting."; return 1; } # script name should not be empty
 [ -e "$script_name" ] && { echo "File '$script_name' already exists."; return 1; };    # script name should not already exist
-touch "$script_name" ; [ $? -ne 0 ] && { echo "Error occurred"; return 1; } ;  # stop the function if any error occured on touch
+touch "$script_name" ; [ $? -ne 0 ] && { echo "Error occurred"; return 1; } ;  # stop the function if any error occured on touch #### script name should not be empty
 echo '#!/usr/bin/env bash' > "$script_name" ; chmod +x "$script_name" ; $EDITOR "$script_name" ; # basic command
 }
+
+
+locate() {
+  [[ -z "$1" ]] && echo "plocate: no pattern specified" && return 1 ;
+  while true; do
+    echo -n "Update locate database? (y/N): " ; read -r update_choice ; # ask for input oneliner. works on bash / zsh both
+    update_choice=${update_choice:-n} # Set default to 'N' if input is empty
+    case $update_choice in
+      [yY] ) echo -e "$(tput setaf 2)Updating database....................$(tput sgr0) \n " && command sudo updatedb ; break ;;
+      [nN] ) echo -e "$(tput setaf 3)Not updating the database............$(tput sgr0) \n "                          ; break ;;
+        *  ) echo -e "$(tput setaf 1)Invalid input, please enter y or n...$(tput sgr0) \n "                                  ;;
+    esac
+  done
+  command locate "$@"
+}
+
+
+
+tldr() {
+  [[ -z "$1" ]] && echo "tldr: no pattern specified" && return 1 ;
+  while true; do
+    echo -n "Update tldr database? (y/N): " ; read -r update_choice ; # ask for input oneliner. works on bash / zsh both
+    update_choice=${update_choice:-n} # Set default to 'N' if input is empty
+    case $update_choice in
+      [yY] ) echo -e "$(tput setaf 2)Updating database....................$(tput sgr0) \n " && command tldr -u ; break ;;
+      [nN] ) echo -e "$(tput setaf 3)Not updating the database............$(tput sgr0) \n "                    ; break ;;
+        *  ) echo -e "$(tput setaf 1)Invalid input, please enter y or n...$(tput sgr0) \n "                            ;;
+    esac
+  done
+  command tldr "$@"
+}
+
+# NOTE: always use `command <name of the command>` inside function/script especially when your function name is same as your application name
+
+
+
+# git log = git log --reverse
+# git() {
+#     if [ "$1" = "log" ]; then command git log --reverse ;
+#     else command git "$@"; fi ;
+# }
+
+# # smart cd into a file ## install fzf first
+# cdd(){ cd "$(find -type d | fzf --query "$1")" ; }
+
+
+# # open a text file ## and default application (NOT IN USE JUST FOR REFERENCE)
+# catf() {
+#   local file_path=$( fzf --query "$1") ; # only find regular files with fzf e.g. text, log, mp3, py ; (non regular files e.g. directory, Symbolic-Link)
+#   [[ -z "$file_path" ]] && return 1 || bat "${file_path}" 
+# }
+
+# # open a text file ## and default application (NOT IN USE JUST FOR REFERENCE)
+# open() {
+#   local file_path=$(find -type f | fzf --query "$1") ; # only find regular files with fzf e.g. text, log, mp3, py ; (non regular files e.g. directory, Symbolic-Link)
+#   [[ -z "$file_path" ]] && return 1 || local file_type=$(file -b --mime-type "$file_path")
+#   [[ "${file_type}" == text/* ]] && $EDITOR "${file_path}" || xdg-open "${file_path}" ;
+# }
+
 
 ############################################################################################
 ######################source:-https://youtu.be/_xxTcKJMnWQ##################################
