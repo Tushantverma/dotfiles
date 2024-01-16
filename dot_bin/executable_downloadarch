@@ -1,0 +1,148 @@
+#!/usr/bin/env bash
+
+#################### Exit script gracefully #####################
+trap "exit_script" SIGINT   # Handle ctrl + c
+trap "exit_script" SIGHUP   # Handle terminal quit
+trap "exit_script" SIGTERM  # Handle termination signal
+trap "exit_script" ERR      # Handle command failure
+
+exit_script() {
+    echo "Signal received! Exiting script gracefully..."
+    pkill -P $$  # Kill all child processes
+    exit 1
+}
+#################################################################
+
+
+
+
+######## step 1 ########
+DESTINATION="./000Arch"
+[[ -d "$DESTINATION" ]] && { echo "$(tput setaf 1)Error: Directory $DESTINATION already exists.$(tput sgr0)"; exit 1; } || mkdir -p "$DESTINATION"
+
+# ---------------------------------------------- checkup the internet connection --------------------------------------- #
+# wget -q --spider https://www.google.com || { echo "No internet connection"; exit 1; }  # wget just checks web page exist or not without downloading
+# wget -q --spider https://www.google.com && { echo "Internet is working" ; } || { echo "No internet connection"; exit 1; }
+wget -q --spider https://www.google.com || wget -q --spider https://www.apple.com || { echo "No internet connection"; exit 1; } && echo "Internet is working"
+# curl -s --head --fail https://www.google.com > /dev/null && { echo "Internet is working" ; } || { echo "No internet connection"; exit 1; }  # it downloads the head code to check
+########################
+
+
+
+######## step 2 ########
+command -v aria2c &> /dev/null || sudo pacman -Sy --noconfirm aria2
+########################
+
+
+
+######## step 3 ########
+## download checksums and signatures ## source https://archlinux.org/download/
+curl -s "https://archlinux.org/iso/latest/sha256sums.txt" | grep -P 'archlinux-[0-9]{4}\.[0-9]{2}\.[0-9]{2}-x86_64\.iso' > "$DESTINATION/sha256sums.txt"
+curl -s "https://archlinux.org/iso/latest/b2sums.txt"     | grep -P 'archlinux-[0-9]{4}\.[0-9]{2}\.[0-9]{2}-x86_64\.iso' > "$DESTINATION/b2sums.txt"
+
+
+DATE="$(grep -oP '[0-9]{4}\.[0-9]{2}\.[0-9]{2}' "$DESTINATION/sha256sums.txt")"   # DATE="$(cat "$DESTINATION/sha256sums.txt" | grep -oP '[0-9]{4}\.[0-9]{2}\.[0-9]{2}')"
+COUNTRY=$(curl -4 -s "https://ifconfig.co/country-iso")
+FAST_URL="$(reflector -a 48 -c $COUNTRY -f 1 -l 1 --sort rate --protocol https 2>/dev/null | grep -oP 'https://.+/(?=\$repo)')"   ## -f1 == return 1 url  ## -l1 == speedtest only 1 url  ## -a 48 == mirror update in 48 hours
+
+[[ -z "$DATE" || -z "$COUNTRY" || -z "$FAST_URL" ]] && { echo "$(tput setaf 1)Error: variables are empty....$(tput sgr0)"; exit 1; }
+
+ISO_URL="${FAST_URL}iso/${DATE}/archlinux-${DATE}-x86_64.iso" 
+SIG_URL="https://archlinux.org/iso/${DATE}/archlinux-${DATE}-x86_64.iso.sig"
+
+
+echo "ISO_URL : $(tput setaf 4)$ISO_URL$(tput sgr0)"
+
+
+
+######## step 4 ########
+echo "$(tput setaf 3)########### Downloading ISO ############$(tput sgr0)"
+aria2c -x 16 -s 16 -d "$DESTINATION" "$ISO_URL"       
+
+echo "$(tput setaf 3)########### Downloading SIG ############$(tput sgr0)"
+aria2c -x 16 -s 16 -d "$DESTINATION" "$SIG_URL" 
+
+### already downloaded above ###
+# sha256sums.txt 
+# b2sums.txt
+
+
+
+######## step 5 ########
+cd "$DESTINATION" || { echo "$(tput setaf 1)can't cd into directory$(tput sgr0)"; exit 1; }
+
+if [ -f "archlinux-${DATE}-x86_64.iso" ] && [ -f "archlinux-${DATE}-x86_64.iso.sig" ] && [ -f "sha256sums.txt" ] && [ -f "b2sums.txt" ]; then
+
+    check_result() { [[ $1 -eq 0 ]] && echo -e "$(tput setaf 2)verification successfull$(tput sgr0)" || { echo -e "$(tput setaf 1)verification failed$(tput sgr0)"; } }
+
+    echo "$(tput setaf 3)######### signatures Verification with ubuntu-keyserver #############$(tput sgr0)"
+    gpg --keyserver hkp://keyserver.ubuntu.com --keyserver-options auto-key-retrieve --verify "archlinux-${DATE}-x86_64.iso.sig" "archlinux-${DATE}-x86_64.iso" ; check_result "$?"
+    gpg --keyserver hkp://keyserver.ubuntu.com --keyserver-options auto-key-retrieve --verify "archlinux-${DATE}-x86_64.iso.sig"                                ; check_result "$?"
+
+    echo "$(tput setaf 3)################### signatures Verification #########################$(tput sgr0)"
+    gpg --keyserver-options auto-key-retrieve --verify "archlinux-${DATE}-x86_64.iso.sig" "archlinux-${DATE}-x86_64.iso" ; check_result "$?"  
+    gpg --keyserver-options auto-key-retrieve --verify "archlinux-${DATE}-x86_64.iso.sig"                                ; check_result "$?"
+    pacman-key -v "archlinux-${DATE}-x86_64.iso.sig"                                                                     ; check_result "$?"
+
+    echo "$(tput setaf 3)################ sha256sums b2sums Verification #####################$(tput sgr0)"
+    sha256sum -c sha256sums.txt                                                                                          ; check_result "$?"
+    b2sum -c b2sums.txt                                                                                                  ; check_result "$?"
+
+
+else
+    echo "$(tput setaf 1)Download failed or missing files. Please check and try again.$(tput sgr0)" ; 
+fi
+
+
+## --- info ------------------------------------------------------------------- ##
+
+## manually verify checksums
+# b2sum     archlinux-2024.12.01-x86_64.iso ; cat b2sums.txt
+# sha256sum archlinux-2024.12.01-x86_64.iso ; cat sha256sums.txt
+
+# gpg --auto-key-locate clear,wkd -v --locate-external-key pierre@archlinux.org ## verify the authenticity of the developer by their email
+
+
+# --- source ------------------------------------------------------------------ ##
+# https://archlinux.org/download/#checksums
+# https://wiki.archlinux.org/title/Installation_guide#Verify_signature
+
+
+# ------------- related videos : how to verify archlinux signature ------------ ##
+# https://youtu.be/hPHW0y6RAZA
+# https://youtu.be/paJWYGjBwbQ
+
+
+# ------------- Arch Linux mirrorlist generated by Reflector ------------------- ##
+
+
+# Server = http://mirrors.saswata.cc/archlinux/$repo/os/$arch
+# Server = https://in-mirror.garudalinux.org/archlinux/$repo/os/$arch
+# Server = https://mirrors.saswata.cc/archlinux/$repo/os/$arch
+# Server = https://in.arch.niranjan.co/$repo/os/$arch
+# Server = http://in-mirror.garudalinux.org/archlinux/$repo/os/$arch
+
+# ## regex used
+# https://.+/(?=\$repo)
+
+
+## --------------------------------------------------------------------------- ##
+
+
+# archlinux-2024.12.01-x86_64aiso
+# archlinux-2024a12.01-x86_64.iso
+# archlinux-2024.12a01-x86_64.iso
+# archlinux-2024.12.01-x86_64.iso
+# archlinux-2024.12.01-x86_64.iso
+# archlinux-2024.12.01-x86_64.iso
+# archlinux-2024.12.01-x86_64.iso
+# archlinux-2024.12.01-x86_64.iso
+# archlinux-2024.12.01-x86_64.iso
+
+# ## regex used
+# archlinux-[0-9]{4}\.[0-9]{2}\.[0-9]{2}-x86_64\.iso
+
+## --------------------------------------------------------------------------- ##
+
+
+
