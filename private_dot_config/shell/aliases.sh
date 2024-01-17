@@ -122,7 +122,7 @@ warm() {
         3) xrandr --output $displayName --gamma 1.3:1.1:0.4    ;; # moderate yellow
         4) xrandr --output $displayName --gamma 1.6:1.3:0.6    ;; # strong yellow
         5) xrandr --output $displayName --gamma 2.0:1.5:0.3    ;; # hard yellow
-        *) echo "Invalid level. Please choose a level between 0 and 6." ;;
+        *) echo "Invalid level. Please choose a level between 0 and 5." ;;
     esac
 }
 
