@@ -30,7 +30,7 @@ wget -q --spider https://www.google.com || wget -q --spider https://www.apple.co
 
 
 ######## step 2 ########
-command -v aria2c &> /dev/null || sudo pacman -Sy --noconfirm aria2
+command -v aria2c &> /dev/null || { echo "$(tput setaf 3)########### Installing aria2 ############$(tput sgr0)" ; sudo pacman -Sy --noconfirm aria2 ; }
 ########################
 
 
@@ -43,7 +43,7 @@ curl -s "https://archlinux.org/iso/latest/b2sums.txt"     | grep -P 'archlinux-[
 
 DATE="$(grep -oP '[0-9]{4}\.[0-9]{2}\.[0-9]{2}' "$DESTINATION/sha256sums.txt")"   # DATE="$(cat "$DESTINATION/sha256sums.txt" | grep -oP '[0-9]{4}\.[0-9]{2}\.[0-9]{2}')"
 COUNTRY=$(curl -4 -s "https://ifconfig.co/country-iso")
-FAST_URL="$(reflector -a 48 -c $COUNTRY -f 1 -l 1 --sort rate --protocol https 2>/dev/null | grep -oP 'https://.+/(?=\$repo)')"   ## -f1 == return 1 url  ## -l1 == speedtest only 1 url  ## -a 48 == mirror update in 48 hours
+FAST_URL="$(reflector -a 48 -c $COUNTRY -f 1 -l 5 --sort rate --protocol https 2>/dev/null | grep -oP 'https://.+/(?=\$repo)')"   ## -f1 == return 1 url  ## -l1 == speedtest only 1 url  ## -a 48 == mirror update in 48 hours
 
 [[ -z "$DATE" || -z "$COUNTRY" || -z "$FAST_URL" ]] && { echo "$(tput setaf 1)Error: variables are empty....$(tput sgr0)"; exit 1; }
 
@@ -74,6 +74,7 @@ cd "$DESTINATION" || { echo "$(tput setaf 1)can't cd into directory$(tput sgr0)"
 if [ -f "archlinux-${DATE}-x86_64.iso" ] && [ -f "archlinux-${DATE}-x86_64.iso.sig" ] && [ -f "sha256sums.txt" ] && [ -f "b2sums.txt" ]; then
 
     check_result() { [[ $1 -eq 0 ]] && echo -e "$(tput setaf 2)verification successfull$(tput sgr0)" || { echo -e "$(tput setaf 1)verification failed$(tput sgr0)"; } }
+    export GNUPGHOME=$(mktemp -d) # using environment variable ## prevent creating ~/.gnupg/ at home directory ## keep home clean #-------------------------------------#
 
     echo "$(tput setaf 3)######### signatures Verification with ubuntu-keyserver #############$(tput sgr0)"
     gpg --keyserver hkp://keyserver.ubuntu.com --keyserver-options auto-key-retrieve --verify "archlinux-${DATE}-x86_64.iso.sig" "archlinux-${DATE}-x86_64.iso" ; check_result "$?"
@@ -88,6 +89,7 @@ if [ -f "archlinux-${DATE}-x86_64.iso" ] && [ -f "archlinux-${DATE}-x86_64.iso.s
     sha256sum -c sha256sums.txt                                                                                          ; check_result "$?"
     b2sum -c b2sums.txt                                                                                                  ; check_result "$?"
 
+    rm -rf "$GNUPGHOME" ; unset GNUPGHOME #-----------------------------------------------------------------------------------------------------------------------------#
 
 else
     echo "$(tput setaf 1)Download failed or missing files. Please check and try again.$(tput sgr0)" ; 
