@@ -19,5 +19,11 @@ README.md
 {{ if stat (joinPath .chezmoi.homeDir ".config/xfce4/xfconf/xfce-perchannel-xml/thunar.xml") }}
 		.config/xfce4/xfconf/xfce-perchannel-xml/thunar.xml
 {{ end }}
+
+## this is file selector / file chooser
+{{ if stat (joinPath .chezmoi.homeDir ".config/dconf/user") }}
+		.config/dconf/user
+{{ end }}
+
 ## $chezmoi data  <<== it's collection of already writen function and variables
 ## source :- https://github.com/twpayne/chezmoi/discussions/2969
