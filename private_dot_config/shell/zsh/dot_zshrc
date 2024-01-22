@@ -1,21 +1,9 @@
 # to run zsh without config execute this command    $zsh -f    --or--    $zsh -o NO_RCS   --or--    $zsh --no-rcs
-autoload -U colors && colors 
-
-# source file if it's exist
-# source_if_exists() { [ -f "$1" ] && . "$1" ; } ## (this is increasing zsh prompt loadup time)
-
-#---------------prompt file---------------#
-source "$HOME/.config/shell/zsh/.prompt_config.sh"
-source "$HOME/.config/shell/aliases.sh"
-source "/usr/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh"   ###( pacman -S zsh-fast-syntax-highlighting ---> recommended ) 
-# source "/usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"          ###( pacman -S zsh-syntax-highlighting )
-# source  "/usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"                 ###( pacman -S zsh-autosuggestions )
-# source "$HOME/.zprofile"  ## to also source it again on new terminal session everytime
-
 
 # Emacs keybinding (this line should be at top because billow defined keys will adapt their behaviour form this)
 bindkey -e
 # https://gist.github.com/acamino/2bc8df5e2ed0f99ddbe7a6fddb7773a6 (some emacs keybinding for terminal for faster productivity)
+
 
 
 #------------------------------------------------------------------------------History file----------------------------------------------------------------------------------#
@@ -121,21 +109,64 @@ setopt autocd     # Automatically cd into typed directory.
 stty stop undef   # Disable ctrl-s to freeze terminal.
 setopt interactive_comments  # it allows the comments in the terminal
 
+### there must be better option for pattern matching like : regex in zsh
+setopt extended_glob  # advanced pattern matching
+# example_1  : List all files in the current directory except those starting with foo  ;      command : ls ^foo*
+# example_2  : List all .txt files in the current directory and all subdirectories     ;      command : ls **/*.txt
+# example_3  : List all files ending with .jpg or .png                                 ;      command : ls *.(jpg|png)
+# example_4  : List files starting with a vowel                                        ;      command : ls [aeiou]*
+# example_5  : List directories only                                                   ;      command : ls *(/)
+# example_6  : List all files except those ending with .log                            ;      command : ls *~*.log
+# example_7  : List all .txt and .md files, but exclude those containing draft         ;      command : ls *.(txt|md)~*draft*
+# example_8  : List all hidden files (dotfiles) in the current directory               ;      command : ls -d .*
+# example_9  : List all files with exactly three characters in their names             ;      command : ls ???
+# example_10 : List all files modified within the last 7 days                          ;      command : ls *(m-7)
+# example_11 : List all empty files in the current directory                           ;      command : ls *(.L0)
+# example_12 : List all symbolic links in the current directory                        ;      command : ls -l *@
+# example_13 : List all executable files in the current directory                      ;      command : ls -l (*)
+# example_14 : List all files not ending with .sh or .py                               ;      command : ls *~*.sh~*.py
+# example_15 : List all files containing digits in their names                         ;      command : ls *([0-9]*) 
+# example_16 : List all files with uppercase letters in their names                    ;      command : ls *([[:upper:]]*)
+# example_17 : List all files larger than 1MB                                          ;      command : ls -lh *(Lk+1024)
+# example_18 : List all directories containing more than 10 files                      ;      command : ls -d *(/e:'[[ $(ls -1 "$REPLY" | wc -l) -gt 10 ]]')
+# example_19 : List all files with setuid permission                                   ;      command : ls -l *(s)
+# example_20 : List all files owned by a specific user (e.g., 'username')              ;      command : ls -l *(u:username:)
+# there is more ---------------------------------------------------------------------------------------------------------------------------------------------#
 
-zshtime() {  
-  # speed test your zsh modules if you zsh prompt load time is slow
-  zmodload zsh/zprof
-  source $ZDOTDIR/.zshrc
-  zprof
-
-  shell=${1-$SHELL}
-  for i in $(seq 1 10); do time $shell -i -c exit; done
-
-  #knowledge_source https://blog.tarkalabs.com/optimize-zsh-fce424fcfd5
-  # how to check and fix zsh slow startup ####### https://www.youtube.com/watch?v=I_EaA7Q3GxI
-}
 
 
+#---------------prompt file---------------#
+autoload -Uz colors && colors
+
+# source file if it's exist
+# source_if_exists() { [ -f "$1" ] && . "$1" ; } ## (this is increasing zsh prompt loadup time)
+
+source "$HOME/.config/shell/zsh/.prompt_config.sh"
+source "$HOME/.config/shell/aliases.sh"
+source "/usr/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh"   ###( pacman -S zsh-fast-syntax-highlighting ---> recommended ) 
+# source "/usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"          ###( pacman -S zsh-syntax-highlighting )
+# source  "/usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"                 ###( pacman -S zsh-autosuggestions )
+# source "$HOME/.zprofile"  ## to also source it again on new terminal session everytime
+#-----------------------------------------#
+
+
+
+
+
+
+
+# zshtime() {  
+#   # speed test your zsh modules if you zsh prompt load time is slow
+#   zmodload zsh/zprof
+#   source $ZDOTDIR/.zshrc
+#   zprof
+
+#   shell=${1-$SHELL}
+#   for i in $(seq 1 10); do time $shell -i -c exit; done
+
+#   #knowledge_source https://blog.tarkalabs.com/optimize-zsh-fce424fcfd5
+#   # how to check and fix zsh slow startup ####### https://www.youtube.com/watch?v=I_EaA7Q3GxI
+# }
 
 
 
