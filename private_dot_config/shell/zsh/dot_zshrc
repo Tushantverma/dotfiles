@@ -135,7 +135,7 @@ setopt extended_glob  # advanced pattern matching
 
 
 
-#---------------prompt file---------------#
+#---------------prompt file---------------# this should be always in the bottom to work correctly 
 autoload -Uz colors && colors
 
 # source file if it's exist
