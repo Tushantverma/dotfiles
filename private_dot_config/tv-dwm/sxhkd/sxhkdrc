@@ -42,17 +42,17 @@ super + z
 
 
 # #####################################################################
-# ######################## ctrl + super ###############################
+# ######################## ctrl + alt #################################
 # #####################################################################
 
 
 # Copy selected text to clipboard (preserve clipboard entry after app is closed)
-ctrl + super + c
+ctrl + alt + c
     xclip -o | xclip -selection clipboard
 
 
 # Paste(type out) text from clipboard (cmd respects whitespace and newline while typing)
-ctrl + super + v
+ctrl + alt + v
     sleep 2; echo "$(xclip -o -selection clipboard)" | while IFS= read -r line; do xdotool type --delay 10 "$line"; xdotool key Return; done
  
 
