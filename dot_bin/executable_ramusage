@@ -1,24 +1,53 @@
 #!/bin/bash
 
-if [[ $# -eq 0 ]]; then
-  echo "Usage: $0 <application name>"
-  exit 1
+# Check if application name is provided
+if [ $# -eq 0 ]; then
+    echo "Please provide an application name"
+    echo "Usage: $0 <application-name>"
+    exit 1
 fi
 
 app_name=$1
 
-# Use ps command to get the PID of the application
-pid=$(ps -e | grep "$app_name" | awk '{print $1}')
+# Get all PIDs for the application
+pids=$(pgrep -x "$app_name")
 
-if [[ -z $pid ]]; then
-  echo "Could not find process for application $app_name"
-  exit 1
+if [ -z "$pids" ]; then
+    echo "No process found for $app_name"
+    exit 1
 fi
 
-# Use ps command to get the RAM usage of the application
-ram_usage=$(ps -p $pid -o rss=)
+# Initialize total memory and CPU usage
+total_mem=0
+total_cpu=0
 
-# Convert to MB
-ram_usage_mb=$((ram_usage / 1024))
+# Calculate total memory and CPU usage for all PIDs
+for pid in $pids; do
+    # Get memory in KB and convert to human readable
+    mem=$(ps -p $pid -o rss= | tr -d ' ')
+    total_mem=$((total_mem + mem))
+    
+    # Get CPU percentage
+    cpu=$(ps -p $pid -o %cpu= | tr -d ' ')
+    total_cpu=$(awk "BEGIN {print $total_cpu + $cpu}")
+done
 
-echo "RAM usage for $app_name: $ram_usage_mb MB"
+# Convert memory to human readable format
+if [ $total_mem -gt 1048576 ]; then
+    mem_human=$(awk "BEGIN {printf \"%.2f\", $total_mem/1048576}")"GB"
+elif [ $total_mem -gt 1024 ]; then
+    mem_human=$(awk "BEGIN {printf \"%.2f\", $total_mem/1024}")"MB"
+else
+    mem_human="${total_mem}KB"
+fi
+
+echo "Application         : $app_name"
+echo "Total Memory Usage  : $mem_human"
+echo "Total CPU Usage     : $total_cpu%"
+
+# Alternative tools suggestion as comment:
+# You might also want to try these tools:
+# 1. ps_mem - For accurate memory usage per program
+# 2. pidstat - Part of sysstat package, shows CPU/memory stats per process
+# 3. glances - Advanced system monitoring tool with process grouping
+
