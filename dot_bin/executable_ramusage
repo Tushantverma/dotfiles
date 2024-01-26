@@ -9,8 +9,8 @@ fi
 
 app_name=$1
 
-# Get all PIDs for the application
-pids=$(pgrep -x "$app_name")
+# Get all PIDs for the application - using more exact matching
+pids=$(pgrep -x "$app_name" 2>/dev/null || pgrep -f "$app_name" 2>/dev/null)
 
 if [ -z "$pids" ]; then
     echo "No process found for $app_name"
@@ -23,20 +23,29 @@ total_cpu=0
 
 # Calculate total memory and CPU usage for all PIDs
 for pid in $pids; do
-    # Get memory in KB and convert to human readable
-    mem=$(ps -p $pid -o rss= | tr -d ' ')
-    total_mem=$((total_mem + mem))
+    # Check if process still exists (could have terminated)
+    if ! kill -0 $pid 2>/dev/null; then
+        continue
+    fi
     
-    # Get CPU percentage
-    cpu=$(ps -p $pid -o %cpu= | tr -d ' ')
-    total_cpu=$(awk "BEGIN {print $total_cpu + $cpu}")
+    # Get memory in KB and convert to human readable
+    if mem=$(ps -p $pid -o rss= 2>/dev/null); then
+        mem=$(echo "$mem" | tr -d ' ')
+        total_mem=$((total_mem + mem))
+    fi
+
+    # Get CPU percentage with better precision
+    if cpu=$(ps -p $pid -o %cpu= 2>/dev/null); then
+        cpu=$(echo "$cpu" | tr -d ' ')
+        total_cpu=$(LC_ALL=C awk "BEGIN {printf \"%.1f\", $total_cpu + $cpu}")
+    fi
 done
 
 # Convert memory to human readable format
 if [ $total_mem -gt 1048576 ]; then
-    mem_human=$(awk "BEGIN {printf \"%.2f\", $total_mem/1048576}")"GB"
+    mem_human=$(LC_ALL=C awk "BEGIN {printf \"%.2f\", $total_mem/1048576}")"GB"
 elif [ $total_mem -gt 1024 ]; then
-    mem_human=$(awk "BEGIN {printf \"%.2f\", $total_mem/1024}")"MB"
+    mem_human=$(LC_ALL=C awk "BEGIN {printf \"%.2f\", $total_mem/1024}")"MB"
 else
     mem_human="${total_mem}KB"
 fi
