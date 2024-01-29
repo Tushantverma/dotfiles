@@ -1,20 +1,49 @@
 #!/usr/bin/env bash
 
+clean_pacman() {
+    echo "$(tput setaf 3)Cleaning pacman cache...$(tput sgr0)"
 
-yes | sudo pacman -Sc 
-yes | sudo pacman -Scc 
+    yes | sudo pacman -Sc 
+    yes | sudo pacman -Scc 
+    yes | yay -Sc 
+    yes | yay -Scc 
+    sudo pacman -Rcns $(pacman -Qtdq)
+}
 
-yes | yay -Sc 
-yes | yay -Scc 
+clean_dir() {
+    echo "$(tput setaf 3)Cleaning temporary dir...$(tput sgr0)"
 
-rm -rf $HOME/.cache/ 
-sudo sh -c "echo 1 >  /proc/sys/vm/drop_caches" 
-sudo sh -c "echo 2 >  /proc/sys/vm/drop_caches" 
-sudo sh -c "echo 3 >  /proc/sys/vm/drop_caches" 
+    [ -f "$HOME/.local/share/recently-used.xbel"     ] && rm -rf "$HOME/.local/share/recently-used.xbel"
+    [ -d "$HOME/.cache"                              ] && rm -rf "$HOME/.cache/"
+    # you can add browser temporary files here
 
-sudo swapoff -a 
-sudo swapon -a 
+}
 
-sudo pacman -Rns $(pacman -Qtdq) 
+clean_ram() {
+    echo "$(tput setaf 3)Cleaning RAM...$(tput sgr0)"
+
+    sudo sh -c "echo 1 >  /proc/sys/vm/drop_caches" 
+    sudo sh -c "echo 2 >  /proc/sys/vm/drop_caches" 
+    sudo sh -c "echo 3 >  /proc/sys/vm/drop_caches" 
+    sudo swapoff -a 
+    sudo swapon -a
+}
+
+
+
+
+
+if [ $# -eq 0 ]; then   ## if no flags are given, clean all
+    clean_pacman ; clean_dir ; clean_ram
+else
+    for arg in "$@"; do ## you can give multiple flags at once
+        case $arg in
+            pacman) clean_pacman ;;
+            dir)    clean_dir    ;;
+            ram)    clean_ram    ;;
+            *) echo "Usage: cleanx [pacman|dir|ram] " ; exit 1 ;;
+        esac
+    done
+fi
 
 #source :- https://www.geeksforgeeks.org/how-to-clear-ram-memory-cache-buffer-and-swap-space-on-linux/
