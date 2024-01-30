@@ -74,7 +74,7 @@ setopt GLOB_DOTS ## show dot files (for bash and zsh both) # for example now you
   alias premove='sudo pacman -Rcns'
   alias pinstall='sudo pacman -S --noconfirm'
   alias cat='bat -p'    ## (cat -n ###this command can give the issue maybe any error on terminal)
-  alias tree='tree -AC' #install tree before using this command
+  # alias tree='tree -AC' ##  -A = ANSI line graphics  ## -C = colorization  ## commenting this alias because after using this command "$tree | xclip -selection clipboard" --or-- "$tree | pbcopy" when you paste the output. your output will have weard characters like "(0tqq01;34msrc[0m"  and after commenting out it's working fine maybe because of "IosevkaNerdFont ligations" and "zsh syntax colorization" are working same as -AC flag in tree command
   alias tterminal='xfconf-query -c xfce4-terminal -p /background-darkness -s 0.8'  # source/syntex https://forum.xfce.org/viewtopic.php?id=16911
   alias bterminal='xfconf-query -c xfce4-terminal -p /background-darkness -s 1.0'  # source/syntex https://forum.xfce.org/viewtopic.php?id=16911
   alias cm='chezmoi'
