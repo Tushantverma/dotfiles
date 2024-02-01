@@ -36,5 +36,5 @@ CAPACITY=$(cat /sys/class/power_supply/BAT*/capacity)
   fi
 
 
-printf "  ^c$color^$ICON$CAPACITY%%"
+printf "  ^c$color^$ICON $CAPACITY%%"
 
