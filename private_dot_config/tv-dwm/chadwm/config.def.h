@@ -89,11 +89,11 @@ static const char* pavucontrol[] = { "pavucontrol", NULL };
 
 static const Launcher launchers[] = {
     /* command     name to display */
-    { suspend,       "" },
-    { discord,       "" },
-    { telegram,      "" },
-    { mintstick,     "" },
-    { pavucontrol,   "" },
+    { suspend,       "" },
+    { discord,       "󱥸" },
+    { telegram,      "" },
+    { mintstick,     "󱥸" },
+    { pavucontrol,   "" },
 };
 
 static const int tagschemes[] = {
