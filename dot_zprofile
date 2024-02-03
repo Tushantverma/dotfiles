@@ -37,8 +37,8 @@ export MOZ_USE_XINPUT2="1"          # Mozilla smooth scrolling/touchpads/two fin
 # source https://github.com/LukeSmithxyz/voidrice/blob/master/.config/shell/profile
 
 #------------Cursor theme-------------#
-# export XCURSOR_THEME='Breeze_Light'  # you can set XCURSOR_THEME for lxappearance but you can't set XCURSOR_SIZE there (this config doesn't respect all apps)
-  export XCURSOR_SIZE='22'             # examples : 22 28 34 40
+# export XCURSOR_THEME='Breeze_Light'  # you can set XCURSOR_THEME form lxappearance but you can't set XCURSOR_SIZE there (this config doesn't respect all apps)
+  export XCURSOR_SIZE='28'             # examples : 22 28 34 40
 # source https://wiki.archlinux.org/title/Cursor_themes#Environment_variable 
 
 # to find out XCURSOR_THEME variable name. apply cursor theme from lxappearance and check the file
