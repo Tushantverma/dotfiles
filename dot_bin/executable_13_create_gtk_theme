@@ -67,6 +67,43 @@ change_rgba_color() {
   find /tmp/arc-theme/common -type f -exec sed -i "s/$1/$rgba/g" {} +
 }
 
+# Function to change button opacity
+change_button_opacity() {
+  find /tmp/arc-theme/common -type f -exec \
+  sed -Ei "/^\\s*\\\$button_bg:/s/lighten\\(([^,]*), *[0-9]+%\\)/lighten(\\1, $1%)/g" {} +
+
+  ## there are only and only two POSIX regex used by sed
+  # 1. POSIX Basic Regular Expressions    (BRE) ( default : but old    )
+  # 2. POSIX Extended Regular Expressions (ERE) ( modern : use this one) (syntax : sed -E)
+  # -- out of sed there is also PCRE (Perl-Compatible Regular Expressions) exist but you can't use it in sed
+
+  ## you can't use variable in (1) so use (2) approach
+  # 1. sed -E '/^\s*\$button_bg:/s/lighten\(([^,]*), *[0-9]+%\)/lighten(\1, 14%)/g'
+  # 2. sed -Ei "/^\\s*\\\$button_bg:/s/lighten\\(([^,]*), *[0-9]+%\\)/lighten(\\1, $myvar%)/g"
+
+  ######## Understand the structure of a sed command ########
+  # sed -i '  ADDRESS     s/PATTERN/REPLACEMENT/FLAGS' files…
+  #         └─A─zone─┘   └─────B─zone─────────────────┘
+  #         ADDRESS → Which lines to look at?
+  #         s/.../.../ → Substitute matched text
+
+  ## ADDRESS zone explain ## ^\s*\$button_bg:
+  # ^            → start of line
+  # \s*          → optional whitespace (spaces/tabs)
+  # \$button_bg: → literally $button_bg:
+
+  ## PATTERN zone explain
+  # ([^,]*)    →  capture group 1
+  # , *        →  comma followed by optional spaces
+  # \\1        →  puts back whatever capture group 1 caught ($bg_color or $base_color)
+  ###########################################################
+
+  ## sed is modifying this lines percentage value in file # → # $button_bg: if($variant != 'dark', lighten($bg_color, 2%), lighten($base_color, 2%));
+}
+
+
+
+
 cleanup(){
   [ -d /tmp/arc-theme ] && sudo rm -rf /tmp/arc-theme
   [ -d /tmp/at ] && sudo rm -rf /tmp/at
@@ -156,6 +193,7 @@ for theme in "${!theme_colors[@]}"; do  ########################################
   change_color "2f343f" "${colors[2]}" # thunar navigation button and file edit view background color
   change_color "383C4A" "${colors[2]}" # thunar bottom bar background color
 
+  change_button_opacity "14" # in percentage (default : 2%)
 
   # -------------- # debug (if color doesn't work) # ----------- #
   # if required color code doesn't change. 
