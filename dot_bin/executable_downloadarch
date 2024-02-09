@@ -91,6 +91,24 @@ if [ -f "archlinux-${DATE}-x86_64.iso" ] && [ -f "archlinux-${DATE}-x86_64.iso.s
 
     rm -rf "$GNUPGHOME" ; unset GNUPGHOME #-----------------------------------------------------------------------------------------------------------------------------#
 
+    echo "$(tput setaf 2)
+    ################################## Reminder Message ###################################
+    #                                                                                     #
+    # -------------- only look for 'Good signature' then it's prefect-------------------- #
+    # gpg:     Good signature from 'Pierre Schmitz <pierre@archlinux.org>' [unknown]      #
+    #                                                                                     #
+    # --------------- you can safely ignore this common WARNING message ----------------- #
+    # gpg: WARNING: The key's User ID is not certified with a trusted signature!          #
+    # gpg:     There is no indication that the signature belongs to the owner.            #
+    #                                                                                     #
+    # -------------------- it should NOT say 'Bad signature' ---------------------------- #
+    # this script is tested by adding wrong 'signature' , 'sha256sum' , 'b2sum' manually  #
+    # in that case it gives 'Bad signature' and fail the 'sha256sum' and 'b2sum' ..       #
+    #              which is good thing and script is working perfectly                    #
+    #                                                                                     #
+    #######################################################################################
+    $(tput sgr0)"
+
 else
     echo "$(tput setaf 1)Download failed or missing files. Please check and try again.$(tput sgr0)" ; 
 fi
