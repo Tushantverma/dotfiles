@@ -90,13 +90,26 @@ PROMPT='${current_dir}${vcs_info_msg_0_}${user_symbol} '
 # local end="%{$(tput cup $(tput lines) 0)%}"   
 # precmd(){tput cup $(($LINES - 1)) 0 ; }       ## you can NOT use `local` in front of function
 
-
 # PROMPT='${end}${current_dir}${vcs_info_msg_0_}${user_symbol} '
+
 
 ## source : https://www.reddit.com/r/zsh/comments/10lo0vg/how_can_i_force_the_shell_prompt_at_bottom/
 ## source : https://github.com/romkatv/powerlevel10k/issues/563
+#-------------------------------------------------------------------#
 
 
+#--------------------# change cursor appearance #-------------------#
+# change cursor from block to beam # for all terminal
+function zle-line-init {  printf '\e[6 q' } ; zle -N zle-line-init
+# it run with each prompt every time you press enter it update cursor from block to beam (vim changes your cursor back to block)
+# '\e[0 q' → blinking block (default in most terminals),
+# '\e[1 q' → blinking block
+# '\e[2 q' → steady block
+# '\e[3 q' → blinking underline
+# '\e[4 q' → steady underline
+# '\e[5 q' → blinking bar (beam / vertical line)
+# '\e[6 q' → steady bar (beam / vertical line)
+### blinking dose not work with all terminal ###
 
 
 
