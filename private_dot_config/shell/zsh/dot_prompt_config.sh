@@ -101,7 +101,8 @@ PROMPT='${current_dir}${vcs_info_msg_0_}${user_symbol} '
 #--------------------# change cursor appearance #-------------------#
 # change cursor from block to beam # for all terminal
 function zle-line-init {  printf '\e[6 q' } ; zle -N zle-line-init
-# it run with each prompt every time you press enter it update cursor from block to beam (vim changes your cursor back to block)
+# it run with each prompt every time you press enter it update cursor from block to beam 
+# vim changes your cursor back to block if you will just add ` printf '\e[6 q' ` in your .zshrc.. so use above zle-line-init function is a good thing
 # '\e[0 q' → blinking block (default in most terminals),
 # '\e[1 q' → blinking block
 # '\e[2 q' → steady block
