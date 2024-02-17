@@ -109,6 +109,30 @@ setopt autocd     # Automatically cd into typed directory.
 stty stop undef   # Disable ctrl-s to freeze terminal.
 setopt interactive_comments  # it allows the comments in the terminal
 
+
+
+setopt null_glob
+############# before ##############
+# ❯ ls
+# dir1  dir2
+# ❯ rm -rf dir1 dir2 *.txt
+# zsh: no matches found: *.txt
+# ❯ ls
+# dir1  dir2
+## it didn't execute rm command because *.txt dose not exist
+############### now ###############
+# ❯ ls
+# dir1  dir2
+# ❯ setopt null_glob
+# ❯ rm -rf dir1 dir2 *.txt
+# ❯ ls
+# ❯
+## it executed rm command even *.txt file dose not exist
+
+
+
+
+
 ### there must be better option for pattern matching like : regex in zsh
 setopt extended_glob  # advanced pattern matching
 # example_1  : List all files in the current directory except those starting with foo  ;      command : ls ^foo*
