@@ -108,7 +108,7 @@ bindkey     '^H'             backward-delete-word    #### you can use (ctrl + ba
 setopt autocd     # Automatically cd into typed directory.
 stty stop undef   # Disable ctrl-s to freeze terminal.
 setopt interactive_comments  # it allows the comments in the terminal
-
+# setopt rm_star_silent # Do not confirm [Y/n] on 'rm -rf *'
 
 
 setopt null_glob
