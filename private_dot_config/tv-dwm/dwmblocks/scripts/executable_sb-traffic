@@ -38,7 +38,7 @@ rx=$(update /sys/class/net/[ew]*/statistics/rx_bytes)
 tx=$(update /sys/class/net/[ew]*/statistics/tx_bytes)
 
 
-printf "^c$color1^%3sB^d^ ^c$color2^%3sB^d^\\n" $(numfmt --to=iec $rx $tx)
+printf "^c$color1^%4sB^d^ ^c$color2^%4sB^d^\\n" $(numfmt --to=iec $rx $tx)
 
 
 
