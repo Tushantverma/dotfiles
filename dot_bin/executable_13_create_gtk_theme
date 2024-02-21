@@ -10,8 +10,8 @@ packages=(
     "inkscape"
     "sassc"
     "meson"
-    "gnome-themes-standard"
-    "gtk-engine-murrine"
+    # "gnome-themes-standard" ## build dependency for GTK2 and GTK2 itself is obsolete and unmaintained
+    # "gtk-engine-murrine"    ## build dependency for GTK2 and GTK2 itself is obsolete and unmaintained
     "gnome-shell"
     "pkg-config"
     "cinnamon"
@@ -46,9 +46,9 @@ echo "##################################################"
 # Define theme colors # it have no any order for execution (creating [theme])
 declare -A theme_colors=(
 ##-----------${colors[0]}, ${colors[1]}, ${colors[2]}, ${colors[3]}, ${colors[n]} -------##
-    [aaqua]="   61afef   ,    100e17   ,     191621  ,    0000ff   "
-  # [aazul]="   c1f505   ,    ff0000   ,     00ff00  ,    0000ff   "
-  # [xblue]="   05f519   ,    ff0000   ,     00ff00  ,    0000ff   "
+    [purple-BharatOS]="   61afef   ,    100e17   ,     191621  ,    0000ff   "
+  # [xaazul-BharatOS]="   c1f505   ,    ff0000   ,     00ff00  ,    0000ff   "
+  # [zxblue-BharatOS]="   05f519   ,    ff0000   ,     00ff00  ,    0000ff   "
 )
 
 # Function to change colors in files
@@ -126,8 +126,8 @@ build_theme() {
   pushd /tmp/arc-theme    ## goto that directory
   [ -d build ] || mkdir build
 
-  sed -i "/gtk/s/.*/  choices: \['gtk2', 'gtk3', 'gtk4'\],/" meson_options.txt   #  build only required theme  ## you can remove this line build time will not change that much
-  sed -i "/dark/s/.*/  choices: \['dark'\],/"                meson_options.txt   #  build only required theme  ## you can remove this line build time will not change that much
+  sed -i "/gtk/s/.*/  choices: \['gtk3', 'gtk4'\],/"   meson_options.txt   #  build only required theme  ## you can remove this line build time will not change that much ## removed \['gtk2'\] build
+  sed -i "/dark/s/.*/  choices: \['dark'\],/"          meson_options.txt   #  build only required theme  ## you can remove this line build time will not change that much
 
   meson setup --prefix=/tmp/at build/
   meson configure --prefix=/tmp/at build/
