@@ -46,9 +46,9 @@ echo "##################################################"
 # Define theme colors # it have no any order for execution (creating [theme])
 declare -A theme_colors=(
 ##-----------${colors[0]}, ${colors[1]}, ${colors[2]}, ${colors[3]}, ${colors[n]} -------##
-    [purple-BharatOS]="   61afef   ,    100e17   ,     191621  ,    0000ff   "
-  # [xaazul-BharatOS]="   c1f505   ,    ff0000   ,     00ff00  ,    0000ff   "
-  # [zxblue-BharatOS]="   05f519   ,    ff0000   ,     00ff00  ,    0000ff   "
+    [Purple-BharatOS]="   61afef   ,    100e17   ,     191621  ,    0000ff   "
+  # [Xaazul-BharatOS]="   c1f505   ,    ff0000   ,     00ff00  ,    0000ff   "
+  # [Zxblue-BharatOS]="   05f519   ,    ff0000   ,     00ff00  ,    0000ff   "
 )
 
 # Function to change colors in files
