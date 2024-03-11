@@ -2,6 +2,9 @@
 
 # my OS install script will use '*'
 
+echo "my home is $HOME"
+echo "my user is $USER"
+
 # building dwm
 cd /home/*/.config/tv-dwm/chadwm/
 sudo make
