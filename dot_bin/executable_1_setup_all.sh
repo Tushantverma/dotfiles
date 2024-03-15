@@ -1,24 +1,24 @@
 #!/bin/bash
 
-# my OS install script will use '*'
+# $username is comming from OS installation script
+# if $username not set, _USER will fallback to $USER
+_USER="${username:-$USER}"
+_HOME="$(getent passwd "$_USER" | cut -d: -f6)"
 
-echo "my User is : $USER"
-echo "my Home is : $HOME"
- 
 # building dwm
-cd /home/$USER/.config/tv-dwm/chadwm/
+cd /home/$_USER/.config/tv-dwm/chadwm/
 sudo make
 sudo make install
 sudo make clean
 
 # building st
-cd /home/$USER/.config/tv-dwm/st/
+cd /home/$_USER/.config/tv-dwm/st/
 sudo make
 sudo make install
 sudo make clean
 
 # building dwmblocks
-cd /home/$USER/.config/tv-dwm/dwmblocks/
+cd /home/$_USER/.config/tv-dwm/dwmblocks/
 sudo make
 sudo make install
 sudo make clean
