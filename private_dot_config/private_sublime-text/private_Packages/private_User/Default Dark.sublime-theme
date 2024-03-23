@@ -1,0 +1,104 @@
+// Documentation at https://www.sublimetext.com/docs/themes.html
+{
+	"variables":
+	{
+	},
+	"rules":
+	[
+
+
+		{
+            "class": "status_bar",             // Bottom_bar background
+            "layer0.tint": "#191621",
+            "layer0.opacity": 1.0
+        },
+        {   
+            "class": "tabset_control",         // Tab_bar background
+            "layer0.tint": "#191621",
+            "layer0.opacity": 1.0
+        },
+        {
+            "class": "tab_control",            // Other unselected tabs
+            "attributes": ["!selected"],
+            "layer0.tint": "#191621",
+            "layer0.opacity": 1.0
+        },
+
+
+
+
+        // -----------Command Palette (ctrl+shift+p)---------
+        {
+            "class": "quick_panel",            // Body of the Command Palette
+            "layer0.tint": "#100e17",
+            "layer0.opacity": 1.0
+        },
+        {
+            "class": "overlay_control",        // Boarder of the Command Palette
+            "layer0.tint": "#191621",
+            "layer0.opacity": 1.0
+        },
+        {
+            "class": "mini_quick_panel_row",   // Command Palette selected text
+            "attributes": ["selected"],
+            "layer0.tint": "#191621",
+            "layer0.opacity": 1.0     
+        },
+        // -------------------------------------------------
+
+
+
+
+        // ----------------Find_bar(ctrl+f)-----------------
+        {
+            "class": "panel_control",          // find_bar background color
+            "layer0.tint": "#191621", 
+            "layer0.opacity": 1.0 
+        },
+        {
+            "class": "text_line_control",      // text box background color
+            "color_scheme_tint": "#211d2b"     // other similar : 211c2e 211d2b 1f1a2b 1f1b2d 161320
+        },
+        {
+            "class": "button_control",         // background color of the : find, find prev, find all button 
+            "layer0.tint": "#100e17", 
+            "layer0.opacity": 1.0     
+        },
+        {
+            "class": "icon_button_control",    // enabled button background color 
+            "attributes": ["selected"],
+            "layer0.tint": "#100e17", 
+            "layer0.opacity": 1.0
+        },
+        // -------------------------------------------------
+
+
+
+
+        // ------------------Side_bar-----------------------
+        {
+            "class": "sidebar_container", // sidebar background color
+            "layer0.tint": "#191621", 
+            "layer0.opacity": 1.0
+        },
+        {
+            "class": "sidebar_label",     // set sidebar text color
+            "fg": "#abb3bf",              // background color of the text
+            "font.size": 16               // text size increased
+        },
+        {
+            "class": "sidebar_heading",   // heading font size increased
+            "fg": "#191621",              // hide the heading by using same sidebar color
+            "font.size": 14               // gaps b/w file name
+        },
+        {
+            "class": "tree_row",          // selected file background color 
+            "attributes": ["selected"],
+            "layer0.tint": "#100e17",
+            "layer0.opacity": 1.0        
+        },
+        // -------------------------------------------------
+
+
+	]
+}

@@ -1,0 +1,28 @@
+// Documentation at https://www.sublimetext.com/docs/color_schemes.html
+{
+	"variables":
+	{
+	},
+	"globals":
+	{
+		"background": "#100e17",     // body background color
+		"line_highlight": "#191621", // selected lineNumber background color
+
+		// ------------------selected text--------------------
+
+        // // Focused Selection
+        "selection": "#282a36",
+        "selection_border": "#282a36",
+        // "selection_foreground": "#6272a4",
+        
+        // // Unfocused (Inactive) Selection
+        "inactive_selection": "#282a36",
+        // "inactive_selection_foreground": "#6272a4",
+        
+        // ---------------------------------------------------
+	},
+	"rules":
+	[
+		
+	]
+}

@@ -69,7 +69,7 @@ setopt GLOB_DOTS ## show dot files (for bash and zsh both) # for example now you
 #Tushant_Aliases
   alias c='clear'
   alias x='exit'
-  alias d='[ -d ~/work ] || mkdir ~/work && cd ~/work' # if directory exist then just cd and if it dosent exist then mkdir and then cd both
+  alias o='[ -d ~/oxox ] || mkdir ~/oxox && cd ~/oxox' # if directory exist then just cd and if it dosent exist then mkdir and then cd both
   alias dd='cd ~/Downloads'
   alias premove='sudo pacman -Rcns'
   alias pinstall='sudo pacman -S --noconfirm'
@@ -87,6 +87,7 @@ setopt GLOB_DOTS ## show dot files (for bash and zsh both) # for example now you
   alias cp='cp -i'   ## ask before overwrite
   alias ff='fastfetch'
   alias q='cd ..'
+  alias cdtmp='cd $(mktemp -d /tmp/tmp.XXXX)'
   alias pbcopy='xclip -selection clipboard'       # usage : echo "hello world" | pbcopy   ,    pbcopy file.txt        ,    pbcopy -t image/png file.png
   alias pbpaste='xclip -selection clipboard -o'   # usage : pbpaste                       ,    pbpaste > newFile.txt 
   alias sudo='sudo ' ## If the last character of the alias is a 'space' or 'tab' character then the next word of the command is also checked for an alias (now you can run your aliases with sudo command | this way you can create one alias by using multiple aliases like [ alias new_alias='alias1 alias2 alias3' ])
