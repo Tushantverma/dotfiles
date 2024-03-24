@@ -20,6 +20,11 @@ README.md
 		.config/xfce4/xfconf/xfce-perchannel-xml/thunar.xml
 {{ end }}
 
+## if .config/git exist then ignore and if not exist then add it to the location
+{{ if stat (joinPath .chezmoi.homeDir ".config/git") }}
+		.config/git
+{{ end }}
+
 ## this is file selector / file chooser
 {{ if stat (joinPath .chezmoi.homeDir ".config/dconf/user") }}
 		.config/dconf/user
