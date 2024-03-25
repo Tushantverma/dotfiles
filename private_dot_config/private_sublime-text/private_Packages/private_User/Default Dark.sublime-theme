@@ -65,6 +65,11 @@
             "layer0.opacity": 1.0     
         },
         {
+            "class": "button_control",         // background color of the : find, find prev, find all button 
+            "attributes": ["pressed"],         // change background color when pressed/clicked for feedback
+            "layer0.tint": "#191621" 
+        },
+        {
             "class": "icon_button_control",    // enabled button background color 
             "attributes": ["selected"],
             "layer0.tint": "#100e17", 
@@ -98,7 +103,6 @@
             "layer0.opacity": 1.0        
         },
         // -------------------------------------------------
-
 
 	]
 }

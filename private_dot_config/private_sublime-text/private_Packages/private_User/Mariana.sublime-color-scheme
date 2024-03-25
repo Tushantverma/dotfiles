@@ -23,6 +23,13 @@
 	},
 	"rules":
 	[
-		
+        // -------markdown code block background color--------
+        {   // To finding the exact scope name press (Ctrl+Shift+Alt+P)
+            "name": "Markdown Code Block Background", // (multiline/inline both)
+            "scope": "markup.raw.code-fence, markup.raw.inline.markdown",
+            "background": "#191621" 
+        },
+        // ---------------------------------------------------
+
 	]
 }
