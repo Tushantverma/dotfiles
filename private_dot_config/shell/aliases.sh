@@ -147,34 +147,17 @@ touch "$script_name" ; [ $? -ne 0 ] && { echo "Error occurred"; return 1; } ;  #
 echo '#!/usr/bin/env bash' > "$script_name" ; chmod +x "$script_name" ; $EDITOR "$script_name" ; # basic command
 }
 
-
 locate() {
-  [[ -z "$1" ]] && echo "plocate: no pattern specified" && return 1 ;
-  while true; do
-    echo -n "Update locate database? (y/N): " ; read -r update_choice ; # ask for input oneliner. works on bash / zsh both
-    update_choice=${update_choice:-n} # Set default to 'N' if input is empty
-    case $update_choice in
-      [yY] ) echo -e "$(tput setaf 2)Updating database....................$(tput sgr0) \n " && command sudo updatedb ; break ;;
-      [nN] ) echo -e "$(tput setaf 3)Not updating the database............$(tput sgr0) \n "                          ; break ;;
-        *  ) echo -e "$(tput setaf 1)Invalid input, please enter y or n...$(tput sgr0) \n "                                  ;;
-    esac
-  done
+  [[ -z $1 ]] && print -u2 "plocate: no pattern specified" && return 1
+  print -Pn "%F{yellow}Update plocate DB? (y/N): %f"
+  read -q && { print; print -P "%F{green}Updating DB...%f"; command sudo updatedb } || print ;
   command locate "$@"
 }
 
-
-
 tldr() {
-  [[ -z "$1" ]] && echo "tldr: no pattern specified" && return 1 ;
-  while true; do
-    echo -n "Update tldr database? (y/N): " ; read -r update_choice ; # ask for input oneliner. works on bash / zsh both
-    update_choice=${update_choice:-n} # Set default to 'N' if input is empty
-    case $update_choice in
-      [yY] ) echo -e "$(tput setaf 2)Updating database....................$(tput sgr0) \n " && command tldr -u ; break ;;
-      [nN] ) echo -e "$(tput setaf 3)Not updating the database............$(tput sgr0) \n "                    ; break ;;
-        *  ) echo -e "$(tput setaf 1)Invalid input, please enter y or n...$(tput sgr0) \n "                            ;;
-    esac
-  done
+  [[ -z $1 ]] && print -u2 "tldr: no pattern specified" && return 1
+  print -Pn "%F{yellow}Update tldr DB? (y/N): %f"
+  read -q && { print; print -P "%F{green}Updating DB...%f"; command tldr -u } || print ;
   command tldr "$@"
 }
 
