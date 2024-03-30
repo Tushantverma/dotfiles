@@ -104,11 +104,11 @@ bindkey     '^H'             backward-delete-word    #### you can use (ctrl + ba
 # # zsh source just for reading  : https://wiki.archlinux.org/title/zsh
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------#
 
-
-setopt autocd     # Automatically cd into typed directory.
-stty stop undef   # Disable ctrl-s to freeze terminal.
+PROMPT_EOL_MARK=''           # Hide the '%' Zsh shows when a command ends without a trailing newline. try $printf "hello" 
+setopt autocd                # Automatically cd into typed directory.
+stty stop undef              # Disable ctrl-s to freeze terminal.
 setopt interactive_comments  # it allows the comments in the terminal
-setopt rm_star_silent # Do not confirm [Y/n] on 'rm -rf *'
+setopt rm_star_silent        # Do not confirm [Y/n] on 'rm -rf *'
 
 
 setopt null_glob

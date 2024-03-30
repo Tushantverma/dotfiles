@@ -69,16 +69,16 @@ setopt GLOB_DOTS ## show dot files (for bash and zsh both) # for example now you
 #Tushant_Aliases
   alias c='clear'
   alias x='exit'
-  alias o='[ -d ~/oxox ] || mkdir ~/oxox && cd ~/oxox' # if directory exist then just cd and if it dosent exist then mkdir and then cd both
+  alias o='[ -d ~/oxox ] || mkdir ~/oxox && cd ~/oxox' # if directory exist then just cd and if it doesn't exist then mkdir and then cd both
   alias dd='cd ~/Downloads'
   alias premove='sudo pacman -Rcns'
   alias pinstall='sudo pacman -S --noconfirm'
   alias cat='bat -p'    ## (cat -n ###this command can give the issue maybe any error on terminal)
   # alias tree='tree -AC' ##  -A = ANSI line graphics  ## -C = colorization  ## commenting this alias because after using this command "$tree | xclip -selection clipboard" --or-- "$tree | pbcopy" when you paste the output. your output will have weard characters like "(0tqq01;34msrc[0m"  and after commenting out it's working fine maybe because of "IosevkaNerdFont ligations" and "zsh syntax colorization" are working same as -AC flag in tree command
-  alias tterminal='xfconf-query -c xfce4-terminal -p /background-darkness -s 0.8'  # source/syntex https://forum.xfce.org/viewtopic.php?id=16911
-  alias bterminal='xfconf-query -c xfce4-terminal -p /background-darkness -s 1.0'  # source/syntex https://forum.xfce.org/viewtopic.php?id=16911
+  alias tterminal='xfconf-query -c xfce4-terminal -p /background-darkness -s 0.8'  # source/syntax https://forum.xfce.org/viewtopic.php?id=16911
+  alias bterminal='xfconf-query -c xfce4-terminal -p /background-darkness -s 1.0'  # source/syntax https://forum.xfce.org/viewtopic.php?id=16911
   alias cm='chezmoi'
-  alias cdcm='chezmoi cd'
+  alias cdcm='cd $(chezmoi source-path)' # alternative "$chezmoi cd"  https://osbharat.github.io/chezmoi/cd-into-chezmoi
   alias yay='yay --color auto'
   alias vim='nvim'
   alias screenoff='xset dpms force off'
